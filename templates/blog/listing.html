@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Blog{% endblock %}
+{% block description %}Latest news and updates from Solaris{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/blog.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="blog-page">
+    <div class="section-container">
+        <h1 class="page-title">Blog</h1>
+        <div class="blog-grid">
+            {% for post in posts %}
+            <a href="/blog/{{ post.slug }}" class="blog-card fade-in">
+                <div class="blog-card-thumbnail">
+                    {% if post.thumbnail %}
+                    <img src="{{ url_for('static', filename='images/blog/' + post.thumbnail) }}" alt="{{ post.title }}">
+                    {% else %}
+                    <div class="blog-card-placeholder"></div>
+                    {% endif %}
+                </div>
+                <div class="blog-card-body">
+                    <span class="blog-card-date">{{ post.date.strftime('%B %d, %Y') if post.date else '' }}</span>
+                    <h3 class="blog-card-title">{{ post.title }}</h3>
+                    <p class="blog-card-summary">{{ post.summary }}</p>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        {% if not posts %}
+        <p class="blog-empty">No posts yet. Check back soon!</p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

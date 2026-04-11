@@ -1,0 +1,109 @@
+/* ========================================
+   SOLARIS — Community & Social Identity
+   ======================================== */
+
+/* --- Social Identity Section --- */
+.social-identity {
+    padding: var(--space-xl) 0;
+    position: relative;
+}
+
+.identity-content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.identity-content h2 {
+    margin-bottom: var(--space-sm);
+}
+
+.identity-content .identity-lead {
+    font-size: 1.15rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+    line-height: 1.7;
+    margin-bottom: var(--space-md);
+}
+
+.identity-pills {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+}
+
+.identity-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: var(--bg-card);
+    border: var(--border-width) solid var(--border-color);
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    transition: var(--transition);
+}
+
+.identity-pill:hover {
+    border-color: var(--border-color-hover);
+    transform: translateY(-2px);
+}
+
+.identity-pill i {
+    font-size: 1rem;
+}
+
+.identity-pill:nth-child(1) i { color: var(--primary); }
+.identity-pill:nth-child(2) i { color: var(--secondary-light); }
+.identity-pill:nth-child(3) i { color: var(--accent-warm); }
+.identity-pill:nth-child(4) i { color: var(--accent-green); }
+
+/* --- Community Section --- */
+.community-section {
+    padding: var(--space-xl) 0;
+    background: var(--bg-secondary);
+    position: relative;
+}
+
+.community-inner {
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.community-inner h2 {
+    margin-bottom: var(--space-sm);
+}
+
+.community-inner .community-desc {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+    line-height: 1.7;
+    margin-bottom: var(--space-md);
+}
+
+.community-cta-group {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+}
+
+/* Discord button special style */
+.btn-discord {
+    background: #5865F2;
+    color: #ffffff;
+    border-color: #4752c4;
+    box-shadow: 0 4px 20px rgba(88, 101, 242, 0.3);
+}
+
+.btn-discord:hover {
+    background: #6d79f5;
+    color: #ffffff;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(88, 101, 242, 0.4);
+}

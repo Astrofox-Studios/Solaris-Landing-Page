@@ -1,0 +1,160 @@
+/* ========================================
+   SOLARIS — Games Section
+   Mystery cards with screenshots + hints
+   ======================================== */
+
+.games-section {
+    padding: var(--space-xl) 0;
+    background: var(--bg-secondary);
+    position: relative;
+}
+
+.games-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-md);
+}
+
+.game-card {
+    position: relative;
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+    border: var(--border-width) solid var(--border-color);
+    box-shadow: var(--shadow-card);
+    transition: var(--transition);
+    aspect-ratio: 4 / 5;
+    cursor: default;
+    outline: 3px solid transparent;
+    outline-offset: 3px;
+}
+
+.game-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--border-color-hover);
+    box-shadow: var(--shadow-card-hover);
+    outline-color: rgba(255, 255, 255, 0.75);
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.2));
+}
+
+[data-theme="light"] .game-card:hover {
+    outline-color: rgba(0, 0, 0, 0.35);
+    filter: drop-shadow(0 0 6px rgba(0, 0, 0, 0.1));
+}
+
+/* Background screenshot */
+.game-card-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+}
+
+.game-card-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+    filter: brightness(0.35) blur(2px);
+}
+
+.game-card:hover .game-card-bg img {
+    transform: scale(1.06);
+    filter: brightness(0.4) blur(1px);
+}
+
+/* Dark overlay for readability */
+.game-card-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(
+        180deg,
+        rgba(18, 18, 24, 0.2) 0%,
+        rgba(18, 18, 24, 0.6) 60%,
+        rgba(18, 18, 24, 0.9) 100%
+    );
+}
+
+/* Content */
+.game-card-content {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-md);
+    text-align: center;
+}
+
+/* Game logo icon */
+.game-card-logo {
+    width: 72px;
+    height: 72px;
+    object-fit: contain;
+    image-rendering: pixelated;
+    margin-bottom: var(--space-xs);
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5));
+    transition: var(--transition);
+}
+
+.game-card:hover .game-card-logo {
+    transform: scale(1.1) rotate(-3deg);
+}
+
+/* Big question mark */
+.game-card-mystery {
+    font-family: var(--font-heading);
+    font-size: 5rem;
+    line-height: 1;
+    margin-bottom: var(--space-sm);
+    opacity: 0.9;
+    transition: var(--transition);
+}
+
+.game-card:nth-child(1) .game-card-mystery {
+    color: var(--primary);
+    text-shadow: 0 0 30px rgba(0, 134, 217, 0.4);
+}
+
+.game-card:nth-child(2) .game-card-mystery {
+    color: var(--secondary-light);
+    text-shadow: 0 0 30px rgba(144, 51, 140, 0.4);
+}
+
+.game-card:nth-child(3) .game-card-mystery {
+    color: var(--accent-warm);
+    text-shadow: 0 0 30px rgba(245, 158, 11, 0.4);
+}
+
+.game-card:hover .game-card-mystery {
+    transform: scale(1.1);
+}
+
+/* Hint text */
+.game-card-hint {
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 700;
+    font-size: 0.95rem;
+    font-style: italic;
+    max-width: 220px;
+    line-height: 1.5;
+}
+
+/* "Coming Soon" label */
+.game-card-label {
+    position: absolute;
+    top: var(--space-sm);
+    right: var(--space-sm);
+    z-index: 3;
+    font-family: var(--font-body);
+    font-weight: 800;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 5px 12px;
+    border-radius: 50px;
+    background: rgba(18, 18, 24, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.6);
+}

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Media{% endblock %}
+{% block description %}Screenshots, videos, and more from Solaris{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/media.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="media-page">
+    <div class="section-container">
+        <h1 class="page-title">Media</h1>
+        <p class="page-subtitle">Screenshots and videos from across Solaris</p>
+        <div class="media-gallery">
+            <div class="media-item">
+                <div class="media-placeholder"></div>
+            </div>
+            <div class="media-item">
+                <div class="media-placeholder"></div>
+            </div>
+            <div class="media-item">
+                <div class="media-placeholder"></div>
+            </div>
+            <div class="media-item">
+                <div class="media-placeholder"></div>
+            </div>
+            <div class="media-item">
+                <div class="media-placeholder"></div>
+            </div>
+            <div class="media-item">
+                <div class="media-placeholder"></div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/gallery.js') }}"></script>
+{% endblock %}

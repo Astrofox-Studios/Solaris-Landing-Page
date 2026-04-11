@@ -1,0 +1,168 @@
+/* ========================================
+   SOLARIS — Footer (chunky, solid)
+   ======================================== */
+
+.site-footer {
+    background: var(--bg-secondary);
+    border-top: var(--border-width) solid var(--border-color);
+    border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
+    padding: var(--space-lg) var(--space-md);
+}
+
+.footer-grid {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-md);
+}
+
+/* Brand column */
+.footer-brand .footer-logo {
+    font-family: var(--font-heading);
+    font-size: 1.3rem;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: inline-block;
+    margin-bottom: var(--space-sm);
+}
+
+.footer-brand p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    font-weight: 600;
+}
+
+/* Column headings */
+.footer-col h4 {
+    color: var(--secondary-light);
+    font-family: var(--font-heading);
+    font-size: 0.9rem;
+    margin-bottom: var(--space-sm);
+}
+
+/* Links */
+.footer-col ul {
+    list-style: none;
+}
+
+.footer-col ul li {
+    margin-bottom: 8px;
+}
+
+.footer-link {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: var(--transition);
+    padding: 4px 8px;
+    border-radius: 8px;
+    margin-left: -8px;
+}
+
+.footer-link:hover {
+    color: var(--primary-light);
+    background: rgba(0, 134, 217, 0.08);
+}
+
+/* Social bubbles */
+.social-bubbles {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: var(--space-sm);
+}
+
+.social-icon.bubble {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    background: var(--bg-card);
+    border: var(--border-width) solid var(--border-color);
+    border-radius: 14px;
+    color: var(--text-secondary);
+    font-size: 1rem;
+    transition: var(--transition);
+    text-decoration: none;
+}
+
+.social-icon.bubble:hover {
+    color: var(--primary);
+    border-color: var(--primary);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-glow-blue);
+}
+
+.social-icon.bubble svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+}
+
+/* Bottom bar (legacy — kept for compat) */
+.footer-bottom {
+    max-width: var(--max-width);
+    margin: var(--space-lg) auto 0;
+    padding-top: var(--space-md);
+    border-top: var(--border-width) solid var(--border-color);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+}
+
+.footer-bottom p {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+/* Company info */
+.footer-company {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    line-height: 1.6;
+    font-weight: 600;
+    margin-top: var(--space-sm);
+}
+
+/* Astrofox bottom bar */
+.footer-astrofox-bar {
+    max-width: var(--max-width);
+    margin: var(--space-md) auto 0;
+    padding-top: var(--space-md);
+    border-top: var(--border-width) solid var(--border-color);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+}
+
+.footer-astrofox-bar .astrofox-logo-link {
+    display: inline-block;
+    transition: var(--transition);
+}
+
+.footer-astrofox-bar .astrofox-logo-link img {
+    height: 80px;
+    width: auto;
+    opacity: 0.7;
+    transition: var(--transition);
+}
+
+.footer-astrofox-bar .astrofox-logo-link:hover img {
+    opacity: 1;
+}
+
+.footer-astrofox-bar p {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    font-weight: 600;
+}

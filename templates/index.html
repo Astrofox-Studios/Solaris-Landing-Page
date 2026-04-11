@@ -1,0 +1,481 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/hero.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/stats.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/news-carousel.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/games.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/community.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/media.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/showcase.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/team.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/signup.css') }}">
+{% endblock %}
+
+{% block content %}
+<!-- ====== HERO ====== -->
+<section class="hero" id="hero">
+    <div class="hero-bg">
+        <img src="{{ url_for('static', filename='images/media/1.png') }}" alt="Solaris server">
+    </div>
+    <div class="hero-overlay"></div>
+
+    <div class="hero-content">
+        <h1 class="hero-title">SOLARIS</h1>
+        <p class="hero-tagline">A new dawn in Minecraft awaits</p>
+        <div class="hero-buttons">
+            <button class="btn btn-primary" id="play-now-btn">Play Now</button>
+            <a href="#signup" class="btn btn-secondary">Stay Updated</a>
+        </div>
+    </div>
+
+    <div class="hero-scroll-indicator">
+        <span>Scroll</span>
+        <div class="scroll-arrow"></div>
+    </div>
+
+    <div class="hero-wave">
+        <svg viewBox="0 0 1440 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0,60 C360,120 720,0 1080,60 C1260,90 1380,80 1440,70 L1440,120 L0,120 Z" fill="var(--bg-primary)"/>
+        </svg>
+    </div>
+</section>
+
+<!-- ====== NEWS CAROUSEL ====== -->
+<section class="news-carousel-section" id="news">
+    <div class="section-container">
+        <h2 class="section-title">Latest News</h2>
+        <p class="section-subtitle">What's happening on Solaris</p>
+
+        <div class="news-carousel" id="news-carousel">
+            {% if posts %}
+            {% for post in posts %}
+            <div class="news-slide {% if loop.first %}active{% endif %}">
+                <a href="/blog/{{ post.slug }}" class="news-slide-inner">
+                    <div class="news-slide-image">
+                        {% if post.thumbnail %}
+                        <img src="{{ url_for('static', filename='images/blog/' + post.thumbnail) }}" alt="{{ post.title }}">
+                        {% else %}
+                        <div class="news-slide-placeholder"></div>
+                        {% endif %}
+                    </div>
+                    <div class="news-slide-info">
+                        <span class="news-slide-date">{{ post.date.strftime('%B %d, %Y') if post.date else '' }}</span>
+                        <h3 class="news-slide-title">{{ post.title }}</h3>
+                        <p class="news-slide-summary">{{ post.summary }}</p>
+                        {% if post.author %}<span class="news-slide-author">By {{ post.author }}</span>{% endif %}
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="news-slide active">
+                <div class="news-slide-inner">
+                    <div class="news-slide-image">
+                        <div class="news-slide-placeholder"></div>
+                    </div>
+                    <div class="news-slide-info">
+                        <span class="news-slide-date">Stay tuned</span>
+                        <h3 class="news-slide-title">News coming soon</h3>
+                        <p class="news-slide-summary">We're working on something exciting. Check back soon for updates, devlogs, and announcements.</p>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="news-carousel-nav">
+            <button class="news-nav-arrow" id="news-prev" aria-label="Previous"><i class="fa-solid fa-chevron-left"></i></button>
+            <div class="news-dots" id="news-dots"></div>
+            <button class="news-nav-arrow" id="news-next" aria-label="Next"><i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+    </div>
+</section>
+
+<!-- ====== STATS + QUICK LINKS ====== -->
+<section class="stats-section" id="stats">
+    <div class="section-container">
+        <div class="stats-grid">
+            <a href="#" class="stat-card stat-discord fade-in" target="_blank" rel="noopener">
+                <i class="fa-brands fa-discord"></i>
+                <div class="stat-card-text">
+                    <span class="stat-card-label">Discord</span>
+                    <span class="stat-card-value">Join the community</span>
+                </div>
+            </a>
+            <a href="#" class="stat-card stat-store fade-in" target="_blank" rel="noopener">
+                <i class="fa-solid fa-store"></i>
+                <div class="stat-card-text">
+                    <span class="stat-card-label">Store</span>
+                    <span class="stat-card-value">Browse ranks &amp; cosmetics</span>
+                </div>
+            </a>
+            <div class="stat-card stat-status stat-disabled fade-in">
+                <i class="fa-solid fa-signal"></i>
+                <div class="stat-card-text">
+                    <span class="stat-card-label">Server Status</span>
+                    <span class="stat-card-value">Coming Soon</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Angled divider -->
+<div class="section-divider">
+    <svg viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,0 L1440,60 L1440,80 L0,80 Z" fill="var(--bg-secondary)"/>
+    </svg>
+</div>
+
+<!-- ====== GAMES ====== -->
+<section class="games-section" id="games">
+    <div class="section-container">
+        <h2 class="section-title">Our Games</h2>
+        <p class="section-subtitle">Something's brewing... stay tuned</p>
+        <div class="games-grid">
+            <div class="game-card fade-in">
+                <div class="game-card-bg">
+                    <img src="{{ url_for('static', filename='images/media/6.png') }}" alt="">
+                </div>
+                <div class="game-card-overlay"></div>
+                <span class="game-card-label">Coming Soon</span>
+                <div class="game-card-content">
+                    <img src="{{ url_for('static', filename='images/icons/spookyCave.png') }}" alt="?" class="game-card-logo">
+                    <span class="game-card-mystery">?</span>
+                    <p class="game-card-hint">Venture deep below... something lurks in the dark</p>
+                </div>
+            </div>
+            <div class="game-card fade-in">
+                <div class="game-card-bg">
+                    <img src="{{ url_for('static', filename='images/media/7.png') }}" alt="">
+                </div>
+                <div class="game-card-overlay"></div>
+                <span class="game-card-label">Coming Soon</span>
+                <div class="game-card-content">
+                    <img src="{{ url_for('static', filename='images/icons/GUNSOMG.png') }}" alt="?" class="game-card-logo">
+                    <span class="game-card-mystery">?</span>
+                    <p class="game-card-hint">When the world breaks apart, only the bold survive</p>
+                </div>
+            </div>
+            <div class="game-card fade-in">
+                <div class="game-card-bg">
+                    <img src="{{ url_for('static', filename='images/media/5.png') }}" alt="">
+                </div>
+                <div class="game-card-overlay"></div>
+                <span class="game-card-label">Coming Soon</span>
+                <div class="game-card-content">
+                    <img src="{{ url_for('static', filename='images/icons/aMovementGame.png') }}" alt="?" class="game-card-logo">
+                    <span class="game-card-mystery">?</span>
+                    <p class="game-card-hint">Speed, precision, and nerves of steel</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Multi-wave divider (games → social identity) -->
+<div class="section-divider" style="background: var(--bg-secondary);">
+    <svg viewBox="0 0 1440 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,30 C180,70 360,10 540,50 C720,90 900,20 1080,60 C1260,90 1380,40 1440,50 L1440,100 L0,100 Z" fill="var(--accent-section-blue)" opacity="0.5"/>
+        <path d="M0,50 C240,90 480,10 720,50 C960,90 1200,10 1440,50 L1440,100 L0,100 Z" fill="var(--accent-section-blue)"/>
+    </svg>
+</div>
+
+<!-- ====== SOCIAL IDENTITY ====== -->
+<section class="social-identity accent-section-blue" id="about-solaris">
+    <div class="section-container">
+        <div class="identity-content fade-in">
+            <h2>More Than Just Minigames</h2>
+            <p class="identity-lead">Solaris is a social experience, a place to meet players, hang out, and play together. Think proximity voice chat, a living social hub, and games that actually bring people together.</p>
+            <div class="identity-pills">
+                <span class="identity-pill"><i class="fa-solid fa-microphone"></i> Proximity Voice</span>
+                <span class="identity-pill"><i class="fa-solid fa-city"></i> Social Hub</span>
+                <span class="identity-pill"><i class="fa-solid fa-gamepad"></i> Unique Games</span>
+                <span class="identity-pill"><i class="fa-solid fa-heart"></i> Community First</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ====== GALLERY ====== -->
+<section class="media-teaser accent-section-blue" id="media">
+    <div class="section-container">
+        <h2 class="section-title">Gallery</h2>
+        <p class="section-subtitle">Snapshots from across the server</p>
+        <div class="media-grid">
+            <div class="media-item fade-in" data-lightbox="0">
+                <img src="{{ url_for('static', filename='images/media/1.png') }}" alt="Futuristic tower at night">
+            </div>
+            <div class="media-item fade-in" data-lightbox="1">
+                <img src="{{ url_for('static', filename='images/media/4.png') }}" alt="Tower at sunset">
+            </div>
+            <div class="media-item fade-in" data-lightbox="2">
+                <img src="{{ url_for('static', filename='images/media/5.png') }}" alt="Arena">
+            </div>
+            <div class="media-item fade-in" data-lightbox="3">
+                <img src="{{ url_for('static', filename='images/media/6.png') }}" alt="Underground caverns">
+            </div>
+            <div class="media-item fade-in" data-lightbox="4">
+                <img src="{{ url_for('static', filename='images/media/8.png') }}" alt="Snowy village">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox">
+    <button class="lightbox-close" id="lightbox-close" aria-label="Close">&times;</button>
+    <button class="lightbox-nav lightbox-prev" id="lightbox-prev" aria-label="Previous"><i class="fa-solid fa-chevron-left"></i></button>
+    <div class="lightbox-content">
+        <img src="" alt="Gallery image" id="lightbox-img">
+    </div>
+    <button class="lightbox-nav lightbox-next" id="lightbox-next" aria-label="Next"><i class="fa-solid fa-chevron-right"></i></button>
+</div>
+
+<!-- Wave divider (gallery → community) -->
+<div class="section-divider" style="background: var(--accent-section-blue);">
+    <svg viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,50 C360,0 720,80 1080,30 C1260,10 1380,20 1440,30 L1440,80 L0,80 Z" fill="var(--bg-secondary)"/>
+    </svg>
+</div>
+
+<!-- ====== COMMUNITY ====== -->
+<section class="community-section" id="community">
+    <div class="section-container">
+        <div class="community-inner fade-in">
+            <h2>Join the Community</h2>
+            <p class="community-desc">Be part of something from the very beginning. Join our Discord to meet the team, chat with other players, and get exclusive early access to updates.</p>
+            <div class="community-cta-group">
+                <a href="#" class="btn btn-discord" target="_blank" rel="noopener">
+                    <i class="fa-brands fa-discord"></i> Join Discord
+                </a>
+                <a href="#" class="btn btn-secondary" target="_blank" rel="noopener">
+                    <i class="fa-brands fa-x-twitter"></i> Follow Us
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Wave divider (community → cosmetics) -->
+<div class="section-divider" style="background: var(--bg-secondary);">
+    <svg viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,80 L0,50 C360,0 720,80 1080,30 C1260,10 1380,20 1440,30 L1440,80 Z" fill="#10b981"/>
+    </svg>
+</div>
+
+<!-- ====== COSMETICS BANNER ====== -->
+<section class="cosmetics-section" id="cosmetics">
+    <div class="cosmetics-banner">
+        <div class="cosmetics-card fade-in">
+            <div class="cosmetics-image">
+                <img src="{{ url_for('static', filename='images/media/cosmetics.png') }}" alt="Cosmetics preview">
+            </div>
+            <div class="cosmetics-info">
+                <span class="cosmetics-eyebrow">Express Yourself</span>
+                <h2 class="cosmetics-title">Be Who You Want</h2>
+                <p class="cosmetics-desc">Deck yourself out with hats, accessories, pets, and more. Loads of cosmetics are completely free to unlock just by playing, and even more are available through the Astro Pass.</p>
+                <div class="cosmetics-pills">
+                    <span class="cosmetics-pill"><i class="fa-solid fa-hat-wizard"></i> Hats</span>
+                    <span class="cosmetics-pill"><i class="fa-solid fa-wand-sparkles"></i> Accessories</span>
+                    <span class="cosmetics-pill"><i class="fa-solid fa-paw"></i> Pets</span>
+                    <span class="cosmetics-pill"><i class="fa-solid fa-gift"></i> Free Unlocks</span>
+                </div>
+                <div class="cosmetics-cta">
+                    <a href="#" class="btn">Browse Cosmetics</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Wave divider (cosmetics → season) -->
+<div class="section-divider" style="background: #10b981;">
+    <svg viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,80 L0,20 C480,80 960,0 1440,40 L1440,80 Z" fill="var(--primary)"/>
+    </svg>
+</div>
+
+<!-- ====== SEASON SPOTLIGHT ====== -->
+<section class="season-section" id="season">
+    <div class="season-banner">
+        <div class="season-card fade-in">
+            <div class="season-info">
+                <span class="season-date-badge"><i class="fa-solid fa-calendar"></i> Coming Soon</span>
+                <span class="season-label">Season Zero</span>
+                <h2 class="season-title">First Light</h2>
+                <div class="season-cta">
+                    <a href="#" class="btn">Get Astro Pass</a>
+                </div>
+            </div>
+            <div class="season-preview" id="season-preview">
+                <div class="season-preview-main">
+                    <img src="{{ url_for('static', filename='images/media/1.png') }}" alt="Season reward" id="season-preview-img">
+                    <div class="season-preview-caption" id="season-preview-caption">
+                        <span class="season-preview-badge premium">Pass</span>
+                        <h4 id="season-preview-title">Solar Crown</h4>
+                        <p id="season-preview-desc">Exclusive headwear for pass holders</p>
+                    </div>
+                </div>
+                <div class="season-preview-icons" id="season-icons">
+                    <button class="season-preview-icon-btn active" data-index="0" data-img="{{ url_for('static', filename='images/media/1.png') }}" data-title="Solar Crown" data-desc="Exclusive headwear for pass holders" data-badge="premium" aria-label="Solar Crown">
+                        <i class="fa-solid fa-hat-wizard"></i>
+                    </button>
+                    <button class="season-preview-icon-btn" data-index="1" data-img="{{ url_for('static', filename='images/media/4.png') }}" data-title="Starfall Trail" data-desc="Particle effect that follows you" data-badge="free" aria-label="Starfall Trail">
+                        <i class="fa-solid fa-burst"></i>
+                    </button>
+                    <button class="season-preview-icon-btn" data-index="2" data-img="{{ url_for('static', filename='images/media/5.png') }}" data-title="Solaris Fox" data-desc="Companion pet with custom animations" data-badge="premium" aria-label="Solaris Fox">
+                        <i class="fa-solid fa-paw"></i>
+                    </button>
+                    <button class="season-preview-icon-btn" data-index="3" data-img="{{ url_for('static', filename='images/media/6.png') }}" data-title="25% Off Store" data-desc="Discount on all store items during the season" data-badge="premium" aria-label="Store Discount">
+                        <i class="fa-solid fa-percent"></i>
+                    </button>
+                    <button class="season-preview-icon-btn" data-index="4" data-img="{{ url_for('static', filename='images/media/8.png') }}" data-title="500 Stardust Back" data-desc="Earn premium currency back by completing the pass" data-badge="free" aria-label="Stardust Rewards">
+                        <i class="fa-solid fa-coins"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Multi-wave divider (season → team) -->
+<div class="section-divider" style="background: var(--primary); margin-top: -3px;">
+    <svg viewBox="0 0 1440 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,40 C240,80 480,10 720,50 C960,80 1200,20 1440,40 L1440,100 L0,100 Z" fill="var(--accent-section-warm)" opacity="0.5"/>
+        <path d="M0,60 C360,20 720,80 1080,40 C1260,25 1380,35 1440,30 L1440,100 L0,100 Z" fill="var(--accent-section-warm)"/>
+    </svg>
+</div>
+
+<!-- ====== MEET THE TEAM ====== -->
+<section class="team-section accent-section-warm" id="team">
+    <div class="team-container">
+        <div class="team-card fade-in">
+            <div class="team-card-inner">
+                <div class="team-info">
+                    <h2>Meet The Team</h2>
+                    <p class="team-subtitle">The people behind Solaris</p>
+
+                    <!-- Arielle -->
+                    <div class="team-member-bio" id="team-bio-0">
+                        <div class="team-member-header">
+                            <div>
+                                <span class="team-member-name">Arielle</span>
+                                <span class="team-member-pronouns">She/Her</span>
+                            </div>
+                            <span class="team-member-role role-director">Director</span>
+                        </div>
+                        <p class="team-member-text">Hii, I'm Ari. As director, I focus on engineering the blueprint and long term vision for Solaris. I'm thoroughly detail oriented and analytical in making sure every part of the server is as fun and polished as possible for our players. It's been my passion to build Solaris, the flame of hope, that fills a gap that's been missing in this community for years.</p>
+                    </div>
+
+                    <!-- Chaz -->
+                    <div class="team-member-bio" id="team-bio-1" style="display: none;">
+                        <div class="team-member-header">
+                            <div>
+                                <span class="team-member-name">Chaz</span>
+                                <span class="team-member-pronouns">Any Pronouns</span>
+                            </div>
+                            <span class="team-member-role role-community">Community Lead</span>
+                        </div>
+                        <p class="team-member-text">Hiya :D I'm Chaz, the community lead manager here on Solaris! I help guide players, keep things safe, and also assist with map-building and a few background tasks. Outside of Solaris, you can find me playing Palia and Hello Kitty Island Adventure. I'll be online frequently around hub, playing games or flirting with Ari. So if you see me, don't be afraid to say hi!</p>
+                    </div>
+
+                    <!-- Cookie -->
+                    <div class="team-member-bio" id="team-bio-2" style="display: none;">
+                        <div class="team-member-header">
+                            <div>
+                                <span class="team-member-name">Cookie</span>
+                                <span class="team-member-pronouns">She/They</span>
+                            </div>
+                            <span class="team-member-role role-build">Lead Builder</span>
+                        </div>
+                        <p class="team-member-text">Hii I'm Cookie, I am the Lead Builder of Solaris. I do the building of maps for games, minigames and other things like the spawn. I enjoy working on building interiors the most, I also really enjoy doing Java Blockbench models and physical painting like watercolours or sketching. You'll usually find me building, snacking on food or streaming on Twitch!</p>
+                    </div>
+
+                    <!-- Skye -->
+                    <div class="team-member-bio" id="team-bio-3" style="display: none;">
+                        <div class="team-member-header">
+                            <div>
+                                <span class="team-member-name">Skye</span>
+                                <span class="team-member-pronouns">She/Her</span>
+                            </div>
+                            <span class="team-member-role role-art">Art Director</span>
+                        </div>
+                        <p class="team-member-text">Hiya, I'm Skye! I'm part of the team working on Solaris. I mainly focus on the visual and creative side of the server, from art direction and building to UI and web design. I also spend a lot of time working on game design ideas and refining features alongside the team. If you see me in-game or in the Discord, feel free to say hi!</p>
+                    </div>
+
+                    <!-- Nate -->
+                    <div class="team-member-bio" id="team-bio-4" style="display: none;">
+                        <div class="team-member-header">
+                            <div>
+                                <span class="team-member-name">Nate</span>
+                                <span class="team-member-pronouns">He/Him</span>
+                            </div>
+                            <span class="team-member-role role-manager">Manager</span>
+                        </div>
+                        <p class="team-member-text">Hi, I'm Nate. I do a mix of things but usually I'm thinking of new ideas for cosmetics, games, and stuff for our players to interact with, like having VR working as well as most other mods that improve social life on the server. In my free time I'm usually donating my time to a FIRST Robotics team, feel free to reach out if you want more info.</p>
+                    </div>
+
+                    <!-- Selector carousel -->
+                    <div class="team-selector">
+                        <button class="team-selector-arrow" id="team-prev" aria-label="Previous"><i class="fa-solid fa-chevron-left"></i></button>
+                        <div class="team-selector-heads">
+                            <img src="https://mc-heads.net/avatar/ImValari/40" alt="Arielle" class="team-selector-head active" data-member="0">
+                            <img src="https://mc-heads.net/avatar/ChazLovell/40" alt="Chaz" class="team-selector-head" data-member="1">
+                            <img src="https://mc-heads.net/avatar/Cookiedoughnut2/40" alt="Cookie" class="team-selector-head" data-member="2">
+                            <img src="https://mc-heads.net/avatar/SkyeNova_/40" alt="Skye" class="team-selector-head" data-member="3">
+                            <img src="https://mc-heads.net/avatar/pokemada/40" alt="Nate" class="team-selector-head" data-member="4">
+                        </div>
+                        <button class="team-selector-arrow" id="team-next" aria-label="Next"><i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                </div>
+
+                <div class="team-render" id="team-render">
+                    {% set renders = {
+                        0: 'images/team/arielle.png',
+                        1: 'images/team/chaz.png',
+                        2: 'images/team/cookie.png',
+                        3: 'images/media/skye.png',
+                        4: 'images/team/nate.png'
+                    } %}
+                    <img src="{{ url_for('static', filename=renders[0]) }}" alt="Character render" class="team-render-img" id="team-render-img"
+                         data-renders='[{% for i in range(5) %}"{{ url_for('static', filename=renders[i]) }}"{% if not loop.last %}, {% endif %}{% endfor %}]'>
+                    <div class="team-render-placeholder" id="team-render-placeholder">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Wave divider (team → signup) -->
+<div class="section-divider" style="background: var(--accent-section-warm); margin-bottom: -3px;">
+    <svg viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,40 C360,0 720,80 1080,30 C1260,10 1380,20 1440,30 L1440,80 L0,80 Z" fill="var(--bg-primary)"/>
+    </svg>
+</div>
+
+<!-- ====== BETA SIGNUP ====== -->
+<section class="signup-section" id="signup">
+    <div class="section-container">
+        <div class="signup-card fade-in">
+            <h2>Sign Up for the Beta</h2>
+            <p class="signup-desc">Join the mailing list for a chance to get early access to the Solaris beta. Be the first to play, test, and shape the server before anyone else.</p>
+            <form class="signup-form" id="signup-form">
+                <input type="email" name="email" placeholder="Enter your email" required autocomplete="email">
+                <button type="submit" class="btn btn-primary">Sign Up</button>
+            </form>
+            <p class="signup-success" id="signup-success">You're on the list! We'll be in touch.</p>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/lightbox.js') }}"></script>
+<script src="{{ url_for('static', filename='js/team.js') }}"></script>
+<script src="{{ url_for('static', filename='js/season-carousel.js') }}"></script>
+<script src="{{ url_for('static', filename='js/news-carousel.js') }}"></script>
+{% endblock %}

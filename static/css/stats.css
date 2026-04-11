@@ -1,0 +1,103 @@
+/* ========================================
+   SOLARIS — Stats / Quick Link Cards
+   ======================================== */
+
+.stats-section {
+    padding: var(--space-lg) 0 var(--space-md);
+    background: var(--bg-primary);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-sm);
+}
+
+.stat-card {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    background: var(--bg-card);
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-card);
+    transition: var(--transition);
+    text-decoration: none;
+    color: var(--text-primary);
+    cursor: pointer;
+    outline: 3px solid transparent;
+    outline-offset: 3px;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--border-color-hover);
+    box-shadow: var(--shadow-card-hover);
+    color: var(--text-primary);
+    outline-color: rgba(255, 255, 255, 0.75);
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.2));
+}
+
+[data-theme="light"] .stat-card:hover {
+    outline-color: rgba(0, 0, 0, 0.35);
+    filter: drop-shadow(0 0 6px rgba(0, 0, 0, 0.1));
+}
+
+.stat-card i {
+    font-size: 1.5rem;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--border-radius-sm);
+    flex-shrink: 0;
+}
+
+.stat-discord i {
+    background: rgba(88, 101, 242, 0.15);
+    color: #5865F2;
+}
+
+.stat-store i {
+    background: rgba(0, 134, 217, 0.15);
+    color: var(--primary);
+}
+
+.stat-status i {
+    background: rgba(136, 136, 160, 0.1);
+    color: var(--text-secondary);
+}
+
+.stat-card-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.stat-card-label {
+    font-weight: 800;
+    font-size: 0.9rem;
+    color: var(--text-heading);
+}
+
+.stat-card-value {
+    font-weight: 600;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+/* Disabled / coming soon state */
+.stat-disabled {
+    opacity: 0.45;
+    cursor: default;
+    pointer-events: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+}

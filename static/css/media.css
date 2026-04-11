@@ -1,0 +1,159 @@
+/* ========================================
+   SOLARIS — Media Section & Gallery
+   Big images, chunky frames, game-like
+   ======================================== */
+
+.media-teaser {
+    padding: var(--space-xl) 0;
+    position: relative;
+}
+
+.media-page {
+    padding: var(--space-xl) 0;
+}
+
+/* Bento-style grid — 5 images, asymmetric */
+.media-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: auto auto;
+    gap: var(--space-sm);
+}
+
+/* First image: big, spans 4 cols and 2 rows */
+.media-grid .media-item:nth-child(1) {
+    grid-column: span 4;
+    grid-row: span 2;
+}
+
+/* 2nd and 3rd: stack on the right */
+.media-grid .media-item:nth-child(2),
+.media-grid .media-item:nth-child(3) {
+    grid-column: span 2;
+}
+
+/* 4th and 5th: bottom row, equal */
+.media-grid .media-item:nth-child(4),
+.media-grid .media-item:nth-child(5) {
+    grid-column: span 3;
+}
+
+.media-gallery {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-md);
+}
+
+.media-item {
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: var(--transition);
+    background: var(--bg-card);
+    box-shadow: var(--shadow-card);
+    position: relative;
+    outline: 3px solid transparent;
+    outline-offset: 3px;
+}
+
+.media-item:hover {
+    transform: translateY(-6px) scale(1.02);
+    border-color: var(--primary);
+    box-shadow: var(--shadow-card-hover);
+    outline-color: rgba(255, 255, 255, 0.75);
+}
+
+[data-theme="light"] .media-item:hover {
+    outline-color: rgba(0, 0, 0, 0.35);
+}
+
+.media-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.media-item:hover img {
+    transform: scale(1.08);
+}
+
+.media-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(0, 134, 217, 0.08), rgba(144, 51, 140, 0.08));
+}
+
+/* Lightbox */
+.lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    background-color: rgba(0, 0, 0, 0.92);
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-md);
+}
+
+.lightbox.active {
+    display: flex;
+}
+
+.lightbox-content {
+    position: relative;
+    max-width: 90vw;
+    max-height: 90vh;
+}
+
+.lightbox-content img {
+    max-width: 100%;
+    max-height: 90vh;
+    object-fit: contain;
+    border-radius: var(--border-radius);
+}
+
+.lightbox-close {
+    position: absolute;
+    top: -44px;
+    right: 0;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 2rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    transition: var(--transition);
+}
+
+.lightbox-close:hover {
+    color: var(--primary);
+}
+
+.lightbox-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--bg-card);
+    border: var(--border-width) solid var(--border-color);
+    border-radius: 50%;
+    color: #fff;
+    font-size: 1.4rem;
+    cursor: pointer;
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+}
+
+.lightbox-nav:hover {
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+.lightbox-prev { left: var(--space-md); }
+.lightbox-next { right: var(--space-md); }

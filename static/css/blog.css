@@ -1,0 +1,215 @@
+/* ========================================
+   SOLARIS — Blog Section & Pages
+   Chunky cards, game-like
+   ======================================== */
+
+.blog-preview,
+.blog-page {
+    padding: var(--space-xl) 0;
+    background: var(--bg-primary);
+}
+
+.blog-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-md);
+}
+
+.blog-card {
+    background: var(--bg-card);
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    transition: var(--transition);
+    display: block;
+    color: var(--text-primary);
+    text-decoration: none;
+    box-shadow: var(--shadow-card);
+}
+
+.blog-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--border-color-hover);
+    box-shadow: var(--shadow-card-hover);
+    color: var(--text-primary);
+}
+
+.blog-card-thumbnail {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: var(--bg-secondary);
+}
+
+.blog-card-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.blog-card:hover .blog-card-thumbnail img {
+    transform: scale(1.08);
+}
+
+.blog-card-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(0, 134, 217, 0.08), rgba(144, 51, 140, 0.08));
+}
+
+.blog-card-body {
+    padding: var(--space-sm) var(--space-sm) calc(var(--space-sm) + 6px);
+}
+
+.blog-card-date {
+    font-size: 0.75rem;
+    color: var(--primary-light);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.blog-card-title {
+    margin: 8px 0 10px;
+    font-size: 1.1rem;
+    line-height: 1.35;
+}
+
+.blog-card-summary {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    font-weight: 600;
+}
+
+.blog-empty {
+    text-align: center;
+    color: var(--text-secondary);
+    padding: var(--space-lg) 0;
+}
+
+/* Blog post page */
+.blog-post-page {
+    padding-top: calc(var(--header-height) + var(--space-lg));
+    padding-bottom: var(--space-xl);
+}
+
+.back-link {
+    display: inline-block;
+    color: var(--text-secondary);
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-bottom: var(--space-md);
+    transition: var(--transition);
+}
+
+.back-link:hover {
+    color: var(--primary);
+}
+
+.post-header {
+    margin-bottom: var(--space-lg);
+    padding-bottom: var(--space-md);
+    border-bottom: var(--border-width) solid var(--border-color);
+}
+
+.post-title {
+    font-size: 2.2rem;
+    margin-bottom: var(--space-sm);
+}
+
+.post-meta {
+    display: flex;
+    gap: var(--space-sm);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.post-date {
+    color: var(--primary-light);
+    font-weight: 800;
+}
+
+.post-tags {
+    display: flex;
+    gap: var(--space-xs);
+    flex-wrap: wrap;
+    margin-top: var(--space-sm);
+}
+
+.tag {
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 5px 14px;
+    background: rgba(0, 134, 217, 0.12);
+    border: var(--border-width) solid rgba(0, 134, 217, 0.2);
+    border-radius: 50px;
+    color: var(--primary-light);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Rendered markdown content */
+.post-content {
+    max-width: 760px;
+    font-size: 1.05rem;
+    line-height: 1.8;
+}
+
+.post-content h1, .post-content h2, .post-content h3 {
+    margin-top: var(--space-md);
+    margin-bottom: var(--space-sm);
+}
+
+.post-content p {
+    margin-bottom: var(--space-sm);
+}
+
+.post-content a {
+    color: var(--primary);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.post-content code {
+    font-family: 'Courier New', monospace;
+    background: var(--bg-card);
+    padding: 3px 10px;
+    font-size: 0.9em;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.post-content pre {
+    background: var(--bg-card);
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    padding: var(--space-sm);
+    overflow-x: auto;
+    margin-bottom: var(--space-sm);
+}
+
+.post-content pre code {
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+.post-content ul, .post-content ol {
+    margin-bottom: var(--space-sm);
+    padding-left: var(--space-md);
+}
+
+.post-content blockquote {
+    border-left: 4px solid var(--primary);
+    padding-left: var(--space-sm);
+    margin: var(--space-sm) 0;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.post-content img {
+    border-radius: var(--border-radius);
+    margin: var(--space-sm) 0;
+}

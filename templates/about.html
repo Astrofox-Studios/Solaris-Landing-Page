@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}About{% endblock %}
+{% block description %}Learn about Solaris and Astro Fox Studios{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/signup.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="about-page" style="padding: var(--space-xl) 0;">
+    <div class="section-container">
+        <h1 class="page-title">About Solaris</h1>
+        <p class="page-subtitle">A Minecraft server experience by Astro Fox Studios</p>
+        <div style="max-width: 700px; margin: 0 auto; font-size: 1.05rem; line-height: 1.8;">
+            <p style="margin-bottom: var(--space-sm);">Solaris is a Minecraft server brought to you by <strong>Astro Fox Studios</strong>. Our mission is to create an unforgettable multiplayer experience where players of all kinds can come together to explore, compete, and build.</p>
+            <p style="margin-bottom: var(--space-md);">Whether you're here for the survival experience, the minigames, or just to hang out — Solaris has something for everyone.</p>
+            <div style="text-align: center;">
+                <button class="btn btn-primary btn-play" id="copy-ip" data-ip="playsolaris.net">
+                    <span class="btn-text">Join Us</span>
+                    <span class="btn-ip">playsolaris.net</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/copy-ip.js') }}"></script>
+{% endblock %}

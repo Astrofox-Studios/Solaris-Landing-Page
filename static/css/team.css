@@ -1,0 +1,285 @@
+/* ========================================
+   SOLARIS — Meet the Team
+   Origin Realms inspired — card with
+   character render, bio, and role badge
+   ======================================== */
+
+.team-section {
+    padding: var(--space-xl) 0;
+    position: relative;
+}
+
+.team-container {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+}
+
+/* Main team card */
+.team-card {
+    background: var(--bg-card);
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+}
+
+/* Layout: info left, render right */
+.team-card-inner {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    min-height: 480px;
+    position: relative;
+}
+
+/* Left side — text */
+.team-info {
+    padding: var(--space-lg);
+    display: flex;
+    flex-direction: column;
+}
+
+.team-info h2 {
+    margin-bottom: 4px;
+}
+
+.team-info .team-subtitle {
+    color: var(--text-secondary);
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: var(--space-md);
+}
+
+/* Active member bio */
+.team-member-bio {
+    flex: 1;
+}
+
+/* Member header: name + role */
+.team-member-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-sm);
+}
+
+.team-member-name {
+    font-family: var(--font-heading);
+    font-size: 1.3rem;
+    color: var(--text-heading);
+}
+
+.team-member-pronouns {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+    margin-left: 4px;
+}
+
+.team-member-role {
+    display: inline-block;
+    font-family: var(--font-body);
+    font-weight: 800;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 4px 12px;
+    border-radius: 8px;
+    margin-left: auto;
+}
+
+.team-member-role.role-art {
+    background: rgba(144, 51, 140, 0.15);
+    color: var(--secondary-light);
+    border: 1px solid rgba(144, 51, 140, 0.3);
+}
+
+.team-member-role.role-build {
+    background: rgba(245, 158, 11, 0.15);
+    color: var(--accent-warm);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.team-member-role.role-director {
+    background: rgba(0, 134, 217, 0.15);
+    color: var(--primary-light);
+    border: 1px solid rgba(0, 134, 217, 0.3);
+}
+
+.team-member-role.role-manager {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--accent-green);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.team-member-role.role-community {
+    background: rgba(244, 114, 182, 0.15);
+    color: #f472b6;
+    border: 1px solid rgba(244, 114, 182, 0.3);
+}
+
+/* Bio text */
+.team-member-text {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.75;
+    font-weight: 600;
+    margin-bottom: var(--space-sm);
+}
+
+/* Selector row — carousel with arrows */
+.team-selector {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: var(--space-md);
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--border-color);
+}
+
+.team-selector-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    border: var(--border-width) solid var(--border-color);
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: var(--transition);
+    flex-shrink: 0;
+    font-size: 0.8rem;
+    outline: 3px solid transparent;
+    outline-offset: 2px;
+}
+
+.team-selector-arrow:hover {
+    border-color: var(--border-color-hover);
+    color: var(--text-primary);
+    background: var(--bg-card-hover);
+    outline-color: rgba(255, 255, 255, 0.75);
+}
+
+[data-theme="light"] .team-selector-arrow:hover {
+    outline-color: rgba(0, 0, 0, 0.35);
+}
+
+.team-selector-heads {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    justify-content: center;
+}
+
+.team-selector-head {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    border: var(--border-width) solid var(--border-color);
+    cursor: pointer;
+    transition: var(--transition);
+    opacity: 0.5;
+    object-fit: contain;
+    background: var(--bg-secondary);
+    image-rendering: pixelated;
+    outline: 3px solid transparent;
+    outline-offset: 2px;
+}
+
+.team-selector-head:hover {
+    opacity: 0.8;
+    transform: translateY(-2px);
+    outline-color: rgba(255, 255, 255, 0.5);
+}
+
+[data-theme="light"] .team-selector-head:hover {
+    outline-color: rgba(0, 0, 0, 0.2);
+}
+
+.team-selector-head.active {
+    opacity: 1;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(0, 134, 217, 0.2);
+}
+
+/* Right side — character render (bust crop, contained in card) */
+.team-render {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    overflow: hidden;
+    padding: var(--space-md) var(--space-sm) 0;
+    position: relative;
+    min-height: 0;
+}
+
+.team-render-img {
+    width: auto;
+    max-height: 100%;
+    height: 420px;
+    object-fit: contain;
+    object-position: center bottom;
+    image-rendering: pixelated;
+    filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.3));
+}
+
+/* Placeholder for missing renders */
+.team-render-placeholder {
+    display: none;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    font-size: 5rem;
+    opacity: 0.2;
+}
+
+.team-render-placeholder.visible {
+    display: flex;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .team-card-inner {
+        grid-template-columns: 1fr;
+        min-height: auto;
+    }
+
+    .team-render {
+        height: 300px;
+        order: -1;
+        padding: var(--space-md) var(--space-sm) 0;
+        align-items: flex-start;
+    }
+
+    .team-render-img {
+        height: 400px;
+    }
+
+    .team-info {
+        padding: var(--space-md);
+    }
+}
+
+@media (max-width: 480px) {
+    .team-member-header {
+        flex-wrap: wrap;
+    }
+
+    .team-member-role {
+        margin-left: 0;
+        margin-top: 8px;
+    }
+
+    .team-render {
+        height: 240px;
+    }
+
+    .team-render-img {
+        height: 340px;
+    }
+}

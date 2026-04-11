@@ -1,0 +1,241 @@
+/* ========================================
+   SOLARIS — News Carousel
+   Animated slides, alternating layout, fun dots
+   ======================================== */
+
+.news-carousel-section {
+    padding: var(--space-lg) 0 var(--space-xl);
+    background: var(--bg-primary);
+}
+
+.news-carousel {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--border-radius-lg);
+    border: var(--border-width) solid var(--border-color);
+    box-shadow: var(--shadow-card);
+    background: var(--bg-card);
+}
+
+/* Each slide — fade + slide animation */
+.news-slide {
+    display: none;
+    opacity: 0;
+    transform: translateX(30px);
+    transition: opacity 0.5s cubic-bezier(0.25, 0.8, 0.25, 1), transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.news-slide.active {
+    display: block;
+}
+
+.news-slide.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.news-slide.slide-out {
+    opacity: 0;
+    transform: translateX(-30px);
+}
+
+.news-slide-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 340px;
+    text-decoration: none;
+    color: var(--text-primary);
+    transition: var(--transition);
+}
+
+/* Alternating layout — swap image and text sides */
+.news-slide.layout-alt .news-slide-inner {
+    direction: rtl;
+}
+
+.news-slide.layout-alt .news-slide-inner > * {
+    direction: ltr;
+}
+
+a.news-slide-inner:hover {
+    color: var(--text-primary);
+}
+
+/* Image side */
+.news-slide-image {
+    overflow: hidden;
+    position: relative;
+}
+
+.news-slide-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+a.news-slide-inner:hover .news-slide-image img {
+    transform: scale(1.04);
+}
+
+.news-slide-placeholder {
+    width: 100%;
+    height: 100%;
+    min-height: 340px;
+    background: linear-gradient(135deg, rgba(0, 134, 217, 0.08), rgba(144, 51, 140, 0.08));
+}
+
+/* Info side */
+.news-slide-info {
+    padding: var(--space-lg);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.news-slide-date {
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--primary-light);
+    margin-bottom: var(--space-xs);
+}
+
+.news-slide-title {
+    font-size: 1.6rem;
+    line-height: 1.25;
+    margin-bottom: var(--space-sm);
+}
+
+.news-slide-summary {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.7;
+    margin-bottom: var(--space-sm);
+}
+
+.news-slide-author {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+}
+
+/* Carousel nav — arrows + shape dots */
+.news-carousel-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-md);
+    margin-top: var(--space-md);
+}
+
+.news-nav-arrow {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--border-radius-sm);
+    background: var(--bg-card);
+    border: var(--border-width) solid var(--border-color);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+    outline: 3px solid transparent;
+    outline-offset: 3px;
+}
+
+.news-nav-arrow:hover {
+    border-color: var(--border-color-hover);
+    color: var(--text-primary);
+    transform: translateY(-2px);
+    outline-color: rgba(255, 255, 255, 0.75);
+}
+
+[data-theme="light"] .news-nav-arrow:hover {
+    outline-color: rgba(0, 0, 0, 0.35);
+}
+
+/* Fun shape dots */
+.news-dots {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.news-dot {
+    width: 10px;
+    height: 10px;
+    background: var(--border-color);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: var(--transition);
+    padding: 0;
+    transform: none;
+}
+
+.news-dot:hover {
+    background: var(--text-secondary);
+    transform: scale(1.2);
+}
+
+/* Active dot gets a random fun shape via JS data-shape attribute */
+.news-dot.active {
+    background: var(--primary);
+    box-shadow: 0 0 10px rgba(0, 134, 217, 0.5);
+    width: 14px;
+    height: 14px;
+}
+
+.news-dot.active[data-shape="diamond"] {
+    border-radius: 2px;
+    transform: rotate(45deg);
+}
+
+.news-dot.active[data-shape="star"] {
+    border-radius: 0;
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    width: 16px;
+    height: 16px;
+}
+
+.news-dot.active[data-shape="circle"] {
+    border-radius: 50%;
+}
+
+.news-dot.active[data-shape="square"] {
+    border-radius: 3px;
+    transform: rotate(0deg);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .news-slide-inner {
+        grid-template-columns: 1fr;
+        min-height: auto;
+    }
+
+    .news-slide.layout-alt .news-slide-inner {
+        direction: ltr;
+    }
+
+    .news-slide-image {
+        aspect-ratio: 16 / 9;
+    }
+
+    .news-slide-info {
+        padding: var(--space-md);
+    }
+
+    .news-slide-title {
+        font-size: 1.3rem;
+    }
+
+    .news-slide-placeholder {
+        min-height: 200px;
+    }
+}

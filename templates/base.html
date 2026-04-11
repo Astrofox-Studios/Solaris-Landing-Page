@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Solaris{% endblock %}</title>
+    <meta name="description" content="{% block description %}Solaris — A new dawn in Minecraft awaits. Join us at playsolaris.net{% endblock %}">
+    <meta property="og:title" content="{% block og_title %}Solaris{% endblock %}">
+    <meta property="og:description" content="A new dawn in Minecraft awaits">
+    <meta property="og:type" content="website">
+
+    <!-- Fonts loaded via main.css @import -->
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
+    {% block extra_css %}{% endblock %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">
+
+    <!-- Theme: apply saved preference before paint -->
+    <script>
+        (function() {
+            var theme = localStorage.getItem('solaris-theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+</head>
+<body>
+    {% include 'partials/header.html' %}
+    <div class="nav-overlay" id="nav-overlay"></div>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    {% include 'partials/footer.html' %}
+
+    <!-- Play Now Modal (global — header button on all pages) -->
+    <div class="modal-overlay" id="play-modal">
+        <div class="modal-card">
+            <button class="modal-close" id="play-modal-close" aria-label="Close">&times;</button>
+            <h3>Join Solaris</h3>
+            <p class="modal-desc">Add our server to Minecraft Java Edition and jump in!</p>
+            <div class="modal-steps">
+                <div class="modal-step">
+                    <span class="modal-step-num">1</span>
+                    <span>Open Minecraft Java Edition</span>
+                </div>
+                <div class="modal-step">
+                    <span class="modal-step-num">2</span>
+                    <span>Go to <strong>Multiplayer</strong> → <strong>Add Server</strong></span>
+                </div>
+                <div class="modal-step">
+                    <span class="modal-step-num">3</span>
+                    <span>Enter the server address below</span>
+                </div>
+            </div>
+            <div class="modal-ip-box">
+                <code class="modal-ip-text">playsolaris.net</code>
+                <button class="btn btn-primary modal-copy-btn" id="modal-copy-ip">Copy IP</button>
+            </div>
+            <p class="modal-versions">Supports <strong>1.21.4</strong>, <strong>1.21.5</strong> &amp; <strong>1.26.1</strong> (when released)</p>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/play-modal.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

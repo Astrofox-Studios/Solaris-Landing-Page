@@ -1,0 +1,67 @@
+/* ========================================
+   SOLARIS — Store CTA Section
+   Bold, chunky, game-like
+   ======================================== */
+
+.store-cta {
+    padding: var(--space-xl) 0;
+    background: var(--bg-primary);
+    position: relative;
+}
+
+.store-banner {
+    text-align: center;
+    padding: var(--space-lg) var(--space-md);
+    background: var(--bg-card);
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--border-radius-lg);
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+}
+
+/* Gradient accent strip at top */
+.store-banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gradient-primary);
+}
+
+/* Decorative background shape */
+.store-banner::after {
+    content: '';
+    position: absolute;
+    top: -60px;
+    right: -60px;
+    width: 200px;
+    height: 200px;
+    background: var(--primary);
+    border-radius: 40px;
+    transform: rotate(45deg);
+    opacity: 0.06;
+    pointer-events: none;
+}
+
+.store-banner h2 {
+    position: relative;
+    margin-bottom: var(--space-sm);
+}
+
+.store-banner p {
+    position: relative;
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: var(--space-md);
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.store-banner .btn {
+    position: relative;
+}

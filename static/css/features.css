@@ -1,0 +1,96 @@
+/* ========================================
+   SOLARIS — Features Section
+   Chunky cards, thick borders, playful
+   ======================================== */
+
+.features {
+    padding: var(--space-xl) 0;
+    position: relative;
+    background: var(--bg-primary);
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-md);
+}
+
+.feature-card {
+    background: var(--bg-card);
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--border-radius-lg);
+    padding: var(--space-md) var(--space-md) calc(var(--space-md) + 4px);
+    transition: var(--transition);
+    box-shadow: var(--shadow-card);
+    position: relative;
+    overflow: hidden;
+}
+
+.feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gradient-primary);
+    border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
+    opacity: 0;
+    transition: var(--transition);
+}
+
+.feature-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--border-color-hover);
+    box-shadow: var(--shadow-card-hover);
+}
+
+.feature-card:hover::before {
+    opacity: 1;
+}
+
+.feature-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--space-sm);
+    font-size: 1.6rem;
+    color: #ffffff;
+    position: relative;
+}
+
+/* Each card gets its own icon bg color for personality */
+.feature-card:nth-child(1) .feature-icon {
+    background: linear-gradient(135deg, #0086D9, #00a8ff);
+    box-shadow: 0 4px 15px rgba(0, 134, 217, 0.3);
+}
+
+.feature-card:nth-child(2) .feature-icon {
+    background: linear-gradient(135deg, #90338C, #c044bb);
+    box-shadow: 0 4px 15px rgba(144, 51, 140, 0.3);
+}
+
+.feature-card:nth-child(3) .feature-icon {
+    background: linear-gradient(135deg, #10b981, #34d399);
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+}
+
+.feature-card:nth-child(4) .feature-icon {
+    background: linear-gradient(135deg, #f59e0b, #fbbf24);
+    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+}
+
+.feature-card h3 {
+    margin-bottom: var(--space-xs);
+    font-size: 1.25rem;
+}
+
+.feature-card p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.7;
+    font-weight: 600;
+}
