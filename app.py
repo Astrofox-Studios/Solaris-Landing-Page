@@ -79,6 +79,11 @@ def media_page():
     return render_template("media.html")
 
 
+@app.route("/roadmap")
+def roadmap():
+    return render_template("roadmap.html")
+
+
 @app.route("/about")
 def about():
     return render_template("about.html")

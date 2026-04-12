@@ -1,0 +1,268 @@
+/* ========================================
+   SOLARIS — Roadmap (KSP2-style cards)
+   ======================================== */
+
+.roadmap-page {
+    padding-top: var(--space-md);
+    padding-bottom: var(--space-xl);
+}
+
+/* ====== Header ====== */
+.roadmap-header {
+    margin-top: calc(var(--header-height) + var(--space-lg));
+    margin-bottom: var(--space-md);
+}
+
+.roadmap-title {
+    font-family: var(--font-heading);
+    font-size: 4rem;
+    color: var(--text-heading);
+    line-height: 1;
+    margin-bottom: 4px;
+}
+
+.roadmap-subtitle {
+    font-family: var(--font-body);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--primary-light);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* ====== Progress Track ====== */
+.roadmap-track {
+    height: 6px;
+    background: var(--border-color);
+    border-radius: 3px;
+    margin-bottom: var(--space-lg);
+    position: relative;
+    overflow: hidden;
+}
+
+.roadmap-track-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 12%;
+    background: linear-gradient(90deg, var(--accent-green), var(--primary));
+    border-radius: 3px;
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
+}
+
+/* ====== Card Layout ====== */
+.roadmap-cards {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+    margin-bottom: var(--space-xl);
+}
+
+/* ====== Arrows Between Cards ====== */
+.roadmap-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 32px;
+    padding-top: 40px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    opacity: 0.4;
+}
+
+/* ====== Individual Card ====== */
+.roadmap-card {
+    flex: 1;
+    min-width: 0;
+    background: var(--bg-card);
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 24px 20px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: var(--transition);
+}
+
+.roadmap-card:hover {
+    border-color: var(--border-color-hover);
+    box-shadow: var(--shadow-card-hover);
+    transform: translateY(-3px);
+}
+
+/* Active card — highlighted */
+.roadmap-card--active {
+    border-color: var(--accent-green);
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.15), var(--shadow-card);
+}
+
+.roadmap-card--active:hover {
+    border-color: var(--accent-green);
+    box-shadow: 0 0 30px rgba(16, 185, 129, 0.25), var(--shadow-card-hover);
+}
+
+/* Pointer triangle on top of each card */
+.roadmap-card-arrow {
+    position: absolute;
+    top: -8px;
+    left: 24px;
+    width: 16px;
+    height: 16px;
+    background: var(--bg-card);
+    border-top: var(--border-width) solid var(--border-color);
+    border-left: var(--border-width) solid var(--border-color);
+    transform: rotate(45deg);
+}
+
+.roadmap-card--active .roadmap-card-arrow {
+    border-color: var(--accent-green);
+}
+
+.roadmap-card-label {
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--accent-green);
+    margin-bottom: 8px;
+}
+
+.roadmap-card-title {
+    font-family: var(--font-heading);
+    font-size: 1.3rem;
+    color: var(--text-heading);
+    margin-bottom: 20px;
+}
+
+/* ====== Milestone List ====== */
+.roadmap-card-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.roadmap-card-list li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.roadmap-card-list li i {
+    color: var(--primary-light);
+    font-size: 0.85rem;
+    width: 18px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+/* ====== Classified Items ====== */
+.roadmap-item--classified i {
+    color: #e74c3c;
+}
+
+.redacted {
+    font-family: 'Courier New', monospace;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 3px;
+    color: #e74c3c;
+    opacity: 0.7;
+    animation: classified-shimmer 3s ease-in-out infinite;
+    user-select: none;
+}
+
+@keyframes classified-shimmer {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 0.85; }
+}
+
+/* ====== Bottom CTA ====== */
+.roadmap-cta {
+    text-align: center;
+    padding: var(--space-lg);
+    background: var(--bg-card);
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--border-radius-lg);
+}
+
+.roadmap-cta h2 {
+    margin-bottom: var(--space-xs);
+}
+
+.roadmap-cta-text {
+    color: var(--text-secondary);
+    font-weight: 600;
+    margin-bottom: var(--space-md);
+    font-size: 1.05rem;
+}
+
+.roadmap-cta-buttons {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+}
+
+/* ====== Responsive ====== */
+@media (max-width: 1024px) {
+    .roadmap-cards {
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+    .roadmap-card {
+        flex: 1 1 calc(33% - 32px);
+        min-width: 200px;
+    }
+
+    .roadmap-arrow {
+        display: none;
+    }
+
+    .roadmap-card-arrow {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .roadmap-title {
+        font-size: 2.8rem;
+    }
+
+    .roadmap-card {
+        flex: 1 1 calc(50% - 16px);
+    }
+
+    .roadmap-card-title {
+        font-size: 1.15rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .roadmap-title {
+        font-size: 2.2rem;
+    }
+
+    .roadmap-cards {
+        flex-direction: column;
+    }
+
+    .roadmap-card {
+        flex: 1 1 100%;
+    }
+
+    .roadmap-cta {
+        padding: var(--space-md);
+    }
+
+    .roadmap-cta-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+}

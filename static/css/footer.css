@@ -67,6 +67,8 @@
 .footer-link:hover {
     color: var(--primary-light);
     background: rgba(0, 134, 217, 0.08);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 134, 217, 0.15);
 }
 
 /* Social bubbles */

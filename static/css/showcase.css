@@ -123,7 +123,7 @@
     padding: 0;
     position: relative;
     overflow: hidden;
-    background: var(--primary);
+    background: var(--season-colour);
 }
 
 .season-banner {
