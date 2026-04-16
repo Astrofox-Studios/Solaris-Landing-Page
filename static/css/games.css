@@ -23,9 +23,11 @@
     box-shadow: var(--shadow-card);
     transition: var(--transition);
     aspect-ratio: 4 / 5;
-    cursor: default;
+    cursor: pointer;
     outline: 3px solid transparent;
     outline-offset: 3px;
+    display: block;
+    text-decoration: none;
 }
 
 .game-card:hover {

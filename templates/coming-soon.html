@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Coming Soon — Solaris{% endblock %}
+{% block description %}This feature is on its way. Stay tuned for updates from the Solaris team.{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/coming-soon.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="coming-soon-page">
+    <div class="coming-soon-glow"></div>
+    <div class="coming-soon-content fade-in">
+        <h1 class="coming-soon-title">Coming Soon</h1>
+        <p class="coming-soon-desc">We're building something exciting. This page isn't quite ready yet — check back soon!</p>
+        <div class="coming-soon-actions">
+            <a href="/" class="btn btn-primary">Back to Home</a>
+            <a href="/blog" class="btn btn-secondary">Read the Blog</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

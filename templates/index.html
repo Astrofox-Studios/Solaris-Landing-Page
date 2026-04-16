@@ -44,7 +44,7 @@
 <!-- ====== NEWS CAROUSEL ====== -->
 <section class="news-carousel-section" id="news">
     <div class="section-container">
-        <h2 class="section-title">Latest News</h2>
+        <h2 class="section-title"><a href="/blog" class="section-title-link">Latest News</a></h2>
         <p class="section-subtitle">What's happening on Solaris</p>
 
         <div class="news-carousel" id="news-carousel">
@@ -53,10 +53,12 @@
             <div class="news-slide {% if loop.first %}active{% endif %}">
                 <a href="/blog/{{ post.slug }}" class="news-slide-inner">
                     <div class="news-slide-image">
-                        {% if post.thumbnail %}
+                        {% if post.header_image %}
+                        <img src="{{ post.header_image }}" alt="{{ post.title }}">
+                        {% elif post.thumbnail %}
                         <img src="{{ url_for('static', filename='images/blog/' + post.thumbnail) }}" alt="{{ post.title }}">
                         {% else %}
-                        <div class="news-slide-placeholder"></div>
+                        <div class="news-slide-placeholder"><i class="fa-solid fa-sun"></i></div>
                         {% endif %}
                     </div>
                     <div class="news-slide-info">
@@ -72,7 +74,7 @@
             <div class="news-slide active">
                 <div class="news-slide-inner">
                     <div class="news-slide-image">
-                        <div class="news-slide-placeholder"></div>
+                        <div class="news-slide-placeholder"><i class="fa-solid fa-sun"></i></div>
                     </div>
                     <div class="news-slide-info">
                         <span class="news-slide-date">Stay tuned</span>
@@ -96,14 +98,14 @@
 <section class="stats-section" id="stats">
     <div class="section-container">
         <div class="stats-grid">
-            <a href="#" class="stat-card stat-discord fade-in" target="_blank" rel="noopener">
+            <a href="/coming-soon" class="stat-card stat-discord fade-in">
                 <i class="fa-brands fa-discord"></i>
                 <div class="stat-card-text">
                     <span class="stat-card-label">Discord</span>
                     <span class="stat-card-value">Join the community</span>
                 </div>
             </a>
-            <a href="#" class="stat-card stat-store fade-in" target="_blank" rel="noopener">
+            <a href="/coming-soon" class="stat-card stat-store fade-in">
                 <i class="fa-solid fa-store"></i>
                 <div class="stat-card-text">
                     <span class="stat-card-label">Store</span>
@@ -134,7 +136,7 @@
         <h2 class="section-title">Our Games</h2>
         <p class="section-subtitle">Something's brewing... stay tuned</p>
         <div class="games-grid">
-            <div class="game-card fade-in">
+            <a href="/coming-soon" class="game-card fade-in">
                 <div class="game-card-bg">
                     <img src="{{ url_for('static', filename='images/media/6.png') }}" alt="">
                 </div>
@@ -145,8 +147,8 @@
                     <span class="game-card-mystery">?</span>
                     <p class="game-card-hint">Venture deep below... something lurks in the dark</p>
                 </div>
-            </div>
-            <div class="game-card fade-in">
+            </a>
+            <a href="/coming-soon" class="game-card fade-in">
                 <div class="game-card-bg">
                     <img src="{{ url_for('static', filename='images/media/7.png') }}" alt="">
                 </div>
@@ -157,8 +159,8 @@
                     <span class="game-card-mystery">?</span>
                     <p class="game-card-hint">When the world breaks apart, only the bold survive</p>
                 </div>
-            </div>
-            <div class="game-card fade-in">
+            </a>
+            <a href="/coming-soon" class="game-card fade-in">
                 <div class="game-card-bg">
                     <img src="{{ url_for('static', filename='images/media/5.png') }}" alt="">
                 </div>
@@ -169,7 +171,7 @@
                     <span class="game-card-mystery">?</span>
                     <p class="game-card-hint">Speed, precision, and nerves of steel</p>
                 </div>
-            </div>
+            </a>
         </div>
     </div>
 </section>
@@ -247,10 +249,10 @@
             <h2>Join the Community</h2>
             <p class="community-desc">Be part of something from the very beginning. Join our Discord to meet the team, chat with other players, and get exclusive early access to updates.</p>
             <div class="community-cta-group">
-                <a href="#" class="btn btn-discord" target="_blank" rel="noopener">
+                <a href="/coming-soon" class="btn btn-discord">
                     <i class="fa-brands fa-discord"></i> Join Discord
                 </a>
-                <a href="#" class="btn btn-secondary" target="_blank" rel="noopener">
+                <a href="/coming-soon" class="btn btn-secondary">
                     <i class="fa-brands fa-x-twitter"></i> Follow Us
                 </a>
             </div>
@@ -290,15 +292,15 @@
     </div>
 </section>
 
-<!-- Wave divider (cosmetics → season) -->
-<div class="section-divider" style="background: #10b981;">
+<!-- Wave divider (cosmetics → season) — hidden with season section -->
+<div class="section-divider" style="background: #10b981; display:none;">
     <svg viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M0,80 L0,20 C480,80 960,0 1440,40 L1440,80 Z" fill="var(--season-colour)"/>
     </svg>
 </div>
 
-<!-- ====== SEASON SPOTLIGHT ====== -->
-<section class="season-section" id="season">
+<!-- ====== SEASON SPOTLIGHT — hidden until ready ====== -->
+<section class="season-section" id="season" style="display:none;">
     <div class="season-banner">
         <div class="season-card fade-in">
             <div class="season-info">
@@ -340,8 +342,16 @@
     </div>
 </section>
 
-<!-- Multi-wave divider (season → team) -->
-<div class="section-divider" style="background: var(--season-colour); margin-top: -3px;">
+<!-- Multi-wave divider (season → team) — hidden with season section -->
+<div class="section-divider" style="background: var(--season-colour); margin-top: -3px; display:none;">
+    <svg viewBox="0 0 1440 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,40 C240,80 480,10 720,50 C960,80 1200,20 1440,40 L1440,100 L0,100 Z" fill="var(--accent-section-warm)" opacity="0.5"/>
+        <path d="M0,60 C360,20 720,80 1080,40 C1260,25 1380,35 1440,30 L1440,100 L0,100 Z" fill="var(--accent-section-warm)"/>
+    </svg>
+</div>
+
+<!-- Bridge divider (cosmetics → team, shown when season is hidden) -->
+<div class="section-divider" style="background: #10b981;">
     <svg viewBox="0 0 1440 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M0,40 C240,80 480,10 720,50 C960,80 1200,20 1440,40 L1440,100 L0,100 Z" fill="var(--accent-section-warm)" opacity="0.5"/>
         <path d="M0,60 C360,20 720,80 1080,40 C1260,25 1380,35 1440,30 L1440,100 L0,100 Z" fill="var(--accent-section-warm)"/>

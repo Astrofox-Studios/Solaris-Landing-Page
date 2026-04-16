@@ -1,11 +1,29 @@
 from flask import Flask, render_template, abort
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, date
 import frontmatter
 import markdown
+import re
 
 app = Flask(__name__)
 BLOG_DIR = Path("content/blog")
+OUTDATED_CUTOFF = date(2026, 1, 1)
+
+
+def process_image_tags(content):
+    """Convert [image:path] to HTML figure/img tags."""
+    return re.sub(
+        r'\[image:([^\]]+)\]',
+        r'<figure class="post-figure"><img src="\1" alt=""></figure>',
+        content
+    )
+
+
+def normalize_date(d):
+    """Ensure we always have a date object for comparison."""
+    if isinstance(d, datetime):
+        return d.date()
+    return d
 
 
 def get_all_posts():
@@ -16,14 +34,18 @@ def get_all_posts():
 
     for filepath in BLOG_DIR.glob("*.md"):
         post = frontmatter.load(filepath)
+        post_date = post.get("date", datetime.now().date())
+        post_date = normalize_date(post_date)
         posts.append({
             "slug": filepath.stem,
             "title": post.get("title", "Untitled"),
-            "date": post.get("date", datetime.now().date()),
+            "date": post_date,
             "author": post.get("author", "The Solaris Team"),
             "thumbnail": post.get("thumbnail", ""),
+            "header_image": post.get("header_image", ""),
             "summary": post.get("summary", ""),
             "tags": post.get("tags", []),
+            "is_outdated": post_date < OUTDATED_CUTOFF,
         })
 
     posts.sort(key=lambda p: p["date"], reverse=True)
@@ -37,20 +59,40 @@ def get_post(slug):
         return None
 
     post = frontmatter.load(filepath)
+    processed_content = process_image_tags(post.content)
     html_content = markdown.markdown(
-        post.content,
+        processed_content,
         extensions=["fenced_code", "codehilite", "tables", "toc"]
     )
+
+    post_date = post.get("date", datetime.now().date())
+    post_date = normalize_date(post_date)
+    tags = post.get("tags", [])
+
+    all_posts = get_all_posts()
+    other_posts = [p for p in all_posts if p["slug"] != slug]
+
+    # Recommended: posts sharing at least one tag; fall back to latest
+    if tags:
+        recommended = [p for p in other_posts if set(p["tags"]) & set(tags)][:5]
+        if not recommended:
+            recommended = other_posts[:5]
+    else:
+        recommended = other_posts[:5]
 
     return {
         "slug": slug,
         "title": post.get("title", "Untitled"),
-        "date": post.get("date", datetime.now().date()),
+        "date": post_date,
         "author": post.get("author", "The Solaris Team"),
         "thumbnail": post.get("thumbnail", ""),
+        "header_image": post.get("header_image", ""),
         "summary": post.get("summary", ""),
-        "tags": post.get("tags", []),
+        "tags": tags,
         "content": html_content,
+        "is_outdated": post_date < OUTDATED_CUTOFF,
+        "latest_posts": other_posts[:5],
+        "recommended_posts": recommended,
     }
 
 
@@ -72,6 +114,11 @@ def blog_post(slug):
     if not post:
         abort(404)
     return render_template("blog/post.html", post=post)
+
+
+@app.route("/coming-soon")
+def coming_soon():
+    return render_template("coming-soon.html")
 
 
 @app.route("/media")

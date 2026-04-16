@@ -8,17 +8,24 @@
 {% endblock %}
 
 {% block content %}
+{% set current_posts = posts | selectattr('is_outdated', 'equalto', false) | list %}
+{% set outdated_posts = posts | selectattr('is_outdated', 'equalto', true) | list %}
+
 <section class="blog-page">
     <div class="section-container">
         <h1 class="page-title">Blog</h1>
+
+        {% if current_posts %}
         <div class="blog-grid">
-            {% for post in posts %}
+            {% for post in current_posts %}
             <a href="/blog/{{ post.slug }}" class="blog-card fade-in">
                 <div class="blog-card-thumbnail">
-                    {% if post.thumbnail %}
+                    {% if post.header_image %}
+                    <img src="{{ post.header_image }}" alt="{{ post.title }}">
+                    {% elif post.thumbnail %}
                     <img src="{{ url_for('static', filename='images/blog/' + post.thumbnail) }}" alt="{{ post.title }}">
                     {% else %}
-                    <div class="blog-card-placeholder"></div>
+                    <div class="blog-card-placeholder"><i class="fa-solid fa-sun"></i></div>
                     {% endif %}
                 </div>
                 <div class="blog-card-body">
@@ -29,9 +36,66 @@
             </a>
             {% endfor %}
         </div>
+        {% endif %}
+
         {% if not posts %}
         <p class="blog-empty">No posts yet. Check back soon!</p>
         {% endif %}
+
+        {% if outdated_posts %}
+        <div class="blog-outdated-section">
+            <button class="blog-outdated-toggle" id="outdated-toggle" aria-expanded="false">
+                <i class="fa-solid fa-box-archive"></i>
+                Older &amp; Archived Posts
+                <span class="outdated-count">{{ outdated_posts | length }}</span>
+                <i class="fa-solid fa-chevron-down outdated-chevron"></i>
+            </button>
+            <div class="blog-outdated-grid" id="outdated-grid" hidden>
+                <p class="outdated-notice-listing">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    These posts are from before 2026 and may be outdated. Solaris is now building an original server scheduled for release in summer 2026.
+                </p>
+                <div class="blog-grid blog-grid-outdated">
+                    {% for post in outdated_posts %}
+                    <a href="/blog/{{ post.slug }}" class="blog-card blog-card-archived fade-in">
+                        <div class="blog-card-thumbnail">
+                            {% if post.header_image %}
+                            <img src="{{ post.header_image }}" alt="{{ post.title }}">
+                            {% elif post.thumbnail %}
+                            <img src="{{ url_for('static', filename='images/blog/' + post.thumbnail) }}" alt="{{ post.title }}">
+                            {% else %}
+                            <div class="blog-card-placeholder"><i class="fa-solid fa-sun"></i></div>
+                            {% endif %}
+                            <span class="archived-badge"><i class="fa-solid fa-box-archive"></i> Archived</span>
+                        </div>
+                        <div class="blog-card-body">
+                            <span class="blog-card-date">{{ post.date.strftime('%B %d, %Y') if post.date else '' }}</span>
+                            <h3 class="blog-card-title">{{ post.title }}</h3>
+                            <p class="blog-card-summary">{{ post.summary }}</p>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
     </div>
 </section>
+
+<script>
+(function() {
+    var btn = document.getElementById('outdated-toggle');
+    var grid = document.getElementById('outdated-grid');
+    if (!btn || !grid) return;
+    btn.addEventListener('click', function() {
+        var expanded = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', String(!expanded));
+        if (expanded) {
+            grid.hidden = true;
+        } else {
+            grid.hidden = false;
+        }
+    });
+})();
+</script>
 {% endblock %}

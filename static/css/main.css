@@ -151,6 +151,16 @@ h4 { font-size: 1.1rem; }
     margin-bottom: var(--space-sm);
 }
 
+.section-title-link {
+    color: inherit;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.section-title-link:hover {
+    color: var(--primary-light);
+}
+
 .section-subtitle {
     text-align: center;
     color: var(--text-secondary);

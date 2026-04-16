@@ -4,29 +4,44 @@
             <a href="/" class="logo">
                 <span class="logo-text">SOLARIS</span>
             </a>
-            <nav class="main-nav" id="main-nav">
+            <!-- Desktop nav — hidden on mobile -->
+            <nav class="desktop-nav" aria-label="Main navigation">
                 <ul class="nav-links">
                     <li><a href="/"><i class="fa-solid fa-house"></i> Home</a></li>
-                    <li><a href="#" class="nav-disabled"><i class="fa-solid fa-scroll"></i> Forms</a></li>
-                    <li><a href="#" class="nav-disabled"><i class="fa-solid fa-book"></i> Wiki</a></li>
-                    <li><a href="#news"><i class="fa-solid fa-newspaper"></i> News</a></li>
+                    <li><a href="/coming-soon" class="nav-disabled"><i class="fa-solid fa-scroll"></i> Forms</a></li>
+                    <li><a href="/coming-soon" class="nav-disabled"><i class="fa-solid fa-book"></i> Wiki</a></li>
+                    <li><a href="/blog"><i class="fa-solid fa-newspaper"></i> News</a></li>
                     <li><a href="/roadmap"><i class="fa-solid fa-route"></i> Roadmap</a></li>
                 </ul>
             </nav>
         </div>
 
         <div class="header-actions">
-            <a href="#" class="btn btn-header-secondary" target="_blank" rel="noopener">Store</a>
+            <a href="/coming-soon" class="btn btn-header-secondary">Store</a>
             <button class="btn btn-primary btn-header-play" id="header-play-btn">Play Now</button>
             <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
                 <i class="fa-solid fa-sun icon-sun"></i>
                 <i class="fa-solid fa-moon icon-moon"></i>
             </button>
             <button class="hamburger" id="hamburger" aria-label="Toggle navigation" aria-expanded="false">
-                <span class="hamburger-line"></span>
-                <span class="hamburger-line"></span>
-                <span class="hamburger-line"></span>
+                <i class="fa-solid fa-burger icon-open"></i>
+                <i class="fa-solid fa-xmark icon-close"></i>
             </button>
         </div>
     </div>
 </header>
+
+<!-- Mobile nav drawer — outside <header> to escape its transform context -->
+<nav class="main-nav" id="main-nav" aria-label="Mobile navigation">
+    <ul class="nav-links">
+        <li><a href="/"><i class="fa-solid fa-house"></i> Home</a></li>
+        <li><a href="/coming-soon" class="nav-disabled"><i class="fa-solid fa-scroll"></i> Forms</a></li>
+        <li><a href="/coming-soon" class="nav-disabled"><i class="fa-solid fa-book"></i> Wiki</a></li>
+        <li><a href="/blog"><i class="fa-solid fa-newspaper"></i> News</a></li>
+        <li><a href="/roadmap"><i class="fa-solid fa-route"></i> Roadmap</a></li>
+    </ul>
+    <div class="nav-mobile-actions">
+        <a href="/coming-soon" class="btn btn-secondary nav-mobile-btn">Store</a>
+        <button class="btn btn-primary nav-mobile-btn" id="mobile-play-btn">Play Now</button>
+    </div>
+</nav>

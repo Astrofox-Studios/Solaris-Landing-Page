@@ -42,6 +42,16 @@ document.addEventListener('DOMContentLoaded', () => {
         mainNav.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', closeMenu);
         });
+
+        // Mobile Play Now button triggers the play modal
+        const mobilePLayBtn = document.getElementById('mobile-play-btn');
+        if (mobilePLayBtn) {
+            mobilePLayBtn.addEventListener('click', () => {
+                closeMenu();
+                const playModal = document.getElementById('play-modal');
+                if (playModal) playModal.classList.add('active');
+            });
+        }
     }
 
     if (navOverlay) {

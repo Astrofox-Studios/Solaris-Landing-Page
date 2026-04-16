@@ -1,0 +1,60 @@
+/* ========================================
+   SOLARIS — Coming Soon Page
+   ======================================== */
+
+.coming-soon-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: calc(var(--header-height) + var(--space-lg)) var(--space-sm) var(--space-xl);
+    position: relative;
+    overflow: hidden;
+    background: var(--bg-primary);
+}
+
+.coming-soon-glow {
+    position: absolute;
+    width: 700px;
+    height: 700px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(50, 90, 211, 0.14) 0%, rgba(105, 41, 183, 0.06) 55%, transparent 75%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+.coming-soon-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    max-width: 500px;
+    width: 100%;
+}
+
+.coming-soon-title {
+    font-family: var(--font-heading);
+    font-size: 3.5rem;
+    color: var(--text-heading);
+    margin-bottom: var(--space-sm);
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.coming-soon-desc {
+    color: var(--text-secondary);
+    font-size: 1.05rem;
+    line-height: 1.7;
+    margin-bottom: var(--space-md);
+    font-weight: 600;
+}
+
+.coming-soon-actions {
+    display: flex;
+    gap: var(--space-sm);
+    justify-content: center;
+    flex-wrap: wrap;
+}

@@ -2,6 +2,7 @@
 
 {% block title %}{{ post.title }}{% endblock %}
 {% block description %}{{ post.summary }}{% endblock %}
+{% block og_title %}{{ post.title }} — Solaris{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/blog.css') }}">
@@ -9,25 +10,135 @@
 
 {% block content %}
 <article class="blog-post-page">
+
+    {% if post.header_image %}
+    <div class="post-hero">
+        <img src="{{ post.header_image }}" alt="{{ post.title }}" class="post-hero-img">
+        <div class="post-hero-overlay"></div>
+    </div>
+    {% endif %}
+
     <div class="section-container">
         <a href="/blog" class="back-link">&larr; Back to Blog</a>
-        <header class="post-header">
-            <h1 class="post-title">{{ post.title }}</h1>
-            <div class="post-meta">
-                <span class="post-date">{{ post.date.strftime('%B %d, %Y') if post.date else '' }}</span>
-                <span class="post-author">by {{ post.author }}</span>
+
+        <div class="post-layout">
+            <!-- Main content -->
+            <div class="post-main">
+                <header class="post-header">
+                    <h1 class="post-title">{{ post.title }}</h1>
+                    <div class="post-meta">
+                        <span class="post-date">{{ post.date.strftime('%B %d, %Y') if post.date else '' }}</span>
+                        <span class="post-author">by {{ post.author }}</span>
+                    </div>
+                    {% if post.tags %}
+                    <div class="post-tags">
+                        {% for tag in post.tags %}
+                        <span class="tag">{{ tag }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </header>
+
+                {% if post.is_outdated %}
+                <div class="outdated-banner" role="alert">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <div class="outdated-banner-text">
+                        <strong>Archived post</strong> This post is outdated and archived. Solaris is now back to making an original server scheduled for release in summer 2026.
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="post-content">
+                    {{ post.content | safe }}
+                </div>
             </div>
-            {% if post.tags %}
-            <div class="post-tags">
-                {% for tag in post.tags %}
-                <span class="tag">{{ tag }}</span>
-                {% endfor %}
-            </div>
-            {% endif %}
-        </header>
-        <div class="post-content">
-            {{ post.content | safe }}
+
+            <!-- Sidebar -->
+            <aside class="post-sidebar">
+                <div class="sidebar-tabs" role="tablist">
+                    <button class="sidebar-tab active" id="tab-latest" role="tab" aria-selected="true" aria-controls="panel-latest" data-panel="panel-latest">Latest</button>
+                    <button class="sidebar-tab" id="tab-recommended" role="tab" aria-selected="false" aria-controls="panel-recommended" data-panel="panel-recommended">Recommended</button>
+                </div>
+
+                <div class="sidebar-panel" id="panel-latest" role="tabpanel" aria-labelledby="tab-latest">
+                    {% if post.latest_posts %}
+                    {% for p in post.latest_posts %}
+                    <a href="/blog/{{ p.slug }}" class="sidebar-post-card">
+                        <div class="sidebar-post-thumb">
+                            {% if p.header_image %}
+                            <img src="{{ p.header_image }}" alt="{{ p.title }}">
+                            {% elif p.thumbnail %}
+                            <img src="{{ url_for('static', filename='images/blog/' + p.thumbnail) }}" alt="{{ p.title }}">
+                            {% else %}
+                            <div class="sidebar-post-placeholder"><i class="fa-solid fa-sun"></i></div>
+                            {% endif %}
+                            {% if p.is_outdated %}
+                            <span class="sidebar-archived-badge"><i class="fa-solid fa-box-archive"></i></span>
+                            {% endif %}
+                        </div>
+                        <div class="sidebar-post-info">
+                            <span class="sidebar-post-date">{{ p.date.strftime('%b %d, %Y') if p.date else '' }}</span>
+                            <h4 class="sidebar-post-title">{{ p.title }}</h4>
+                        </div>
+                    </a>
+                    {% endfor %}
+                    {% else %}
+                    <p class="sidebar-empty">No other posts yet.</p>
+                    {% endif %}
+                </div>
+
+                <div class="sidebar-panel hidden" id="panel-recommended" role="tabpanel" aria-labelledby="tab-recommended">
+                    {% if post.recommended_posts %}
+                    {% for p in post.recommended_posts %}
+                    <a href="/blog/{{ p.slug }}" class="sidebar-post-card">
+                        <div class="sidebar-post-thumb">
+                            {% if p.header_image %}
+                            <img src="{{ p.header_image }}" alt="{{ p.title }}">
+                            {% elif p.thumbnail %}
+                            <img src="{{ url_for('static', filename='images/blog/' + p.thumbnail) }}" alt="{{ p.title }}">
+                            {% else %}
+                            <div class="sidebar-post-placeholder"><i class="fa-solid fa-sun"></i></div>
+                            {% endif %}
+                            {% if p.is_outdated %}
+                            <span class="sidebar-archived-badge"><i class="fa-solid fa-box-archive"></i></span>
+                            {% endif %}
+                        </div>
+                        <div class="sidebar-post-info">
+                            <span class="sidebar-post-date">{{ p.date.strftime('%b %d, %Y') if p.date else '' }}</span>
+                            <h4 class="sidebar-post-title">{{ p.title }}</h4>
+                        </div>
+                    </a>
+                    {% endfor %}
+                    {% else %}
+                    <p class="sidebar-empty">No recommended posts.</p>
+                    {% endif %}
+                </div>
+            </aside>
         </div>
     </div>
 </article>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function() {
+    var tabs = document.querySelectorAll('.sidebar-tab');
+    tabs.forEach(function(tab) {
+        tab.addEventListener('click', function() {
+            tabs.forEach(function(t) {
+                t.classList.remove('active');
+                t.setAttribute('aria-selected', 'false');
+            });
+            document.querySelectorAll('.sidebar-panel').forEach(function(p) {
+                p.classList.add('hidden');
+            });
+            tab.classList.add('active');
+            tab.setAttribute('aria-selected', 'true');
+            var panel = document.getElementById(tab.dataset.panel);
+            if (panel) panel.classList.remove('hidden');
+        });
+    });
+})();
+</script>
 {% endblock %}
