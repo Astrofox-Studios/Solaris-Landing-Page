@@ -69,10 +69,15 @@
     filter: brightness(1.2);
 }
 
-/* Nav — inline with logo */
-.main-nav {
+/* Desktop nav — inline with logo */
+.desktop-nav {
     display: flex;
     align-items: center;
+}
+
+/* Mobile nav drawer — hidden on desktop, shown via responsive.css */
+.main-nav {
+    display: none;
 }
 
 .nav-links {

@@ -51,12 +51,17 @@
         gap: 0;
     }
 
+    /* Hide the desktop inline nav on mobile */
+    .desktop-nav {
+        display: none;
+    }
+
     /* Left-side slide drawer */
     .main-nav {
         position: fixed;
         top: 0;
-        left: -320px;
-        width: 300px;
+        left: -300px;
+        width: 280px;
         height: 100vh;
         background: var(--bg-card);
         border-right: var(--border-width) solid var(--border-color);
@@ -67,7 +72,7 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        padding: calc(var(--header-height) + var(--space-md)) var(--space-sm) var(--space-md);
+        padding: calc(var(--header-height) + var(--space-sm)) 0 var(--space-md);
         overflow-y: auto;
     }
 
@@ -81,8 +86,9 @@
 
     .nav-links {
         flex-direction: column;
-        gap: 4px;
+        gap: 2px;
         text-align: left;
+        padding: 0 var(--space-xs);
     }
 
     .nav-links li {
@@ -91,22 +97,25 @@
 
     .nav-links a {
         font-size: 1rem;
-        padding: 12px 16px;
+        padding: 11px 14px;
         border-radius: var(--border-radius-sm);
         display: flex;
         align-items: center;
         gap: 10px;
+        width: 100%;
     }
 
     .nav-links a i {
-        font-size: 0.9rem;
+        font-size: 0.85rem;
         opacity: 1;
-        width: 18px;
+        width: 16px;
         text-align: center;
+        flex-shrink: 0;
     }
 
     .nav-links a.nav-disabled {
         pointer-events: auto;
+        opacity: 0.4;
     }
 
     /* Action buttons inside the mobile drawer */
@@ -114,9 +123,9 @@
         display: flex;
         flex-direction: column;
         gap: var(--space-xs);
-        padding-top: var(--space-md);
+        padding: var(--space-sm) var(--space-xs) 0;
         border-top: var(--border-width) solid var(--border-color);
-        margin-top: var(--space-sm);
+        margin-top: var(--space-xs);
     }
 
     .nav-mobile-btn {
