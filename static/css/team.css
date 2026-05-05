@@ -50,9 +50,27 @@
     margin-bottom: var(--space-md);
 }
 
-/* Active member bio */
-.team-member-bio {
+/* Bio area — CSS grid stacking keeps the card at a fixed height
+   (tallest bio), so switching members never causes a layout jump */
+.team-bio-area {
+    display: grid;
     flex: 1;
+    align-content: start;
+}
+
+.team-member-bio {
+    grid-row: 1;
+    grid-column: 1;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
+}
+
+.team-member-bio.active {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
 }
 
 /* Member header: name + role */
@@ -116,6 +134,30 @@
     background: rgba(244, 114, 182, 0.15);
     color: #f472b6;
     border: 1px solid rgba(244, 114, 182, 0.3);
+}
+
+.team-member-role.role-admin {
+    background: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.team-member-role.role-infra {
+    background: rgba(100, 116, 139, 0.15);
+    color: #94a3b8;
+    border: 1px solid rgba(100, 116, 139, 0.3);
+}
+
+.team-member-role.role-music {
+    background: rgba(20, 184, 166, 0.15);
+    color: #2dd4bf;
+    border: 1px solid rgba(20, 184, 166, 0.3);
+}
+
+.team-member-role.role-3d {
+    background: rgba(249, 115, 22, 0.15);
+    color: #fb923c;
+    border: 1px solid rgba(249, 115, 22, 0.3);
 }
 
 /* Bio text */
@@ -249,19 +291,33 @@
         min-height: auto;
     }
 
+    /* Hide character render on mobile — too much vertical space */
     .team-render {
-        height: 300px;
-        order: -1;
-        padding: var(--space-md) var(--space-sm) 0;
-        align-items: flex-start;
-    }
-
-    .team-render-img {
-        height: 400px;
+        display: none;
     }
 
     .team-info {
         padding: var(--space-md);
+    }
+
+    /* Heads strip: full width, horizontal scroll, no visible scrollbar */
+    .team-selector-heads {
+        justify-content: flex-start;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        padding-bottom: 2px; /* prevent clipping of focus outlines */
+    }
+
+    .team-selector-heads::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Keep heads a consistent size — don't let flexbox squish them */
+    .team-selector-head {
+        flex-shrink: 0;
     }
 }
 
@@ -273,13 +329,5 @@
     .team-member-role {
         margin-left: 0;
         margin-top: 8px;
-    }
-
-    .team-render {
-        height: 240px;
-    }
-
-    .team-render-img {
-        height: 340px;
     }
 }

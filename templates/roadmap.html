@@ -1,119 +1,132 @@
 {% extends "base.html" %}
 
 {% block title %}Roadmap — Solaris{% endblock %}
-{% block description %}Follow the Solaris roadmap from development to launch and beyond{% endblock %}
+{% block description %}Follow the Solaris roadmap from Pre-Early Access through to Beta Release and beyond.{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/roadmap.css') }}">
 {% endblock %}
 
 {% block content %}
-<section class="roadmap-page">
+<div class="roadmap-page">
+
+    <!-- Header -->
+    <div class="roadmap-header">
+        <div class="section-container">
+            <div class="roadmap-header-inner fade-in">
+                <h1 class="roadmap-title">ROADMAP</h1>
+                <p class="roadmap-phase-label">Pre-Early Access</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Phase cards -->
+    <div class="roadmap-scroll-wrap">
+        <div class="section-container">
+            <div class="roadmap-phases">
+
+                <!-- Phase 1: Pre-Early Access (active) -->
+                <div class="roadmap-phase-card roadmap-phase-card--active fade-in">
+                    <div class="roadmap-phase-top">
+                        <span class="roadmap-you-are-here">You are here</span>
+                        <h2 class="roadmap-phase-title">PRE-EARLY<br>ACCESS</h2>
+                    </div>
+                    <div class="roadmap-phase-art" aria-hidden="true">
+                        <i class="fa-solid fa-palette"></i>
+                    </div>
+                    <div class="roadmap-phase-features">
+                        <div class="roadmap-feat-group">
+                            <p class="roadmap-feat-section">Economy</p>
+                            <p class="roadmap-feat-item"><span>+</span> Marketplace</p>
+                            <p class="roadmap-feat-item"><span>+</span> Bank &amp; Balance System</p>
+                            <p class="roadmap-feat-item"><span>+</span> Base Commands (/pay, /bal)</p>
+                        </div>
+                        <div class="roadmap-feat-group">
+                            <p class="roadmap-feat-section">Art Overhaul</p>
+                            <p class="roadmap-feat-item"><span>+</span> Finalised Block Texture Style</p>
+                            <p class="roadmap-feat-item"><span>+</span> Finalised UI Style</p>
+                            <p class="roadmap-feat-item"><span>+</span> Tons More Models</p>
+                        </div>
+                        <div class="roadmap-feat-group">
+                            <p class="roadmap-feat-section">Cosmetics</p>
+                            <p class="roadmap-feat-item"><span>+</span> Full Cosmetics System</p>
+                            <p class="roadmap-feat-item"><span>+</span> Titles, Handhelds, Hats, Furniture</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Phase 2: Early Access -->
+                <div class="roadmap-phase-card fade-in">
+                    <div class="roadmap-phase-top">
+                        <span class="roadmap-milestone-tag">Milestone</span>
+                        <h2 class="roadmap-phase-title">EARLY<br>ACCESS</h2>
+                    </div>
+                    <div class="roadmap-phase-art roadmap-phase-art--2" aria-hidden="true">
+                        <i class="fa-solid fa-rocket"></i>
+                    </div>
+                    <div class="roadmap-phase-features">
+                        <div class="roadmap-feat-group">
+                            <p class="roadmap-feat-section">Launch</p>
+                            <p class="roadmap-feat-item"><span>+</span> Official Trailer</p>
+                            <p class="roadmap-feat-item"><span>+</span> 2 Fully Playable Games</p>
+                            <p class="roadmap-feat-item"><span>+</span> Economy, Cosmetics &amp; More</p>
+                        </div>
+                        <div class="roadmap-feat-group">
+                            <p class="roadmap-feat-section">Housing System</p>
+                            <p class="roadmap-feat-item"><span>+</span> Planets &amp; Apartments</p>
+                            <p class="roadmap-feat-item"><span>+</span> Custom Game Blocks</p>
+                            <p class="roadmap-feat-item"><span>+</span> Full Housing Customisation</p>
+                        </div>
+                        <div class="roadmap-feat-group">
+                            <p class="roadmap-feat-section">Games</p>
+                            <p class="roadmap-feat-item"><span>+</span> Corrupted Cataclysm</p>
+                            <p class="roadmap-feat-item"><span>+</span> Cataclysm</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Phase 3: Beta Release -->
+                <div class="roadmap-phase-card fade-in">
+                    <div class="roadmap-phase-top">
+                        <h2 class="roadmap-phase-title">BETA<br>RELEASE</h2>
+                    </div>
+                    <div class="roadmap-phase-art roadmap-phase-art--3" aria-hidden="true">
+                        <i class="fa-solid fa-trophy"></i>
+                    </div>
+                    <div class="roadmap-phase-features">
+                        <div class="roadmap-feat-group">
+                            <p class="roadmap-feat-section">Competitive / Ranking</p>
+                            <p class="roadmap-feat-item"><span>+</span> Default Ranking System for Games</p>
+                            <p class="roadmap-feat-item"><span>+</span> Global Leaderboard</p>
+                            <p class="roadmap-feat-item"><span>+</span> Numerous Ranks to Climb</p>
+                        </div>
+                        <div class="roadmap-feat-group">
+                            <p class="roadmap-feat-section">Player Systems</p>
+                            <p class="roadmap-feat-item"><span>+</span> More Player-Inclusive Features</p>
+                            <p class="roadmap-feat-item"><span>+</span> Expanded Community Tools</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom CTA -->
     <div class="section-container">
-        <div class="roadmap-header fade-in">
-            <h1 class="roadmap-title">ROADMAP</h1>
-            <p class="roadmap-subtitle">Pre-Access</p>
-        </div>
-
-        <!-- Progress bar connecting the phases -->
-        <div class="roadmap-track fade-in">
-            <div class="roadmap-track-fill"></div>
-        </div>
-
-        <div class="roadmap-cards">
-
-            <!-- Phase 1: Development (Active) -->
-            <div class="roadmap-card roadmap-card--active fade-in">
-                <div class="roadmap-card-arrow"></div>
-                <div class="roadmap-card-label">You are here</div>
-                <h2 class="roadmap-card-title">Development</h2>
-                <ul class="roadmap-card-list">
-                    <li><i class="fa-solid fa-palette"></i> Art Overhaul</li>
-                    <li><i class="fa-solid fa-compass"></i> New Hub</li>
-                    <li><i class="fa-solid fa-puzzle-piece"></i> Hub Activities</li>
-                    <li><i class="fa-solid fa-eye"></i> Sneak Peeks</li>
-                    <li class="roadmap-item--classified"><i class="fa-solid fa-lock"></i> <span class="redacted">CLASSIFIED</span></li>
-                </ul>
-            </div>
-
-            <!-- Arrow -->
-            <div class="roadmap-arrow fade-in" aria-hidden="true">
-                <i class="fa-solid fa-chevron-right"></i>
-            </div>
-
-            <!-- Phase 2: Pre-Access -->
-            <div class="roadmap-card fade-in">
-                <div class="roadmap-card-arrow"></div>
-                <h2 class="roadmap-card-title">Pre-Access</h2>
-                <ul class="roadmap-card-list">
-                    <li><i class="fa-solid fa-door-open"></i> Open Weekend</li>
-                    <li><i class="fa-solid fa-square-poll-vertical"></i> Community Polls</li>
-                    <li class="roadmap-item--classified"><i class="fa-solid fa-lock"></i> <span class="redacted">CLASSIFIED</span></li>
-                    <li class="roadmap-item--classified"><i class="fa-solid fa-lock"></i> <span class="redacted">CLASSIFIED</span></li>
-                </ul>
-            </div>
-
-            <!-- Arrow -->
-            <div class="roadmap-arrow fade-in" aria-hidden="true">
-                <i class="fa-solid fa-chevron-right"></i>
-            </div>
-
-            <!-- Phase 3: Early Access -->
-            <div class="roadmap-card fade-in">
-                <div class="roadmap-card-arrow"></div>
-                <h2 class="roadmap-card-title">Early Access</h2>
-                <ul class="roadmap-card-list">
-                    <li><i class="fa-solid fa-film"></i> Trailer</li>
-                    <li><i class="fa-solid fa-wrench"></i> Day 1 Patch</li>
-                    <li class="roadmap-item--classified"><i class="fa-solid fa-lock"></i> <span class="redacted">CLASSIFIED</span></li>
-                </ul>
-            </div>
-
-            <!-- Arrow -->
-            <div class="roadmap-arrow fade-in" aria-hidden="true">
-                <i class="fa-solid fa-chevron-right"></i>
-            </div>
-
-            <!-- Phase 4: Open Beta -->
-            <div class="roadmap-card fade-in">
-                <div class="roadmap-card-arrow"></div>
-                <h2 class="roadmap-card-title">Open Beta</h2>
-                <ul class="roadmap-card-list">
-                    <li><i class="fa-solid fa-rocket"></i> Public Launch</li>
-                    <li><i class="fa-solid fa-gamepad"></i> 2 Big Games</li>
-                    <li><i class="fa-solid fa-users"></i> Staff Expansion</li>
-                </ul>
-            </div>
-
-            <!-- Arrow -->
-            <div class="roadmap-arrow fade-in" aria-hidden="true">
-                <i class="fa-solid fa-chevron-right"></i>
-            </div>
-
-            <!-- Phase 5: Season 1 -->
-            <div class="roadmap-card fade-in">
-                <h2 class="roadmap-card-title">Season 1</h2>
-                <ul class="roadmap-card-list">
-                    <li><i class="fa-solid fa-flag-checkered"></i> Seasons Go Live</li>
-                    <li class="roadmap-item--classified"><i class="fa-solid fa-lock"></i> <span class="redacted">CLASSIFIED</span></li>
-                </ul>
-            </div>
-
-        </div>
-
-        <!-- Bottom CTA -->
         <div class="roadmap-cta fade-in">
             <h2>Want to shape the mission?</h2>
             <p class="roadmap-cta-text">Join our community and help chart the course.</p>
             <div class="roadmap-cta-buttons">
                 <a href="https://discord.gg/solaris" class="btn btn-primary" target="_blank" rel="noopener">
-                    <i class="fa-brands fa-discord"></i> Join Discord
+                    <i class="fa-brands fa-discord" aria-hidden="true"></i> Join Discord
                 </a>
-                <a href="/#signup" class="btn btn-secondary">
-                    <i class="fa-solid fa-envelope"></i> Sign Up
+                <a href="/beta" class="btn btn-secondary">
+                    <i class="fa-solid fa-envelope" aria-hidden="true"></i> Sign Up for Beta
                 </a>
             </div>
         </div>
     </div>
-</section>
+
+</div>
 {% endblock %}

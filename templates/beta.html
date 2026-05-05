@@ -1,0 +1,263 @@
+{% extends "base.html" %}
+
+{% block title %}Beta Access | Solaris{% endblock %}
+{% block description %}Sign up for a chance at early access to the Solaris beta. Be among the first to play, and help shape a new dawn in Minecraft.{% endblock %}
+{% block og_title %}Solaris Beta — Early Access{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/beta.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<!-- ====== BETA HERO ====== -->
+<section class="beta-hero" id="beta-hero">
+    <canvas class="beta-particles" id="beta-particles"></canvas>
+
+    <div class="beta-orbs" aria-hidden="true">
+        <div class="beta-orb beta-orb-1"></div>
+        <div class="beta-orb beta-orb-2"></div>
+        <div class="beta-orb beta-orb-3"></div>
+    </div>
+
+    <div class="beta-hero-content">
+        <h1 class="beta-hero-title">
+            <span class="beta-title-line">SOLARIS</span>
+            <span class="beta-title-sub">BETA</span>
+        </h1>
+
+        <p class="beta-hero-tagline">Play before anyone else. Shape what Solaris becomes.</p>
+
+        <div class="beta-signup-card">
+            <form class="beta-form" id="beta-form" novalidate>
+                <div class="beta-form-row">
+                    <div class="beta-input-wrap">
+                        <i class="fa-solid fa-envelope beta-input-icon" aria-hidden="true"></i>
+                        <input
+                            type="email"
+                            name="email"
+                            id="beta-email"
+                            class="beta-email-input"
+                            placeholder="Enter your email address"
+                            required
+                            autocomplete="email"
+                        >
+                    </div>
+                    <button type="submit" class="btn btn-primary beta-submit-btn">
+                        <span class="beta-btn-label">Join the Beta</span>
+                        <i class="fa-solid fa-arrow-right beta-btn-arrow" aria-hidden="true"></i>
+                    </button>
+                </div>
+
+                <div class="beta-excitement">
+                    <p class="beta-excitement-label">What are you most excited about?</p>
+                    <div class="beta-chips">
+                        <label class="beta-chip">
+                            <input type="checkbox" name="excitement" value="minigames">
+                            <span><i class="fa-solid fa-gamepad" aria-hidden="true"></i> Minigames</span>
+                        </label>
+                        <label class="beta-chip">
+                            <input type="checkbox" name="excitement" value="voice">
+                            <span><i class="fa-solid fa-microphone" aria-hidden="true"></i> Voice Chat</span>
+                        </label>
+                        <label class="beta-chip">
+                            <input type="checkbox" name="excitement" value="cosmetics">
+                            <span><i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i> Cosmetics</span>
+                        </label>
+                        <label class="beta-chip">
+                            <input type="checkbox" name="excitement" value="economy">
+                            <span><i class="fa-solid fa-coins" aria-hidden="true"></i> Economy</span>
+                        </label>
+                        <label class="beta-chip">
+                            <input type="checkbox" name="excitement" value="housing">
+                            <span><i class="fa-solid fa-house" aria-hidden="true"></i> Housing</span>
+                        </label>
+                        <label class="beta-chip">
+                            <input type="checkbox" name="excitement" value="competitive">
+                            <span><i class="fa-solid fa-trophy" aria-hidden="true"></i> Ranked Play</span>
+                        </label>
+                        <label class="beta-chip">
+                            <input type="checkbox" name="excitement" value="community">
+                            <span><i class="fa-solid fa-users" aria-hidden="true"></i> Community</span>
+                        </label>
+                        <label class="beta-chip">
+                            <input type="checkbox" name="excitement" value="building">
+                            <span><i class="fa-solid fa-hammer" aria-hidden="true"></i> Building</span>
+                        </label>
+                    </div>
+                </div>
+            </form>
+
+            <div class="beta-success" id="beta-success" role="alert" aria-live="polite">
+                <div class="beta-success-icon" aria-hidden="true">
+                    <i class="fa-solid fa-check"></i>
+                </div>
+                <h3>You're on the list!</h3>
+                <p>We'll reach out when beta access drops. In the meantime, hang out with us on Discord.</p>
+                <div class="beta-success-actions">
+                    <a href="https://discord.gg/solaris" class="btn btn-primary" target="_blank" rel="noopener">
+                        <i class="fa-brands fa-discord" aria-hidden="true"></i> Join Discord
+                    </a>
+                    <a href="/roadmap" class="btn btn-secondary">View Roadmap</a>
+                </div>
+            </div>
+        </div>
+
+        <p class="beta-fine-print">Signing up enters you into a draw for beta access — spots are limited and not guaranteed. We'll only contact you when it's time.</p>
+    </div>
+
+    <div class="beta-wave" aria-hidden="true">
+        <svg viewBox="0 0 1440 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0,60 C360,120 720,0 1080,60 C1260,90 1380,80 1440,70 L1440,120 L0,120 Z" fill="var(--bg-primary)"/>
+        </svg>
+    </div>
+</section>
+
+<!-- ====== WHAT'S IN BETA ====== -->
+<section class="beta-features" id="beta-features">
+    <div class="section-container">
+        <h2 class="section-title fade-in">The Beta Experience</h2>
+        <p class="section-subtitle fade-in">Here's what beta players get access to from day one, and what's right around the corner.</p>
+
+        <div class="beta-features-grid">
+            <div class="beta-feature-card fade-in">
+                <div class="beta-feature-icon">
+                    <i class="fa-solid fa-gamepad" aria-hidden="true"></i>
+                </div>
+                <div class="beta-feature-body">
+                    <h3>Launch Minigames</h3>
+                    <p>Jump into the first wave of carefully crafted minigames, tested, tuned, and ready to play. Every game mode built with replayability at its core.</p>
+                </div>
+                <span class="beta-feature-badge">Day 1</span>
+            </div>
+
+            <div class="beta-feature-card fade-in">
+                <div class="beta-feature-icon beta-feature-icon--purple">
+                    <i class="fa-solid fa-microphone-lines" aria-hidden="true"></i>
+                </div>
+                <div class="beta-feature-body">
+                    <h3>Proximity Voice Chat</h3>
+                    <p>Hear players around you naturally with spatial proximity voice. No mods needed, built right into the server experience.</p>
+                </div>
+                <span class="beta-feature-badge">Day 1</span>
+            </div>
+
+            <div class="beta-feature-card fade-in">
+                <div class="beta-feature-icon beta-feature-icon--warm">
+                    <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
+                </div>
+                <div class="beta-feature-body">
+                    <h3>Astro Pass &amp; Cosmetics</h3>
+                    <p>Be among the first to try the full cosmetics system. Collect, equip, and flex your style with the Astro Pass — cosmetics only, never pay-to-win.</p>
+                </div>
+                <span class="beta-feature-badge beta-feature-badge--exclusive">Beta Exclusive</span>
+            </div>
+
+            <div class="beta-feature-card fade-in">
+                <div class="beta-feature-icon beta-feature-icon--green">
+                    <i class="fa-solid fa-comment-dots" aria-hidden="true"></i>
+                </div>
+                <div class="beta-feature-body">
+                    <h3>Shape the Game</h3>
+                    <p>Your bug reports and feedback directly change what we build next. Beta players are co-creators, not just testers.</p>
+                </div>
+                <span class="beta-feature-badge beta-feature-badge--green">High Impact</span>
+            </div>
+
+            <div class="beta-feature-card fade-in">
+                <div class="beta-feature-icon">
+                    <i class="fa-solid fa-coins" aria-hidden="true"></i>
+                </div>
+                <div class="beta-feature-body">
+                    <h3>Economy System</h3>
+                    <p>A full player economy with a marketplace, bank, and base commands. Trade, earn, and spend — a living in-game financial world.</p>
+                </div>
+                <span class="beta-feature-badge beta-feature-badge--upcoming">Coming Soon</span>
+            </div>
+
+            <div class="beta-feature-card fade-in">
+                <div class="beta-feature-icon beta-feature-icon--purple">
+                    <i class="fa-solid fa-house" aria-hidden="true"></i>
+                </div>
+                <div class="beta-feature-body">
+                    <h3>Housing &amp; Planets</h3>
+                    <p>Claim your own space — from apartments to full planets. Customise every block, add game blocks, and make it truly yours.</p>
+                </div>
+                <span class="beta-feature-badge beta-feature-badge--upcoming">Coming Soon</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Wave: features -> plan -->
+<div class="section-divider" style="background: var(--bg-primary);" aria-hidden="true">
+    <svg viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,20 C360,80 720,0 1080,50 C1260,70 1380,55 1440,40 L1440,80 L0,80 Z" fill="var(--bg-secondary)"/>
+    </svg>
+</div>
+
+<!-- ====== ROADMAP PLAN ====== -->
+<section class="beta-roadmap" id="beta-roadmap">
+    <div class="section-container">
+        <div class="beta-roadmap-inner fade-in">
+            <div class="beta-roadmap-text">
+                <p class="beta-eyebrow">The plan</p>
+                <h2>What comes after beta?</h2>
+                <p>We have a full roadmap built out across three phases, from our current Pre-Early Access sprint through to a full competitive Beta Release. Every milestone is tracked and public.</p>
+                <a href="/roadmap" class="btn btn-primary">
+                    View Full Roadmap <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                </a>
+            </div>
+
+            <div class="beta-roadmap-card">
+                <div class="roadmap-phase">
+                    <span class="roadmap-dot roadmap-dot--active" aria-hidden="true"></span>
+                    <div>
+                        <strong>Pre-Early Access</strong>
+                        <span>Art overhaul, economy, full cosmetics system</span>
+                    </div>
+                </div>
+                <div class="roadmap-phase">
+                    <span class="roadmap-dot" aria-hidden="true"></span>
+                    <div>
+                        <strong>Early Access — Milestone</strong>
+                        <span>Trailer, 2 playable games, housing and planets</span>
+                    </div>
+                </div>
+                <div class="roadmap-phase">
+                    <span class="roadmap-dot" aria-hidden="true"></span>
+                    <div>
+                        <strong>Beta Release</strong>
+                        <span>Ranked play, leaderboards, competitive system</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Wave: plan -> bottom CTA -->
+<div class="section-divider" style="background: var(--bg-secondary);" aria-hidden="true">
+    <svg viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,50 C360,0 720,70 1080,30 C1260,10 1380,25 1440,20 L1440,80 L0,80 Z" fill="var(--bg-primary)"/>
+    </svg>
+</div>
+
+<!-- ====== BOTTOM CTA ====== -->
+<section class="beta-bottom">
+    <div class="section-container">
+        <div class="beta-bottom-inner fade-in">
+            <h2>Don't miss your spot.</h2>
+            <p>Beta access is limited. Drop your email at the top and be ready when the doors open.</p>
+            <a href="#beta-hero" class="btn btn-primary beta-scroll-top">
+                <i class="fa-solid fa-arrow-up" aria-hidden="true"></i> Secure My Spot
+            </a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/beta.js') }}"></script>
+{% endblock %}

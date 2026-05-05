@@ -136,5 +136,10 @@ def about():
     return render_template("about.html")
 
 
+@app.route("/beta")
+def beta():
+    return render_template("beta.html")
+
+
 if __name__ == "__main__":
     app.run(debug=True, port=7060, host="127.0.0.1")
