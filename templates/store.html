@@ -1,0 +1,234 @@
+{% extends "base.html" %}
+
+{% block title %}Store — Solaris{% endblock %}
+{% block description %}The Solaris store — Early Access, the Astro Pass, and Stars. Opening with Early Access.{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/store.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<!-- ====== STORE HERO ====== -->
+<div class="store-hero">
+    <div class="section-container">
+        <div class="store-hero-inner fade-in">
+            <h1 class="store-title">STORE</h1>
+            <div class="store-coming-banner">
+                <i class="fa-solid fa-clock" aria-hidden="true"></i>
+                <span>Store opens with Early Access — purchases aren't available yet</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ====== ACCESS & PASSES ====== -->
+<section class="store-section" id="passes">
+    <div class="section-container">
+        <h2 class="store-section-title">Access &amp; Passes</h2>
+        <p class="store-section-sub">Get in early and grab the season pass</p>
+
+        <div class="store-passes-grid">
+
+            <!-- Early Access -->
+            <div class="store-pass-card store-pass-card--featured fade-in">
+                <div class="store-pass-badge">Limited</div>
+                <div class="store-pass-icon">
+                    <i class="fa-solid fa-rocket"></i>
+                </div>
+                <h3 class="store-pass-name">Early Access</h3>
+                <p class="store-pass-desc">Be among the first to play Solaris. Get in before the public launch and receive exclusive beta cosmetics you won't be able to earn later.</p>
+                <ul class="store-pass-perks">
+                    <li><i class="fa-solid fa-check" aria-hidden="true"></i> Server access before public launch</li>
+                    <li><i class="fa-solid fa-check" aria-hidden="true"></i> Exclusive Early Adopter badge</li>
+                    <li><i class="fa-solid fa-check" aria-hidden="true"></i> Beta cosmetics &amp; title</li>
+                </ul>
+                <div class="store-pass-price-row">
+                    <span class="store-pass-price">$5.99</span>
+                </div>
+                <button class="btn store-btn-disabled" disabled aria-disabled="true">
+                    <i class="fa-solid fa-lock" aria-hidden="true"></i> Coming Soon
+                </button>
+                <p class="store-pass-note">
+                    <i class="fa-solid fa-gift" aria-hidden="true"></i>
+                    Or <a href="/beta">sign up to the waitlist</a> for a chance to get in free
+                </p>
+            </div>
+
+            <!-- Astro Pass -->
+            <div class="store-pass-card fade-in">
+                <div class="store-pass-icon store-pass-icon--purple">
+                    <i class="fa-solid fa-star"></i>
+                </div>
+                <h3 class="store-pass-name">Astro Pass</h3>
+                <p class="store-pass-desc">The Solaris season pass. Unlock exclusive cosmetics, bonus Stars, and seasonal rewards throughout the season. Pass is optional — Season One is free to play.</p>
+                <ul class="store-pass-perks">
+                    <li><i class="fa-solid fa-check" aria-hidden="true"></i> Exclusive seasonal cosmetics</li>
+                    <li><i class="fa-solid fa-check" aria-hidden="true"></i> Bonus Stars throughout the season</li>
+                    <li><i class="fa-solid fa-check" aria-hidden="true"></i> Astro Pass title &amp; badge</li>
+                    <li><i class="fa-solid fa-check" aria-hidden="true"></i> 10% store discount all season</li>
+                </ul>
+                <div class="store-pass-price-row">
+                    <span class="store-pass-price">$6.99</span>
+                    <span class="store-pass-per">/ season</span>
+                </div>
+                <button class="btn store-btn-disabled" disabled aria-disabled="true">
+                    <i class="fa-solid fa-lock" aria-hidden="true"></i> Coming Soon
+                </button>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- Wave divider -->
+<div class="section-divider" style="background: var(--bg-primary);">
+    <svg viewBox="0 0 1440 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,30 C360,60 720,0 1080,30 C1260,45 1380,25 1440,30 L1440,60 L0,60 Z" fill="var(--bg-secondary)"/>
+    </svg>
+</div>
+
+<!-- ====== STARS ====== -->
+<section class="store-section store-section--alt" id="stars">
+    <div class="section-container">
+        <div class="store-section-header fade-in">
+            <h2 class="store-section-title">
+                <img src="{{ url_for('static', filename='images/icons/star.png') }}" alt="" class="store-title-star" aria-hidden="true">
+                Stars
+            </h2>
+            <p class="store-section-sub">Our in-game currency — spend Stars on cosmetics, items, and more in the store</p>
+        </div>
+
+        <div class="store-stars-grid">
+
+            <!-- 500 Stars -->
+            <div class="store-stars-card fade-in">
+                <div class="store-stars-visual">
+                    <div class="star-cluster star-cluster--1">
+                        <img src="{{ url_for('static', filename='images/icons/star.png') }}" alt="Star" class="star-icon">
+                    </div>
+                </div>
+                <div class="store-stars-info">
+                    <span class="store-stars-amount">500 Stars</span>
+                    <span class="store-stars-price">$4.99</span>
+                </div>
+                <button class="btn store-btn-disabled store-btn-stars" disabled aria-disabled="true">
+                    <i class="fa-solid fa-lock" aria-hidden="true"></i> Coming Soon
+                </button>
+            </div>
+
+            <!-- 1,100 Stars -->
+            <div class="store-stars-card fade-in">
+                <div class="store-stars-bonus">+10% Bonus</div>
+                <div class="store-stars-visual">
+                    <div class="star-cluster star-cluster--3">
+                        <div class="star-row">
+                            <img src="{{ url_for('static', filename='images/icons/star.png') }}" alt="Star" class="star-icon">
+                            <img src="{{ url_for('static', filename='images/icons/star.png') }}" alt="Star" class="star-icon">
+                            <img src="{{ url_for('static', filename='images/icons/star.png') }}" alt="Star" class="star-icon">
+                        </div>
+                    </div>
+                </div>
+                <div class="store-stars-info">
+                    <span class="store-stars-amount">1,100 Stars</span>
+                    <span class="store-stars-price">$9.99</span>
+                </div>
+                <button class="btn store-btn-disabled store-btn-stars" disabled aria-disabled="true">
+                    <i class="fa-solid fa-lock" aria-hidden="true"></i> Coming Soon
+                </button>
+            </div>
+
+            <!-- 2,400 Stars -->
+            <div class="store-stars-card fade-in">
+                <div class="store-stars-bonus">+20% Bonus</div>
+                <div class="store-stars-visual">
+                    <div class="star-cluster star-cluster--5">
+                        <div class="star-row">
+                            <img src="{{ url_for('static', filename='images/icons/star.png') }}" alt="Star" class="star-icon">
+                            <img src="{{ url_for('static', filename='images/icons/star.png') }}" alt="Star" class="star-icon">
+                        </div>
+                        <div class="star-row">
+                            <img src="{{ url_for('static', filename='images/icons/star.png') }}" alt="Star" class="star-icon">
+                            <img src="{{ url_for('static', filename='images/icons/star.png') }}" alt="Star" class="star-icon">
+                            <img src="{{ url_for('static', filename='images/icons/star.png') }}" alt="Star" class="star-icon">
+                        </div>
+                    </div>
+                </div>
+                <div class="store-stars-info">
+                    <span class="store-stars-amount">2,400 Stars</span>
+                    <span class="store-stars-price">$19.99</span>
+                </div>
+                <button class="btn store-btn-disabled store-btn-stars" disabled aria-disabled="true">
+                    <i class="fa-solid fa-lock" aria-hidden="true"></i> Coming Soon
+                </button>
+            </div>
+
+            <!-- 5,000 Stars -->
+            <div class="store-stars-card store-stars-card--highlight fade-in">
+                <div class="store-stars-bonus store-stars-bonus--best">Best Value</div>
+                <div class="store-stars-visual">
+                    <div class="star-cluster star-cluster--7">
+                        <div class="star-row">
+                            <img src="{{ url_for('static', filename='images/icons/star.png') }}" alt="Star" class="star-icon">
+                            <img src="{{ url_for('static', filename='images/icons/star.png') }}" alt="Star" class="star-icon">
+                            <img src="{{ url_for('static', filename='images/icons/star.png') }}" alt="Star" class="star-icon">
+                        </div>
+                        <div class="star-row">
+                            <img src="{{ url_for('static', filename='images/icons/star.png') }}" alt="Star" class="star-icon">
+                            <img src="{{ url_for('static', filename='images/icons/star.png') }}" alt="Star" class="star-icon">
+                            <img src="{{ url_for('static', filename='images/icons/star.png') }}" alt="Star" class="star-icon">
+                            <img src="{{ url_for('static', filename='images/icons/star.png') }}" alt="Star" class="star-icon">
+                        </div>
+                    </div>
+                </div>
+                <div class="store-stars-info">
+                    <span class="store-stars-amount">5,000 Stars</span>
+                    <span class="store-stars-price">$39.99</span>
+                </div>
+                <button class="btn store-btn-disabled store-btn-stars" disabled aria-disabled="true">
+                    <i class="fa-solid fa-lock" aria-hidden="true"></i> Coming Soon
+                </button>
+            </div>
+
+            <!-- 10,000 Stars -->
+            <div class="store-stars-card fade-in">
+                <div class="store-stars-bonus">+30% Bonus</div>
+                <div class="store-stars-visual">
+                    <div class="star-cluster star-cluster--10">
+                        <div class="star-row">
+                            <img src="{{ url_for('static', filename='images/icons/star.png') }}" alt="Star" class="star-icon">
+                            <img src="{{ url_for('static', filename='images/icons/star.png') }}" alt="Star" class="star-icon">
+                            <img src="{{ url_for('static', filename='images/icons/star.png') }}" alt="Star" class="star-icon">
+                        </div>
+                        <div class="star-row">
+                            <img src="{{ url_for('static', filename='images/icons/star.png') }}" alt="Star" class="star-icon">
+                            <img src="{{ url_for('static', filename='images/icons/star.png') }}" alt="Star" class="star-icon">
+                            <img src="{{ url_for('static', filename='images/icons/star.png') }}" alt="Star" class="star-icon">
+                            <img src="{{ url_for('static', filename='images/icons/star.png') }}" alt="Star" class="star-icon">
+                        </div>
+                        <div class="star-row">
+                            <img src="{{ url_for('static', filename='images/icons/star.png') }}" alt="Star" class="star-icon">
+                            <img src="{{ url_for('static', filename='images/icons/star.png') }}" alt="Star" class="star-icon">
+                            <img src="{{ url_for('static', filename='images/icons/star.png') }}" alt="Star" class="star-icon">
+                        </div>
+                    </div>
+                </div>
+                <div class="store-stars-info">
+                    <span class="store-stars-amount">10,000 Stars</span>
+                    <span class="store-stars-price">$79.99</span>
+                </div>
+                <button class="btn store-btn-disabled store-btn-stars" disabled aria-disabled="true">
+                    <i class="fa-solid fa-lock" aria-hidden="true"></i> Coming Soon
+                </button>
+            </div>
+
+        </div>
+
+        <p class="store-stars-note fade-in">
+            <i class="fa-solid fa-info-circle" aria-hidden="true"></i>
+            Stars never expire and can be spent on cosmetics, cosmetic bundles, and more. Some items are earnable for free just by playing.
+        </p>
+    </div>
+</section>
+
+{% endblock %}

@@ -114,23 +114,34 @@
     transition: var(--transition);
 }
 
-.game-card:nth-child(1) .game-card-mystery {
+.game-card:nth-child(2) .game-card-mystery {
     color: var(--primary);
     text-shadow: 0 0 30px rgba(0, 134, 217, 0.4);
 }
 
-.game-card:nth-child(2) .game-card-mystery {
+.game-card:nth-child(3) .game-card-mystery {
     color: var(--secondary-light);
     text-shadow: 0 0 30px rgba(144, 51, 140, 0.4);
 }
 
-.game-card:nth-child(3) .game-card-mystery {
-    color: var(--accent-warm);
-    text-shadow: 0 0 30px rgba(245, 158, 11, 0.4);
-}
-
 .game-card:hover .game-card-mystery {
     transform: scale(1.1);
+}
+
+/* Revealed game name */
+.game-card-name {
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    line-height: 1.1;
+    margin-bottom: var(--space-sm);
+    color: var(--accent-warm);
+    text-shadow: 0 0 30px rgba(245, 158, 11, 0.4);
+    opacity: 0.9;
+    transition: var(--transition);
+}
+
+.game-card:hover .game-card-name {
+    transform: scale(1.05);
 }
 
 /* Hint text */
@@ -141,6 +152,51 @@
     font-style: italic;
     max-width: 220px;
     line-height: 1.5;
+}
+
+/* Red variant (Dodgeball) */
+.game-card--red .game-card-overlay {
+    background: linear-gradient(
+        180deg,
+        rgba(180, 40, 40, 0.18) 0%,
+        rgba(18, 18, 24, 0.58) 60%,
+        rgba(18, 18, 24, 0.92) 100%
+    );
+}
+
+.game-card--red .game-card-name {
+    color: #f87171;
+    text-shadow: 0 0 30px rgba(248, 113, 113, 0.5);
+}
+
+.game-card--red:hover {
+    outline-color: rgba(248, 113, 113, 0.55);
+    filter: drop-shadow(0 0 8px rgba(248, 113, 113, 0.22));
+}
+
+/* Read More button inside game cards */
+.game-card-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: var(--space-sm);
+    padding: 8px 20px;
+    border-radius: 50px;
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background: rgba(248, 113, 113, 0.15);
+    border: 1.5px solid rgba(248, 113, 113, 0.4);
+    color: #fca5a5;
+    transition: var(--transition);
+}
+
+.game-card:hover .game-card-cta {
+    background: rgba(248, 113, 113, 0.28);
+    border-color: rgba(248, 113, 113, 0.7);
+    color: #ffffff;
 }
 
 /* "Coming Soon" label */

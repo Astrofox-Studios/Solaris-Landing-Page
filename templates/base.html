@@ -20,6 +20,7 @@
     {% block extra_css %}{% endblock %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cookie-banner.css') }}">
 
     <!-- Theme: apply saved preference before paint -->
     <script>
@@ -67,8 +68,11 @@
         </div>
     </div>
 
+    {% include 'partials/cookie-banner.html' %}
+
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     <script src="{{ url_for('static', filename='js/play-modal.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/cookie-banner.js') }}"></script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>

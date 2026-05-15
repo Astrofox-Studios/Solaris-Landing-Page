@@ -85,13 +85,32 @@
     const betaCard    = document.querySelector('.beta-signup-card');
 
     if (betaForm && betaSuccess) {
+        let errorDiv = document.getElementById('beta-error');
+        if (!errorDiv) {
+            errorDiv = document.createElement('div');
+            errorDiv.id = 'beta-error';
+            errorDiv.style.cssText = 'color:#ef4444;font-size:0.9rem;margin-bottom:12px;display:none;';
+            const submitBtn = betaForm.querySelector('.beta-submit-btn');
+            betaForm.insertBefore(errorDiv, submitBtn);
+        }
+
+        function showError(msg) {
+            errorDiv.textContent = msg;
+            errorDiv.style.display = 'block';
+        }
+
+        function hideError() {
+            errorDiv.style.display = 'none';
+            errorDiv.textContent = '';
+        }
+
         betaForm.addEventListener('submit', (e) => {
             e.preventDefault();
+            hideError();
 
             const submitBtn  = betaForm.querySelector('.beta-submit-btn');
             const emailInput = betaForm.querySelector('.beta-email-input');
 
-            // Basic validation
             if (!emailInput.value || !emailInput.checkValidity()) {
                 emailInput.focus();
                 emailInput.style.borderColor = '#ef4444';
@@ -103,20 +122,43 @@
                 return;
             }
 
-            // Loading state
             submitBtn.disabled = true;
             submitBtn.querySelector('.beta-btn-label').textContent = 'Joining…';
 
-            // TODO: replace with real mailing-list API call
-            setTimeout(() => {
-                betaForm.style.display  = 'none';
-                betaSuccess.classList.add('show');
+            const fd = new FormData(betaForm);
+            const cookieConsent = localStorage.getItem('solaris-cookies') === 'accepted' ? 'true' : 'false';
+            fd.set('ip_consent', cookieConsent);
 
-                // Gently scroll the card into view on mobile
-                if (betaCard) {
-                    betaCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                }
-            }, 700);
+            fetch('/beta-signup', { method: 'POST', body: fd })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        betaForm.style.display = 'none';
+                        betaSuccess.classList.add('show');
+                        if (betaCard) {
+                            betaCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                        }
+                    } else {
+                        submitBtn.disabled = false;
+                        submitBtn.querySelector('.beta-btn-label').textContent = 'Join Early Access';
+                        if (data.error === 'already_signed_up') {
+                            showError("You're already on the list! Check your email.");
+                        } else if (data.error === 'too_many_attempts') {
+                            showError('Too many signup attempts from your location.');
+                        } else if (data.error === 'invalid_email') {
+                            showError('Please enter a valid email address.');
+                        } else if (data.error === 'turnstile_failed') {
+                            showError('Security check failed. Please try again.');
+                        } else {
+                            showError('Something went wrong. Please try again.');
+                        }
+                    }
+                })
+                .catch(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.querySelector('.beta-btn-label').textContent = 'Join Early Access';
+                    showError('Something went wrong. Please try again.');
+                });
         });
     }
 

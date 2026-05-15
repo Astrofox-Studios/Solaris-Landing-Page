@@ -133,3 +133,18 @@
     width: 100%;
     height: auto;
 }
+
+/* Benefit hint below CTA buttons */
+.hero-benefit-hint {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 700;
+    margin-top: 0.75rem;
+    text-align: center;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.4);
+}
+
+.hero-benefit-hint i {
+    color: var(--accent-warm);
+    margin-right: 3px;
+}

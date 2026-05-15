@@ -1,0 +1,262 @@
+{% extends "base.html" %}
+
+{% block title %}Admin — Solaris Signups{% endblock %}
+{% block description %}Admin dashboard for Solaris Early Access signups.{% endblock %}
+{% block og_title %}Admin — Solaris{% endblock %}
+
+{% block extra_css %}
+<style>
+    .admin-wrap {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 120px 24px 60px;
+    }
+    .admin-header {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 36px;
+    }
+    .admin-header h1 {
+        font-size: 2rem;
+        margin: 0;
+        color: var(--text-primary);
+    }
+    .admin-badge {
+        background: var(--primary);
+        color: #fff;
+        font-size: 0.85rem;
+        font-weight: 700;
+        padding: 4px 14px;
+        border-radius: 999px;
+    }
+    .admin-stats {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-bottom: 40px;
+    }
+    .admin-stat {
+        background: var(--bg-card);
+        border: 2px solid var(--border-color);
+        border-radius: var(--border-radius);
+        padding: 20px 28px;
+        min-width: 160px;
+        flex: 1;
+    }
+    .admin-stat-label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-secondary);
+        margin-bottom: 6px;
+    }
+    .admin-stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        font-family: 'Paytone One', sans-serif;
+    }
+    .admin-section {
+        margin-bottom: 48px;
+    }
+    .admin-section h2 {
+        font-size: 1.2rem;
+        color: var(--text-primary);
+        margin-bottom: 20px;
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 10px;
+    }
+    .admin-chart-wrap {
+        background: var(--bg-card);
+        border: 2px solid var(--border-color);
+        border-radius: var(--border-radius);
+        padding: 24px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 300px;
+    }
+    .admin-chart-wrap canvas {
+        max-width: 400px;
+        max-height: 400px;
+    }
+    .admin-no-data {
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+        text-align: center;
+        padding: 40px;
+    }
+    .admin-table-wrap {
+        overflow-x: auto;
+        border-radius: var(--border-radius);
+        border: 2px solid var(--border-color);
+    }
+    .admin-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.88rem;
+        background: var(--bg-card);
+    }
+    .admin-table th {
+        background: var(--bg-secondary);
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        font-size: 0.72rem;
+        padding: 12px 14px;
+        text-align: left;
+        white-space: nowrap;
+    }
+    .admin-table td {
+        padding: 10px 14px;
+        border-top: 1px solid var(--border-color);
+        color: var(--text-primary);
+        vertical-align: middle;
+    }
+    .admin-table tr:hover td {
+        background: var(--bg-secondary);
+    }
+    .admin-tag {
+        display: inline-block;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        padding: 2px 7px;
+        font-size: 0.75rem;
+        margin: 1px 2px;
+        color: var(--text-secondary);
+    }
+    .ip-hidden {
+        color: var(--text-secondary);
+        font-style: italic;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-wrap">
+    <div class="admin-header">
+        <h1>Admin — Solaris Signups</h1>
+        <span class="admin-badge">{{ total }} total</span>
+        <a href="/admin/logout" style="margin-left:auto; font-size:0.8rem; font-weight:700; color:var(--text-secondary); text-decoration:none; display:flex; align-items:center; gap:6px;">
+            <i class="fa-solid fa-right-from-bracket"></i> Logout
+        </a>
+    </div>
+
+    <div class="admin-stats">
+        <div class="admin-stat">
+            <div class="admin-stat-label">Total Signups</div>
+            <div class="admin-stat-value">{{ total }}</div>
+        </div>
+        <div class="admin-stat">
+            <div class="admin-stat-label">Unique Countries</div>
+            <div class="admin-stat-value">{{ country_breakdown | length }}</div>
+        </div>
+        <div class="admin-stat">
+            <div class="admin-stat-label">Last Signup</div>
+            <div class="admin-stat-value" style="font-size:1.1rem; padding-top:6px;">
+                {% if signups %}{{ signups[0].date }}{% else %}—{% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="admin-section">
+        <h2>Country Breakdown</h2>
+        <div class="admin-chart-wrap">
+            {% if country_breakdown %}
+            <canvas id="country-chart"></canvas>
+            {% else %}
+            <p class="admin-no-data">No data yet.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="admin-section">
+        <h2>All Signups (newest first)</h2>
+        {% if signups %}
+        <div class="admin-table-wrap">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Email</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Country</th>
+                        <th>City</th>
+                        <th>IP</th>
+                        <th>Interests</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for s in signups %}
+                    <tr>
+                        <td>{{ s.signup_number }}</td>
+                        <td>{{ s.email[:40] }}{% if s.email|length > 40 %}…{% endif %}</td>
+                        <td>{{ s.date }}</td>
+                        <td>{{ s.time }}</td>
+                        <td>{{ s.country or '—' }}</td>
+                        <td>{{ s.city or '—' }}</td>
+                        <td>
+                            {% if s.ip_hidden %}
+                            <span class="ip-hidden">hidden</span>
+                            {% else %}
+                            {{ s.ip }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% for tag in s.interests %}
+                            <span class="admin-tag">{{ tag }}</span>
+                            {% else %}
+                            <span style="color:var(--text-secondary)">—</span>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p style="color:var(--text-secondary)">No signups yet.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{% if country_breakdown %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+(function () {
+    var labels = {{ country_breakdown.keys() | list | tojson }};
+    var values = {{ country_breakdown.values() | list | tojson }};
+    var palette = [
+        '#325ad3','#6929b7','#f59e0b','#10b981','#ef4444','#3b82f6',
+        '#8b5cf6','#ec4899','#14b8a6','#f97316','#84cc16','#06b6d4'
+    ];
+    var colors = labels.map(function(_, i) { return palette[i % palette.length]; });
+
+    new Chart(document.getElementById('country-chart'), {
+        type: 'pie',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: values,
+                backgroundColor: colors,
+                borderColor: 'var(--bg-card)',
+                borderWidth: 2,
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    labels: { color: '#e2e8f0', font: { family: 'Nunito' } }
+                }
+            }
+        }
+    });
+})();
+</script>
+{% endif %}
+{% endblock %}

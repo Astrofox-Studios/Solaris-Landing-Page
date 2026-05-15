@@ -178,6 +178,14 @@
     color: var(--accent-warm);
 }
 
+.roadmap-phase-art--4 {
+    color: var(--accent-green);
+}
+
+.roadmap-phase-art--5 {
+    color: #c4b5fd;
+}
+
 .roadmap-phase-card:hover .roadmap-phase-art {
     opacity: 0.4;
 }
@@ -266,31 +274,46 @@
     flex-wrap: wrap;
 }
 
+/* ====== Pricing note at card bottom ====== */
+
+.roadmap-phase-pricing {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 1rem 1.75rem 1.25rem;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--accent-warm);
+    border-top: 1px solid var(--border-color);
+    margin-top: auto;
+}
+
+.roadmap-phase-pricing i {
+    flex-shrink: 0;
+    font-size: 0.85rem;
+}
+
+.roadmap-phase-pricing a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.roadmap-phase-pricing--free {
+    color: var(--accent-green);
+}
+
 /* ====== Responsive ====== */
 
 @media (max-width: 900px) {
-    /* Horizontal scroll on tablet/mobile — KSP2 style */
     .roadmap-phases {
-        grid-template-columns: repeat(3, 78vw);
-        overflow-x: auto;
-        scroll-snap-type: x mandatory;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-        padding-bottom: 12px;
-    }
-
-    .roadmap-phases::-webkit-scrollbar {
-        display: none;
-    }
-
-    .roadmap-phase-card {
-        scroll-snap-align: start;
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 600px) {
     .roadmap-phases {
-        grid-template-columns: repeat(3, 88vw);
+        grid-template-columns: 1fr;
     }
 
     .roadmap-phase-art {

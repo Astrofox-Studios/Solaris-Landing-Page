@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Login — Solaris{% endblock %}
+{% block description %}Solaris admin login.{% endblock %}
+
+{% block extra_css %}
+<style>
+    .login-page {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background:
+            radial-gradient(ellipse at 20% 50%, rgba(50, 90, 211, 0.18) 0%, transparent 55%),
+            radial-gradient(ellipse at 80% 20%, rgba(105, 41, 183, 0.14) 0%, transparent 50%),
+            var(--bg-primary);
+        padding: 2rem 1rem;
+    }
+
+    .login-card {
+        width: 100%;
+        max-width: 400px;
+        background: var(--bg-card);
+        border: 2px solid var(--border-color);
+        border-radius: var(--border-radius-lg);
+        padding: 2.5rem 2rem;
+        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.03);
+    }
+
+    .login-logo {
+        font-family: var(--font-heading);
+        font-size: 1.6rem;
+        color: var(--text-heading);
+        margin-bottom: 0.25rem;
+        letter-spacing: 1px;
+    }
+
+    .login-sub {
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--text-secondary);
+        margin-bottom: 2rem;
+    }
+
+    .login-field {
+        margin-bottom: 1rem;
+    }
+
+    .login-label {
+        display: block;
+        font-size: 0.75rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: var(--text-secondary);
+        margin-bottom: 6px;
+    }
+
+    .login-input {
+        width: 100%;
+        padding: 13px 16px;
+        background: var(--bg-secondary);
+        border: 2px solid var(--border-color);
+        border-radius: var(--border-radius-sm);
+        color: var(--text-primary);
+        font-family: var(--font-body);
+        font-size: 0.95rem;
+        font-weight: 600;
+        outline: none;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        box-sizing: border-box;
+    }
+
+    .login-input:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px rgba(50, 90, 211, 0.2);
+    }
+
+    .login-error {
+        padding: 10px 14px;
+        background: rgba(239, 68, 68, 0.12);
+        border: 1.5px solid rgba(239, 68, 68, 0.35);
+        border-radius: var(--border-radius-sm);
+        color: #fca5a5;
+        font-size: 0.85rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .login-btn {
+        width: 100%;
+        justify-content: center;
+        margin-top: 0.5rem;
+        padding: 14px;
+        font-size: 0.95rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="login-page">
+    <div class="login-card">
+        <p class="login-logo">SOLARIS</p>
+        <p class="login-sub">Admin Access</p>
+
+        {% if error %}
+        <div class="login-error">
+            <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <form method="POST" action="/admin">
+            <div class="login-field">
+                <label class="login-label" for="username">Username</label>
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    class="login-input"
+                    autocomplete="username"
+                    required
+                    autofocus
+                >
+            </div>
+            <div class="login-field">
+                <label class="login-label" for="password">Password</label>
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    class="login-input"
+                    autocomplete="current-password"
+                    required
+                >
+            </div>
+            <button type="submit" class="btn btn-primary login-btn">
+                Sign In <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

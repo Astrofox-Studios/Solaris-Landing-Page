@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 
-{% block title %}Beta Access | Solaris{% endblock %}
-{% block description %}Sign up for a chance at early access to the Solaris beta. Be among the first to play, and help shape a new dawn in Minecraft.{% endblock %}
-{% block og_title %}Solaris Beta — Early Access{% endblock %}
+{% block title %}Early Access | Solaris{% endblock %}
+{% block description %}Sign up for Early Access to Solaris. Be among the first to play, and help shape a new dawn in Minecraft.{% endblock %}
+{% block og_title %}Solaris — Early Access{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/beta.css') }}">
@@ -23,7 +23,7 @@
     <div class="beta-hero-content">
         <h1 class="beta-hero-title">
             <span class="beta-title-line">SOLARIS</span>
-            <span class="beta-title-sub">BETA</span>
+            <span class="beta-title-sub">EARLY ACCESS</span>
         </h1>
 
         <p class="beta-hero-tagline">Play before anyone else. Shape what Solaris becomes.</p>
@@ -44,10 +44,12 @@
                         >
                     </div>
                     <button type="submit" class="btn btn-primary beta-submit-btn">
-                        <span class="beta-btn-label">Join the Beta</span>
+                        <span class="beta-btn-label">Join Early Access</span>
                         <i class="fa-solid fa-arrow-right beta-btn-arrow" aria-hidden="true"></i>
                     </button>
                 </div>
+
+                <div id="beta-error" class="beta-error" role="alert" aria-live="polite" style="display:none;"></div>
 
                 <div class="beta-excitement">
                     <p class="beta-excitement-label">What are you most excited about?</p>
@@ -86,6 +88,8 @@
                         </label>
                     </div>
                 </div>
+
+                <div class="cf-turnstile" data-sitekey="0x4AAAAAADP2YI_f4DwaNWUN" data-theme="dark" style="margin-top: 1rem;"></div>
             </form>
 
             <div class="beta-success" id="beta-success" role="alert" aria-live="polite">
@@ -93,7 +97,7 @@
                     <i class="fa-solid fa-check"></i>
                 </div>
                 <h3>You're on the list!</h3>
-                <p>We'll reach out when beta access drops. In the meantime, hang out with us on Discord.</p>
+                <p>We'll reach out when Early Access drops. In the meantime, hang out with us on Discord.</p>
                 <div class="beta-success-actions">
                     <a href="https://discord.gg/solaris" class="btn btn-primary" target="_blank" rel="noopener">
                         <i class="fa-brands fa-discord" aria-hidden="true"></i> Join Discord
@@ -103,7 +107,8 @@
             </div>
         </div>
 
-        <p class="beta-fine-print">Signing up enters you into a draw for beta access — spots are limited and not guaranteed. We'll only contact you when it's time.</p>
+        <p class="beta-fine-print">Signing up enters you into a draw for Early Access — spots are limited and not guaranteed. We'll only contact you when it's time.</p>
+
     </div>
 
     <div class="beta-wave" aria-hidden="true">
@@ -116,8 +121,8 @@
 <!-- ====== WHAT'S IN BETA ====== -->
 <section class="beta-features" id="beta-features">
     <div class="section-container">
-        <h2 class="section-title fade-in">The Beta Experience</h2>
-        <p class="section-subtitle fade-in">Here's what beta players get access to from day one, and what's right around the corner.</p>
+        <h2 class="section-title fade-in">The Early Access Experience</h2>
+        <p class="section-subtitle fade-in">Here's what Early Access players get access to from day one, and what's right around the corner.</p>
 
         <div class="beta-features-grid">
             <div class="beta-feature-card fade-in">
@@ -150,7 +155,7 @@
                     <h3>Astro Pass &amp; Cosmetics</h3>
                     <p>Be among the first to try the full cosmetics system. Collect, equip, and flex your style with the Astro Pass — cosmetics only, never pay-to-win.</p>
                 </div>
-                <span class="beta-feature-badge beta-feature-badge--exclusive">Beta Exclusive</span>
+                <span class="beta-feature-badge beta-feature-badge--exclusive">Early Access Exclusive</span>
             </div>
 
             <div class="beta-feature-card fade-in">
@@ -202,8 +207,8 @@
         <div class="beta-roadmap-inner fade-in">
             <div class="beta-roadmap-text">
                 <p class="beta-eyebrow">The plan</p>
-                <h2>What comes after beta?</h2>
-                <p>We have a full roadmap built out across three phases, from our current Pre-Early Access sprint through to a full competitive Beta Release. Every milestone is tracked and public.</p>
+                <h2>What comes after Early Access?</h2>
+                <p>We have a full roadmap built out across phases, from our current Pre-Early Access sprint through to a full competitive Beta Release and beyond. Every milestone is tracked and public.</p>
                 <a href="/roadmap" class="btn btn-primary">
                     View Full Roadmap <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
                 </a>
@@ -248,7 +253,7 @@
     <div class="section-container">
         <div class="beta-bottom-inner fade-in">
             <h2>Don't miss your spot.</h2>
-            <p>Beta access is limited. Drop your email at the top and be ready when the doors open.</p>
+            <p>Early Access is limited. Drop your email at the top and be ready when the doors open.</p>
             <a href="#beta-hero" class="btn btn-primary beta-scroll-top">
                 <i class="fa-solid fa-arrow-up" aria-hidden="true"></i> Secure My Spot
             </a>
@@ -259,5 +264,6 @@
 {% endblock %}
 
 {% block extra_js %}
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <script src="{{ url_for('static', filename='js/beta.js') }}"></script>
 {% endblock %}

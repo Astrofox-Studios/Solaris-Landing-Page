@@ -1,0 +1,105 @@
+.cookie-banner {
+    position: fixed;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(120%);
+    z-index: 9999;
+    width: calc(100% - 2rem);
+    max-width: 860px;
+    background: var(--bg-card);
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius-lg);
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.45);
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    pointer-events: none;
+}
+
+.cookie-banner.visible {
+    transform: translateX(-50%) translateY(0);
+    pointer-events: auto;
+}
+
+.cookie-banner-inner {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1.25rem 1.5rem;
+    flex-wrap: wrap;
+}
+
+.cookie-icon {
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
+    flex-shrink: 0;
+    image-rendering: pixelated;
+}
+
+.cookie-text {
+    flex: 1;
+    min-width: 200px;
+}
+
+.cookie-title {
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    color: var(--text-heading);
+    margin-bottom: 0.3rem;
+}
+
+.cookie-desc {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    line-height: 1.55;
+    margin: 0;
+}
+
+.cookie-desc a {
+    color: var(--primary-light);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.cookie-actions {
+    display: flex;
+    gap: 10px;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+}
+
+.cookie-btn-accept,
+.cookie-btn-optout {
+    white-space: nowrap;
+    padding: 10px 22px;
+    font-size: 0.85rem;
+}
+
+.cookie-btn-optout {
+    background: transparent;
+    border: 1.5px solid var(--border-color);
+    color: var(--text-secondary);
+}
+
+.cookie-btn-optout:hover {
+    border-color: var(--border-color-hover);
+    color: var(--text-primary);
+    transform: translateY(-2px);
+}
+
+@media (max-width: 600px) {
+    .cookie-banner-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    .cookie-actions {
+        width: 100%;
+    }
+    .cookie-btn-accept,
+    .cookie-btn-optout {
+        flex: 1;
+        text-align: center;
+        justify-content: center;
+    }
+}

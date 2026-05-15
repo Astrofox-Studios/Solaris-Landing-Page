@@ -151,12 +151,12 @@
 
 .beta-title-sub {
     display: block;
-    font-size: clamp(1.4rem, 4.5vw, 3rem);
+    font-size: clamp(1rem, 3vw, 2rem);
     background: linear-gradient(135deg, var(--primary-light), var(--secondary-light));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    letter-spacing: 10px;
+    letter-spacing: 4px;
     text-transform: uppercase;
     margin-top: -0.4rem;
 }
@@ -384,6 +384,18 @@
     gap: 12px;
     justify-content: center;
     flex-wrap: wrap;
+}
+
+/* Error message in form */
+.beta-error {
+    padding: 10px 16px;
+    border-radius: var(--border-radius-sm);
+    background: rgba(239, 68, 68, 0.12);
+    border: 1.5px solid rgba(239, 68, 68, 0.35);
+    color: #fca5a5;
+    font-size: 0.88rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
 }
 
 /* Fine print */
