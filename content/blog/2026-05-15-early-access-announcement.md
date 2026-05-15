@@ -7,8 +7,8 @@ tags:
   - announcement
   - early-access
   - news
-thumbnail: ""
-header_image: ""
+thumbnail: "early-access.png"
+header_image: "/static/images/blog/early-access.png"
 ---
 
 # Early Access Launches June 27th

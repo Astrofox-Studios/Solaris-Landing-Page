@@ -7,8 +7,8 @@ tags:
   - competitive
   - gameplay
   - deep-dive
-thumbnail: ""
-header_image: ""
+thumbnail: "comp.png"
+header_image: "/static/images/blog/comp.png"
 ---
 
 # Inside the Competitive System
