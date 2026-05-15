@@ -332,6 +332,50 @@
     .drawer-pending { background: rgba(245, 158, 11, 0.14); color: #f59e0b; border: 1.5px solid rgba(245, 158, 11, 0.35); }
     .drawer-pending.active-status { background: #f59e0b; color: #fff; }
     .drawer-action-btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+    /* ── Settings ── */
+    .settings-card {
+        background: var(--bg-card);
+        border: 2px solid var(--border-color);
+        border-radius: var(--border-radius);
+        padding: 28px;
+        max-width: 420px;
+    }
+    .settings-field { margin-bottom: 1rem; }
+    .settings-label {
+        display: block;
+        font-size: 0.72rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: var(--text-secondary);
+        margin-bottom: 6px;
+    }
+    .settings-input {
+        width: 100%;
+        padding: 11px 14px;
+        background: var(--bg-secondary);
+        border: 2px solid var(--border-color);
+        border-radius: 10px;
+        color: var(--text-primary);
+        font-family: 'Nunito', sans-serif;
+        font-size: 0.95rem;
+        font-weight: 600;
+        outline: none;
+        box-sizing: border-box;
+        transition: border-color 0.2s;
+    }
+    .settings-input:focus { border-color: var(--primary); }
+    .settings-msg {
+        font-size: 0.83rem;
+        font-weight: 700;
+        padding: 8px 12px;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        display: none;
+    }
+    .settings-msg--ok    { background: rgba(16,185,129,0.12); color: #10b981; border: 1px solid rgba(16,185,129,0.3); }
+    .settings-msg--error { background: rgba(239,68,68,0.12);  color: #fca5a5; border: 1px solid rgba(239,68,68,0.3); }
 </style>
 {% endblock %}
 
@@ -358,6 +402,9 @@
         <button class="admin-tab-btn" data-tab="testers">
             Tester Applications
             <span class="admin-badge-count">{{ tester_apps | length }}</span>
+        </button>
+        <button class="admin-tab-btn" data-tab="settings">
+            Settings
         </button>
     </div>
 
@@ -552,6 +599,35 @@
             {% else %}
             <p style="color:var(--text-secondary)">No tester applications yet.</p>
             {% endif %}
+        </div>
+    </div>
+
+</div>
+
+    <!-- ── Tab: Settings ────────────────────────────────────────────────────── -->
+    <div class="admin-tab-panel" data-panel="settings">
+        <div class="admin-section">
+            <h2>Change Password</h2>
+            <div class="settings-card">
+                <div class="settings-msg" id="cp-msg"></div>
+                <form id="cp-form" novalidate>
+                    <div class="settings-field">
+                        <label class="settings-label" for="cp-current">Current Password</label>
+                        <input type="password" id="cp-current" class="settings-input" autocomplete="current-password" required>
+                    </div>
+                    <div class="settings-field">
+                        <label class="settings-label" for="cp-new">New Password</label>
+                        <input type="password" id="cp-new" class="settings-input" autocomplete="new-password" required minlength="12">
+                    </div>
+                    <div class="settings-field">
+                        <label class="settings-label" for="cp-confirm">Confirm New Password</label>
+                        <input type="password" id="cp-confirm" class="settings-input" autocomplete="new-password" required minlength="12">
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="cp-submit" style="width:100%;justify-content:center;margin-top:0.25rem;">
+                        Update Password
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -777,6 +853,47 @@
 
         document.getElementById('drawer-body').innerHTML = html;
     }
+
+    // ── Change password ───────────────────────────────────────────────────
+    var cpForm   = document.getElementById('cp-form');
+    var cpMsg    = document.getElementById('cp-msg');
+    var cpSubmit = document.getElementById('cp-submit');
+
+    function cpShowMsg(msg, ok) {
+        cpMsg.textContent = msg;
+        cpMsg.className   = 'settings-msg ' + (ok ? 'settings-msg--ok' : 'settings-msg--error');
+        cpMsg.style.display = 'block';
+    }
+
+    cpForm.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        var current = document.getElementById('cp-current').value;
+        var newPw   = document.getElementById('cp-new').value;
+        var confirm = document.getElementById('cp-confirm').value;
+
+        if (newPw !== confirm) { cpShowMsg('Passwords do not match.', false); return; }
+        if (newPw.length < 12) { cpShowMsg('Minimum 12 characters.', false); return; }
+
+        cpSubmit.disabled = true;
+        try {
+            var resp = await fetch('/admin/change-password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ current_password: current, new_password: newPw }),
+            });
+            var data = await resp.json();
+            if (data.ok) {
+                cpShowMsg('Password updated successfully.', true);
+                cpForm.reset();
+            } else {
+                cpShowMsg(data.error || 'Failed to update password.', false);
+            }
+        } catch (_) {
+            cpShowMsg('Connection error.', false);
+        } finally {
+            cpSubmit.disabled = false;
+        }
+    });
 
     document.querySelectorAll('tr[data-app]').forEach(function (tr) {
         tr.addEventListener('click', function () {

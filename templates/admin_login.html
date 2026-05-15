@@ -87,6 +87,7 @@
         font-size: 0.85rem;
         font-weight: 700;
         margin-bottom: 1rem;
+        display: none;
     }
 
     .login-btn {
@@ -95,6 +96,58 @@
         margin-top: 0.5rem;
         padding: 14px;
         font-size: 0.95rem;
+    }
+
+    /* ── Waiting state ── */
+    .login-wait {
+        display: none;
+        text-align: center;
+        padding: 1rem 0;
+    }
+
+    .login-spinner {
+        width: 48px;
+        height: 48px;
+        border: 3px solid rgba(50, 90, 211, 0.2);
+        border-top-color: var(--primary);
+        border-radius: 50%;
+        animation: login-spin 0.9s linear infinite;
+        margin: 0 auto 1.5rem;
+    }
+
+    @keyframes login-spin {
+        to { transform: rotate(360deg); }
+    }
+
+    .login-wait-title {
+        font-weight: 800;
+        font-size: 1rem;
+        color: var(--text-primary);
+        margin-bottom: 0.4rem;
+    }
+
+    .login-wait-desc {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        line-height: 1.5;
+    }
+
+    .login-wait-cancel {
+        margin-top: 1.5rem;
+        background: none;
+        border: none;
+        color: var(--text-secondary);
+        font-size: 0.8rem;
+        font-weight: 700;
+        cursor: pointer;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+        font-family: var(--font-body);
+    }
+
+    .login-wait-cancel:hover {
+        color: var(--text-primary);
     }
 </style>
 {% endblock %}
@@ -105,41 +158,136 @@
         <p class="login-logo">SOLARIS</p>
         <p class="login-sub">Admin Access</p>
 
-        {% if error %}
-        <div class="login-error">
-            <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
-            {{ error }}
-        </div>
-        {% endif %}
+        <div class="login-error" id="login-error" role="alert"></div>
 
-        <form method="POST" action="/admin">
-            <div class="login-field">
-                <label class="login-label" for="username">Username</label>
-                <input
-                    type="text"
-                    id="username"
-                    name="username"
-                    class="login-input"
-                    autocomplete="username"
-                    required
-                    autofocus
-                >
-            </div>
-            <div class="login-field">
-                <label class="login-label" for="password">Password</label>
-                <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    class="login-input"
-                    autocomplete="current-password"
-                    required
-                >
-            </div>
-            <button type="submit" class="btn btn-primary login-btn">
-                Sign In <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
-            </button>
-        </form>
+        <!-- Credentials form -->
+        <div id="login-form-wrap">
+            <form id="login-form" novalidate>
+                <div class="login-field">
+                    <label class="login-label" for="username">Username</label>
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        class="login-input"
+                        autocomplete="username"
+                        required
+                        autofocus
+                    >
+                </div>
+                <div class="login-field">
+                    <label class="login-label" for="password">Password</label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        class="login-input"
+                        autocomplete="current-password"
+                        required
+                    >
+                </div>
+                <button type="submit" class="btn btn-primary login-btn" id="login-submit-btn">
+                    Sign In <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                </button>
+            </form>
+        </div>
+
+        <!-- Waiting for Discord approval -->
+        <div class="login-wait" id="login-wait">
+            <div class="login-spinner"></div>
+            <p class="login-wait-title">Check your Discord</p>
+            <p class="login-wait-desc">
+                An approval request has been sent to the server.<br>
+                Approve it to continue.
+            </p>
+            <button class="login-wait-cancel" id="login-wait-cancel">Cancel</button>
+        </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+    var formWrap  = document.getElementById('login-form-wrap');
+    var form      = document.getElementById('login-form');
+    var submitBtn = document.getElementById('login-submit-btn');
+    var errorBox  = document.getElementById('login-error');
+    var waitEl    = document.getElementById('login-wait');
+    var cancelBtn = document.getElementById('login-wait-cancel');
+    var pollTimer = null;
+
+    function showError(msg) {
+        errorBox.textContent = msg;
+        errorBox.style.display = 'block';
+    }
+    function hideError() {
+        errorBox.style.display = 'none';
+    }
+    function showForm() {
+        waitEl.style.display  = 'none';
+        formWrap.style.display = 'block';
+    }
+    function showWait() {
+        formWrap.style.display = 'none';
+        waitEl.style.display   = 'block';
+    }
+
+    cancelBtn.addEventListener('click', function () {
+        if (pollTimer) clearInterval(pollTimer);
+        showForm();
+    });
+
+    form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        hideError();
+
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = 'Checking… <i class="fa-solid fa-spinner fa-spin"></i>';
+
+        try {
+            var resp = await fetch('/admin/login', { method: 'POST', body: new FormData(form) });
+            var data = await resp.json();
+
+            if (data.error) {
+                showError(data.error);
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Sign In <i class="fa-solid fa-arrow-right"></i>';
+                return;
+            }
+
+            if (data.pending) {
+                showWait();
+                pollStatus(data.request_id);
+            }
+        } catch (_) {
+            showError('Connection error. Please try again.');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'Sign In <i class="fa-solid fa-arrow-right"></i>';
+        }
+    });
+
+    function pollStatus(reqId) {
+        pollTimer = setInterval(async function () {
+            try {
+                var resp = await fetch('/admin/login/check?id=' + encodeURIComponent(reqId));
+                var data = await resp.json();
+
+                if (data.status === 'approved') {
+                    clearInterval(pollTimer);
+                    window.location.href = '/admin';
+                } else if (data.status === 'denied') {
+                    clearInterval(pollTimer);
+                    showForm();
+                    showError('Login denied.');
+                } else if (data.status === 'expired') {
+                    clearInterval(pollTimer);
+                    showForm();
+                    showError('Request expired. Please try again.');
+                }
+            } catch (_) { /* keep polling on network error */ }
+        }, 2500);
+    }
+})();
+</script>
 {% endblock %}

@@ -12,6 +12,14 @@ import tarfile
 import threading
 import time
 import requests as http_requests
+try:
+    import bcrypt as _bcrypt
+    import bot as auth_bot
+    _AUTH_BOT_OK = True
+except ImportError:
+    _bcrypt = None
+    auth_bot = None
+    _AUTH_BOT_OK = False
 
 load_dotenv()
 
@@ -25,12 +33,11 @@ SIGNUPS_FILE = Path("signups.txt")
 BACKUPS_DIR = Path("backups")
 APPLICATIONS_FILE = Path("applications.json")
 
-DISCORD_WEBHOOK = os.environ.get(
-    "DISCORD_WEBHOOK",
-    "https://discord.com/api/webhooks/1504789105714925661/e4-Pq_eF89ksaEQs2zwWx01rfKQbd70cwyFxxhIUZQN1OTIxXRoVryEHLUy5ckJSImfN",
-)
-ADMIN_USERNAME = os.environ.get("ADMIN_USERNAME", "admin")
-ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "solaris2026")
+DISCORD_WEBHOOK = os.environ.get("DISCORD_WEBHOOK", "")
+ADMIN_USERNAME  = os.environ.get("ADMIN_USERNAME", "admin")
+ADMIN_PASSWORD  = os.environ.get("ADMIN_PASSWORD", "")
+BOT_TOKEN       = os.environ.get("DISCORD_BOT_TOKEN", "")
+ADMIN_AUTH_FILE = Path("admin_auth.json")
 
 data_lock = threading.Lock()
 applications_lock = threading.Lock()
@@ -247,6 +254,84 @@ def backup_loop():
 
 
 threading.Thread(target=backup_loop, daemon=True).start()
+
+# ── Admin auth helpers ────────────────────────────────────────────────────────
+
+def _load_auth_config() -> dict:
+    if ADMIN_AUTH_FILE.exists():
+        try:
+            with open(ADMIN_AUTH_FILE) as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return {}
+
+
+def _save_auth_config(data: dict):
+    tmp = Path(str(ADMIN_AUTH_FILE) + ".tmp")
+    with open(tmp, "w") as f:
+        json.dump(data, f, indent=2)
+    tmp.replace(ADMIN_AUTH_FILE)
+
+
+def check_admin_password(password: str) -> bool:
+    # Always reject empty submissions
+    if not password:
+        return False
+    stored = _load_auth_config().get("password_hash", "")
+    if stored:
+        # Hash exists — use bcrypt (fast path for all logins after first)
+        return _bcrypt and _bcrypt.checkpw(password.encode(), stored.encode())
+    # No hash yet: compare against ADMIN_PASSWORD from .env and auto-migrate
+    env_pw = ADMIN_PASSWORD
+    if not env_pw:
+        return False
+    if secrets.compare_digest(password, env_pw):
+        if _bcrypt:
+            new_hash = _bcrypt.hashpw(password.encode(), _bcrypt.gensalt(12)).decode()
+            _save_auth_config({"password_hash": new_hash})
+        return True
+    return False
+
+
+def update_admin_password(new_password: str):
+    if not _bcrypt:
+        return
+    new_hash = _bcrypt.hashpw(new_password.encode(), _bcrypt.gensalt(12)).decode()
+    _save_auth_config({"password_hash": new_hash})
+
+
+# ── Login rate limiter ────────────────────────────────────────────────────────
+
+_login_attempts: dict = {}
+_login_ratelimit_lock = threading.Lock()
+_MAX_LOGIN_ATTEMPTS = 5
+_LOGIN_WINDOW = 900  # 15 minutes
+
+
+def _login_allowed(ip: str) -> bool:
+    now = time.time()
+    with _login_ratelimit_lock:
+        recent = [t for t in _login_attempts.get(ip, []) if now - t < _LOGIN_WINDOW]
+        _login_attempts[ip] = recent
+        return len(recent) < _MAX_LOGIN_ATTEMPTS
+
+
+def _record_login_fail(ip: str):
+    now = time.time()
+    with _login_ratelimit_lock:
+        recent = [t for t in _login_attempts.get(ip, []) if now - t < _LOGIN_WINDOW]
+        recent.append(now)
+        _login_attempts[ip] = recent
+
+
+# ── Start Discord auth bot ────────────────────────────────────────────────────
+
+if _AUTH_BOT_OK and BOT_TOKEN:
+    auth_bot.start(BOT_TOKEN)
+elif not BOT_TOKEN:
+    import logging as _logging
+    _logging.getLogger(__name__).warning("DISCORD_BOT_TOKEN not set — admin login will be blocked")
 
 
 # ── Validation ────────────────────────────────────────────────────────────────
@@ -677,26 +762,10 @@ def beta_signup():
 
 # ── Admin ─────────────────────────────────────────────────────────────────────
 
-@app.route("/admin", methods=["GET", "POST"])
+@app.route("/admin")
 def admin():
-    if request.method == "POST":
-        username = request.form.get("username", "")
-        password = request.form.get("password", "")
-        ip = request.headers.get("X-Forwarded-For", request.remote_addr).split(",")[0].strip()
-
-        valid_user = secrets.compare_digest(username, ADMIN_USERNAME)
-        valid_pass = secrets.compare_digest(password, ADMIN_PASSWORD)
-        success = valid_user and valid_pass
-
-        notify_login(username, ip, success)
-
-        if success:
-            session["admin"] = True
-            return redirect(url_for("admin"))
-        return render_template("admin_login.html", error="Invalid credentials.")
-
     if not session.get("admin"):
-        return render_template("admin_login.html", error=None)
+        return render_template("admin_login.html")
 
     data = load_data()
     signups = list(reversed(data["signups"]))
@@ -720,10 +789,72 @@ def admin():
     )
 
 
+@app.route("/admin/login", methods=["POST"])
+def admin_login():
+    if not _AUTH_BOT_OK or not BOT_TOKEN:
+        return jsonify({"error": "Discord 2FA not configured on the server."}), 503
+
+    ip = request.headers.get("X-Forwarded-For", request.remote_addr).split(",")[0].strip()
+
+    if not _login_allowed(ip):
+        return jsonify({"error": "Too many attempts. Try again in 15 minutes."}), 429
+
+    username = request.form.get("username", "")
+    password = request.form.get("password", "")
+
+    valid_user = secrets.compare_digest(username, ADMIN_USERNAME)
+    valid_pass = check_admin_password(password) if valid_user else False
+
+    if not (valid_user and valid_pass):
+        _record_login_fail(ip)
+        notify_login(username, ip, False)
+        return jsonify({"error": "Invalid credentials."}), 401
+
+    req_id = secrets.token_urlsafe(32)
+    ua = request.headers.get("User-Agent", "")
+    auth_bot.create_request(req_id, ip, ua)
+    return jsonify({"pending": True, "request_id": req_id})
+
+
+@app.route("/admin/login/check")
+def admin_login_check():
+    req_id = request.args.get("id", "")
+    if not req_id or not _AUTH_BOT_OK:
+        return jsonify({"status": "expired"})
+
+    status = auth_bot.get_status(req_id)
+
+    if status == "approved" and auth_bot.consume(req_id):
+        ip = request.headers.get("X-Forwarded-For", request.remote_addr).split(",")[0].strip()
+        session["admin"] = True
+        notify_login(ADMIN_USERNAME, ip, True)
+        return jsonify({"status": "approved"})
+
+    return jsonify({"status": status})
+
+
 @app.route("/admin/logout")
 def admin_logout():
     session.pop("admin", None)
     return redirect(url_for("admin"))
+
+
+@app.route("/admin/change-password", methods=["POST"])
+def admin_change_password():
+    if not session.get("admin"):
+        return jsonify({"error": "unauthorized"}), 401
+
+    body        = request.json or {}
+    current_pw  = body.get("current_password", "")
+    new_pw      = body.get("new_password", "")
+
+    if not check_admin_password(current_pw):
+        return jsonify({"error": "Current password is incorrect."}), 403
+    if len(new_pw) < 12:
+        return jsonify({"error": "New password must be at least 12 characters."}), 400
+
+    update_admin_password(new_pw)
+    return jsonify({"ok": True})
 
 
 @app.route("/admin/applications/status", methods=["POST"])
