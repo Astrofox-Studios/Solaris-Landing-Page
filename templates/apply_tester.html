@@ -1,0 +1,295 @@
+{% extends "base.html" %}
+
+{% block title %}Tester Application | Solaris{% endblock %}
+{% block description %}Apply to join the Solaris tester programme and get early access to upcoming content.{% endblock %}
+{% block og_title %}Tester Application | Solaris{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/apply.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="apply-form-page">
+    <div class="apply-form-header fade-in">
+        <a href="/apply" class="apply-back-link"><i class="fa-solid fa-arrow-left"></i> Back</a>
+        <h1>Tester Programme</h1>
+        <p>Get early access to upcoming Solaris content, hunt bugs, and give feedback that shapes the final experience. Fill this out honestly. We want testers who are engaged, not just impressive.</p>
+    </div>
+
+    <!-- Step indicator -->
+    <div class="apply-steps-indicator fade-in">
+        <div class="apply-step-dot active" data-step="1"><span>1</span><label>Rules</label></div>
+        <div class="apply-step-line"></div>
+        <div class="apply-step-dot" data-step="2"><span>2</span><label>Details</label></div>
+        <div class="apply-step-line"></div>
+        <div class="apply-step-dot" data-step="3"><span>3</span><label>Experience</label></div>
+        <div class="apply-step-line"></div>
+        <div class="apply-step-dot" data-step="4"><span>4</span><label>Submit</label></div>
+    </div>
+
+    <form id="tester-form" class="apply-form" novalidate>
+
+        <!-- Step 1: Rules -->
+        <div class="apply-form-step active" data-step="1">
+            <div class="apply-section-header">
+                <h2>Before you apply</h2>
+                <p>Please read the rules carefully. Testers are trusted members of our community and we take this seriously.</p>
+            </div>
+
+            <div class="apply-rules-box">
+                <div class="apply-rule">
+                    <i class="fa-solid fa-lock"></i>
+                    <p><strong>No leaking.</strong> Do not share anything that isn't publicly known, especially in the main community Discord.</p>
+                </div>
+                <div class="apply-rule">
+                    <i class="fa-solid fa-hand"></i>
+                    <p><strong>No harassment or bullying.</strong> Treat every member of the team and testing group with respect.</p>
+                </div>
+                <div class="apply-rule">
+                    <i class="fa-solid fa-ban"></i>
+                    <p><strong>No NSFW content.</strong> Keep all channels and communications appropriate.</p>
+                </div>
+                <div class="apply-rule">
+                    <i class="fa-solid fa-video"></i>
+                    <p><strong>Recording &amp; streaming.</strong> You may livestream and record for bug-finding purposes unless we announce otherwise. Watch the announcements channel.</p>
+                </div>
+                <div class="apply-rule">
+                    <i class="fa-solid fa-comment-slash"></i>
+                    <p><strong>No offensive humour.</strong> Do not make hurtful jokes about serious topics.</p>
+                </div>
+                <div class="apply-rule">
+                    <i class="fa-solid fa-calendar-xmark"></i>
+                    <p><strong>Blacklist agreement.</strong> If accepted, you will be blacklisted from the live event for at least 2 testing cycles after you last played.</p>
+                </div>
+            </div>
+
+            <div class="apply-field">
+                <label>Do you agree to all of these rules? <span class="req">*</span></label>
+                <div class="apply-radio-group">
+                    <label class="apply-radio"><input type="radio" name="rules_agreed" value="yes" required> Yes, I agree</label>
+                    <label class="apply-radio"><input type="radio" name="rules_agreed" value="no"> No</label>
+                </div>
+            </div>
+
+            <div class="apply-field">
+                <label>Do you agree that if accepted you will be blacklisted from the live event for at least 2 testing cycles? <span class="req">*</span></label>
+                <div class="apply-radio-group">
+                    <label class="apply-radio"><input type="radio" name="blacklist_agreed" value="yes" required> Yes, I understand and agree</label>
+                    <label class="apply-radio"><input type="radio" name="blacklist_agreed" value="no"> No</label>
+                </div>
+            </div>
+
+            <div class="apply-field">
+                <label>Do you own a valid Minecraft Java Edition account? <span class="req">*</span></label>
+                <div class="apply-radio-group">
+                    <label class="apply-radio"><input type="radio" name="owns_java" value="yes" required> Yes</label>
+                    <label class="apply-radio"><input type="radio" name="owns_java" value="no"> No</label>
+                </div>
+            </div>
+
+            <div id="rules-warning" class="apply-error-msg" style="display:none;">
+                You must agree to all rules and own a Java account to apply as a tester.
+            </div>
+
+            <div class="apply-step-nav">
+                <button type="button" class="btn btn-primary apply-next-btn" id="step1-next">
+                    Continue <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 2: Contact Details -->
+        <div class="apply-form-step" data-step="2">
+            <div class="apply-section-header">
+                <h2>Contacts &amp; usernames</h2>
+                <p>We'll use these to get in touch and whitelist you for testing sessions.</p>
+            </div>
+
+            <div class="apply-field">
+                <label for="t-email">Email address <span class="req">*</span></label>
+                <input type="email" id="t-email" name="email" placeholder="your@email.com" autocomplete="email" required>
+            </div>
+
+            <div class="apply-fields-row">
+                <div class="apply-field">
+                    <label for="t-ign">Minecraft IGN <span class="req">*</span></label>
+                    <input type="text" id="t-ign" name="minecraft_ign" placeholder="Your in-game name" required>
+                </div>
+                <div class="apply-field">
+                    <label for="t-discord">Discord @ <span class="req">*</span></label>
+                    <input type="text" id="t-discord" name="discord" placeholder="e.g. @username" required>
+                </div>
+            </div>
+
+            <div class="apply-fields-row">
+                <div class="apply-field apply-field-sm">
+                    <label for="t-age">Age <span class="req">*</span></label>
+                    <input type="number" id="t-age" name="age" placeholder="Age" min="10" max="99" required>
+                </div>
+                <div class="apply-field">
+                    <label for="t-pronouns">Pronouns <span class="req">*</span></label>
+                    <input type="text" id="t-pronouns" name="pronouns" placeholder="e.g. he/him, she/her, they/them" required>
+                </div>
+            </div>
+
+            <div class="apply-field">
+                <label>Have you tested for Astrofox Studios before? <span class="req">*</span></label>
+                <div class="apply-radio-group">
+                    <label class="apply-radio"><input type="radio" name="tested_before" value="yes"> Yes</label>
+                    <label class="apply-radio"><input type="radio" name="tested_before" value="no" checked> No</label>
+                </div>
+            </div>
+
+            <div class="apply-field">
+                <label>As a tester you'll need to give lots of feedback. Are you OK with that? <span class="req">*</span></label>
+                <div class="apply-radio-group">
+                    <label class="apply-radio"><input type="radio" name="feedback_ok" value="yes"> Yes, absolutely</label>
+                    <label class="apply-radio"><input type="radio" name="feedback_ok" value="no"> No</label>
+                </div>
+            </div>
+
+            <div class="apply-step-nav">
+                <button type="button" class="btn btn-secondary apply-prev-btn">
+                    <i class="fa-solid fa-arrow-left"></i> Back
+                </button>
+                <button type="button" class="btn btn-primary apply-next-btn" id="step2-next">
+                    Continue <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 3: Experience & Opinions -->
+        <div class="apply-form-step" data-step="3">
+            <div class="apply-section-header">
+                <h2>Experience &amp; opinions</h2>
+                <p>Be honest. We're looking for engaged testers, not necessarily the most skilled players.</p>
+            </div>
+
+            <div class="apply-field">
+                <label for="t-prior">What events or projects have you tested before? <span class="req">*</span></label>
+                <textarea id="t-prior" name="prior_testing" rows="3" placeholder="Any Minecraft servers, games, or software you've tested. If none, say so!"></textarea>
+            </div>
+
+            <div class="apply-field">
+                <label for="t-other-exp">As a tester, what other relevant experience do you have? <span class="req">*</span></label>
+                <textarea id="t-other-exp" name="other_experience" rows="3" placeholder="Doesn't have to be testing. Anything that helps you give great feedback: bug reporting, game design knowledge, technical skills..."></textarea>
+            </div>
+
+            <div class="apply-field">
+                <label>On a scale of 1–10, how would you rate your overall Minecraft ability? <span class="req">*</span></label>
+                <p class="apply-field-hint">Be honest. We want people who aren't that sweaty. <strong>Don't put 7.</strong></p>
+                <div class="skill-slider-wrap">
+                    <input type="range" id="t-skill" name="skill_level" min="1" max="10" value="5" class="skill-slider">
+                    <div class="skill-labels">
+                        <span>1: New to the game</span>
+                        <span id="skill-val">5</span>
+                        <span>10: Absolute GOD</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="apply-field">
+                <label for="t-opinion">What's your opinion on any Astrofox Studios projects you've seen? <span class="req">*</span></label>
+                <p class="apply-field-hint">Destiny Games, Callisto, Solaris, Tropiclash, Astrofox Outpost. Or just what you've heard about them.</p>
+                <textarea id="t-opinion" name="opinion" rows="4" placeholder="Share your honest thoughts. Good and bad are both welcome."></textarea>
+            </div>
+
+            <div class="apply-field">
+                <label for="t-improvements">Any improvements you'd like to see across Astrofox events?</label>
+                <p class="apply-field-hint">Optional, but thoughtful answers here can really help your application.</p>
+                <textarea id="t-improvements" name="improvements" rows="3" placeholder="What would make the events better?"></textarea>
+            </div>
+
+            <div class="apply-field">
+                <label for="t-extra">Anything else to add?</label>
+                <textarea id="t-extra" name="extra" rows="2" placeholder="Questions, context, or anything else..."></textarea>
+            </div>
+
+            <div class="apply-step-nav">
+                <button type="button" class="btn btn-secondary apply-prev-btn">
+                    <i class="fa-solid fa-arrow-left"></i> Back
+                </button>
+                <button type="button" class="btn btn-primary apply-next-btn" id="step3-next">
+                    Review <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 4: Review & Submit -->
+        <div class="apply-form-step" data-step="4">
+            <div class="apply-section-header">
+                <h2>Ready to submit?</h2>
+                <p>We'll review your application and reach out on Discord. If accepted you'll get access to the testing Discord channel.</p>
+            </div>
+
+            <div class="apply-review-box">
+                <div class="apply-review-row">
+                    <span class="apply-review-label">Minecraft IGN</span>
+                    <span class="apply-review-value" id="review-ign"></span>
+                </div>
+                <div class="apply-review-row">
+                    <span class="apply-review-label">Email</span>
+                    <span class="apply-review-value" id="review-email"></span>
+                </div>
+                <div class="apply-review-row">
+                    <span class="apply-review-label">Discord</span>
+                    <span class="apply-review-value" id="review-discord"></span>
+                </div>
+                <div class="apply-review-row">
+                    <span class="apply-review-label">Age</span>
+                    <span class="apply-review-value" id="review-age"></span>
+                </div>
+                <div class="apply-review-row">
+                    <span class="apply-review-label">Pronouns</span>
+                    <span class="apply-review-value" id="review-pronouns"></span>
+                </div>
+                <div class="apply-review-row">
+                    <span class="apply-review-label">Skill level</span>
+                    <span class="apply-review-value" id="review-skill"></span>
+                </div>
+                <div class="apply-review-row">
+                    <span class="apply-review-label">Tested before?</span>
+                    <span class="apply-review-value" id="review-tested"></span>
+                </div>
+                <div class="apply-review-row">
+                    <span class="apply-review-label">Owns Java?</span>
+                    <span class="apply-review-value" id="review-java"></span>
+                </div>
+                <div class="apply-review-row">
+                    <span class="apply-review-label">Rules agreed?</span>
+                    <span class="apply-review-value" id="review-rules"></span>
+                </div>
+            </div>
+
+            <div class="apply-disclaimer">
+                By submitting, you confirm all information is accurate and that you agree to the tester rules stated above.
+            </div>
+
+            <div id="apply-error" class="apply-error-msg" style="display:none;"></div>
+
+            <div class="apply-step-nav">
+                <button type="button" class="btn btn-secondary apply-prev-btn">
+                    <i class="fa-solid fa-arrow-left"></i> Back
+                </button>
+                <button type="submit" class="btn btn-primary apply-submit-btn" id="submit-btn">
+                    Submit Application <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Success -->
+        <div class="apply-success" id="apply-success" style="display:none;">
+            <div class="apply-success-icon"><i class="fa-solid fa-circle-check"></i></div>
+            <h2>Application submitted!</h2>
+            <p>Thanks for applying to the tester programme! We'll review your application and reach out on Discord. Keep an eye out for an invite.</p>
+            <p class="apply-success-id">Application ID: <strong id="success-app-id"></strong></p>
+            <a href="/" class="btn btn-primary">Back to Home</a>
+        </div>
+
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/apply-tester.js') }}"></script>
+{% endblock %}

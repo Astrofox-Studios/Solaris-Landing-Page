@@ -23,6 +23,7 @@ OUTDATED_CUTOFF = date(2026, 1, 1)
 DATA_FILE = Path("data.json")
 SIGNUPS_FILE = Path("signups.txt")
 BACKUPS_DIR = Path("backups")
+APPLICATIONS_FILE = Path("applications.json")
 
 DISCORD_WEBHOOK = os.environ.get(
     "DISCORD_WEBHOOK",
@@ -32,6 +33,20 @@ ADMIN_USERNAME = os.environ.get("ADMIN_USERNAME", "admin")
 ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "solaris2026")
 
 data_lock = threading.Lock()
+applications_lock = threading.Lock()
+
+VALID_STAFF_ROLES = {
+    "Java / Kotlin Developer",
+    "Builder",
+    "Support Staff / Moderator",
+    "System Administrator",
+    "2D Artist",
+    "3D Modeler",
+    "Game / Content Designer",
+    "Animator",
+    "Marketing",
+    "Other",
+}
 
 DISPOSABLE_DOMAINS = {
     "mailinator.com", "guerrillamail.com", "trashmail.com", "yopmail.com",
@@ -100,6 +115,74 @@ def notify_login(username: str, ip: str, success: bool):
                 {"name": "IP", "value": ip, "inline": True},
             ],
             "timestamp": datetime.utcnow().isoformat() + "Z",
+        }],
+    })
+
+
+# ── Applications data ────────────────────────────────────────────────────────
+
+def _read_applications():
+    empty = {"staff": [], "testers": [], "staff_count": 0, "tester_count": 0}
+    if not APPLICATIONS_FILE.exists():
+        return empty
+    try:
+        with open(APPLICATIONS_FILE, "r") as f:
+            data = json.load(f)
+    except (json.JSONDecodeError, ValueError):
+        return empty
+    data.setdefault("staff", [])
+    data.setdefault("testers", [])
+    data.setdefault("staff_count", len(data["staff"]))
+    data.setdefault("tester_count", len(data["testers"]))
+    return data
+
+
+def load_applications():
+    with applications_lock:
+        return _read_applications()
+
+
+def save_applications(data):
+    tmp = Path(str(APPLICATIONS_FILE) + ".tmp")
+    with open(tmp, "w") as f:
+        json.dump(data, f, indent=2)
+    tmp.replace(APPLICATIONS_FILE)
+
+
+def notify_staff_application(app_data: dict):
+    role = app_data.get("role", "Unknown")
+    discord = app_data.get("general", {}).get("discord", "—")
+    age = app_data.get("general", {}).get("age", "—")
+    send_discord({
+        "username": "Solaris Applications",
+        "embeds": [{
+            "title": f"📋 New Staff Application — {role}",
+            "color": 6892787,
+            "fields": [
+                {"name": "Role", "value": role, "inline": True},
+                {"name": "Discord", "value": discord, "inline": True},
+                {"name": "Age", "value": age, "inline": True},
+                {"name": "Application #", "value": str(app_data.get("id", "?")), "inline": True},
+            ],
+            "timestamp": app_data.get("timestamp", datetime.utcnow().isoformat()) + "Z",
+        }],
+    })
+
+
+def notify_tester_application(app_data: dict):
+    send_discord({
+        "username": "Solaris Applications",
+        "embeds": [{
+            "title": "🎮 New Tester Application",
+            "color": 1547855,
+            "fields": [
+                {"name": "IGN", "value": app_data.get("minecraft_ign", "—"), "inline": True},
+                {"name": "Discord", "value": app_data.get("discord", "—"), "inline": True},
+                {"name": "Age", "value": app_data.get("age", "—"), "inline": True},
+                {"name": "Skill Level", "value": str(app_data.get("skill_level", "—")) + "/10", "inline": True},
+                {"name": "Application #", "value": str(app_data.get("id", "?")), "inline": True},
+            ],
+            "timestamp": app_data.get("timestamp", datetime.utcnow().isoformat()) + "Z",
         }],
     })
 
@@ -319,6 +402,188 @@ def store():
     return render_template("store.html")
 
 
+@app.route("/apply")
+def apply_landing():
+    return render_template("apply.html")
+
+
+@app.route("/apply/staff", methods=["GET", "POST"])
+def apply_staff():
+    if request.method == "GET":
+        return render_template("apply_staff.html")
+
+    try:
+        role = request.form.get("role", "").strip()
+        if role not in VALID_STAFF_ROLES:
+            return jsonify({"error": "invalid_role"}), 400
+
+        discord = request.form.get("discord", "").strip()
+        age = request.form.get("age", "").strip()
+        microphone = request.form.get("microphone", "").strip()
+
+        if not discord or not age or not microphone:
+            return jsonify({"error": "missing_required"}), 400
+
+        role_fields = {}
+        if role == "Java / Kotlin Developer":
+            role_fields["github"] = request.form.get("github", "").strip()
+            role_fields["languages"] = request.form.getlist("languages")
+            role_fields["experience"] = request.form.get("experience", "").strip()
+            role_fields["years_coding"] = request.form.get("years_coding", "").strip()
+        elif role == "Builder":
+            role_fields["experience"] = request.form.get("experience", "").strip()
+            role_fields["years_building"] = request.form.get("years_building", "").strip()
+            role_fields["style"] = request.form.get("style", "").strip()
+            role_fields["portfolio"] = request.form.get("portfolio", "").strip()
+        elif role == "Support Staff / Moderator":
+            role_fields["experience"] = request.form.get("experience", "").strip()
+            role_fields["years_support"] = request.form.get("years_support", "").strip()
+        elif role == "System Administrator":
+            role_fields["experience"] = request.form.get("experience", "").strip()
+            role_fields["years_sysadmin"] = request.form.get("years_sysadmin", "").strip()
+        elif role == "2D Artist":
+            role_fields["art_type"] = request.form.get("art_type", "").strip()
+            role_fields["experience"] = request.form.get("experience", "").strip()
+            role_fields["years_art"] = request.form.get("years_art", "").strip()
+            role_fields["portfolio"] = request.form.get("portfolio", "").strip()
+        elif role == "3D Modeler":
+            role_fields["model_type"] = request.form.get("model_type", "").strip()
+            role_fields["software"] = request.form.get("software", "").strip()
+            role_fields["experience"] = request.form.get("experience", "").strip()
+            role_fields["years_modeling"] = request.form.get("years_modeling", "").strip()
+            role_fields["portfolio"] = request.form.get("portfolio", "").strip()
+        elif role == "Game / Content Designer":
+            role_fields["fav_aspect"] = request.form.get("fav_aspect", "").strip()
+            role_fields["experience"] = request.form.get("experience", "").strip()
+            role_fields["years_design"] = request.form.get("years_design", "").strip()
+            role_fields["process"] = request.form.get("process", "").strip()
+        elif role == "Animator":
+            role_fields["anim_type"] = request.form.get("anim_type", "").strip()
+            role_fields["experience"] = request.form.get("experience", "").strip()
+            role_fields["years_animating"] = request.form.get("years_animating", "").strip()
+        elif role == "Marketing":
+            role_fields["experience"] = request.form.get("experience", "").strip()
+            role_fields["years_marketing"] = request.form.get("years_marketing", "").strip()
+            role_fields["best_method"] = request.form.get("best_method", "").strip()
+        elif role == "Other":
+            role_fields["custom_role"] = request.form.get("custom_role", "").strip()
+            role_fields["experience"] = request.form.get("experience", "").strip()
+
+        now = datetime.utcnow()
+        ip = request.headers.get("X-Forwarded-For", request.remote_addr).split(",")[0].strip()
+
+        app_record = {
+            "role": role,
+            "role_fields": role_fields,
+            "general": {
+                "discord": discord,
+                "age": age,
+                "microphone": microphone,
+                "socials": request.form.get("socials", "").strip(),
+                "portfolio_link": request.form.get("portfolio_link", "").strip(),
+                "extra": request.form.get("extra", "").strip(),
+            },
+            "timestamp": now.isoformat(),
+            "date": now.strftime("%Y-%m-%d"),
+            "time": now.strftime("%H:%M:%S"),
+            "ip": ip,
+            "status": "pending",
+        }
+
+        with applications_lock:
+            data = _read_applications()
+            app_record["id"] = len(data["staff"]) + 1
+            data["staff"].append(app_record)
+            data["staff_count"] = len(data["staff"])
+            save_applications(data)
+
+        notify_staff_application(app_record)
+        return jsonify({"success": True, "id": app_record["id"]})
+
+    except Exception as e:
+        app.logger.error("apply_staff error: %s", e, exc_info=True)
+        return jsonify({"error": "server_error"}), 500
+
+
+@app.route("/apply/tester", methods=["GET", "POST"])
+def apply_tester():
+    if request.method == "GET":
+        return render_template("apply_tester.html")
+
+    try:
+        email = request.form.get("email", "").strip().lower()
+        if not validate_email(email):
+            return jsonify({"error": "invalid_email"}), 400
+
+        rules_agreed = request.form.get("rules_agreed", "")
+        blacklist_agreed = request.form.get("blacklist_agreed", "")
+        owns_java = request.form.get("owns_java", "")
+        feedback_ok = request.form.get("feedback_ok", "")
+
+        if rules_agreed != "yes" or blacklist_agreed != "yes":
+            return jsonify({"error": "must_agree_rules"}), 400
+        if owns_java != "yes":
+            return jsonify({"error": "must_own_java"}), 400
+        if feedback_ok != "yes":
+            return jsonify({"error": "must_accept_feedback"}), 400
+
+        minecraft_ign = request.form.get("minecraft_ign", "").strip()
+        discord = request.form.get("discord", "").strip()
+        age = request.form.get("age", "").strip()
+        pronouns = request.form.get("pronouns", "").strip()
+
+        if not all([minecraft_ign, discord, age, pronouns]):
+            return jsonify({"error": "missing_required"}), 400
+
+        try:
+            skill_level = int(request.form.get("skill_level", "0"))
+            if not (1 <= skill_level <= 10):
+                raise ValueError
+        except (ValueError, TypeError):
+            return jsonify({"error": "invalid_skill_level"}), 400
+
+        now = datetime.utcnow()
+        ip = request.headers.get("X-Forwarded-For", request.remote_addr).split(",")[0].strip()
+
+        app_record = {
+            "email": email,
+            "minecraft_ign": minecraft_ign,
+            "discord": discord,
+            "age": age,
+            "pronouns": pronouns,
+            "owns_java": owns_java,
+            "tested_before": request.form.get("tested_before", "no"),
+            "rules_agreed": rules_agreed,
+            "feedback_ok": feedback_ok,
+            "blacklist_agreed": blacklist_agreed,
+            "skill_level": skill_level,
+            "prior_testing": request.form.get("prior_testing", "").strip(),
+            "other_experience": request.form.get("other_experience", "").strip(),
+            "opinion": request.form.get("opinion", "").strip(),
+            "improvements": request.form.get("improvements", "").strip(),
+            "extra": request.form.get("extra", "").strip(),
+            "timestamp": now.isoformat(),
+            "date": now.strftime("%Y-%m-%d"),
+            "time": now.strftime("%H:%M:%S"),
+            "ip": ip,
+            "status": "pending",
+        }
+
+        with applications_lock:
+            data = _read_applications()
+            app_record["id"] = len(data["testers"]) + 1
+            data["testers"].append(app_record)
+            data["tester_count"] = len(data["testers"])
+            save_applications(data)
+
+        notify_tester_application(app_record)
+        return jsonify({"success": True, "id": app_record["id"]})
+
+    except Exception as e:
+        app.logger.error("apply_tester error: %s", e, exc_info=True)
+        return jsonify({"error": "server_error"}), 500
+
+
 @app.route("/beta-signup", methods=["POST"])
 def beta_signup():
     try:
@@ -387,7 +652,10 @@ def beta_signup():
             data["ip_signups"][ip] = email
 
             save_data(data)
-            save_signup_txt(data)
+            try:
+                save_signup_txt(data)
+            except Exception as txt_err:
+                app.logger.warning("save_signup_txt failed: %s", txt_err)
 
         notify_signup(signup)
         return jsonify({"success": True, "number": total})
@@ -427,12 +695,18 @@ def admin():
         c = s.get("country", "") or "Unknown"
         country_breakdown[c] = country_breakdown.get(c, 0) + 1
 
+    apps = load_applications()
+    staff_apps = list(reversed(apps["staff"]))
+    tester_apps = list(reversed(apps["testers"]))
+
     return render_template(
         "admin.html",
         total=data["total_signups"],
         signups=signups,
         country_breakdown=country_breakdown,
         ip_attempts=data["ip_attempts"],
+        staff_apps=staff_apps,
+        tester_apps=tester_apps,
     )
 
 
@@ -440,6 +714,34 @@ def admin():
 def admin_logout():
     session.pop("admin", None)
     return redirect(url_for("admin"))
+
+
+@app.route("/admin/applications/status", methods=["POST"])
+def admin_update_application_status():
+    if not session.get("admin"):
+        return jsonify({"error": "unauthorized"}), 401
+
+    app_type = request.json.get("type")
+    app_id   = request.json.get("id")
+    status   = request.json.get("status")
+
+    if app_type not in ("staff", "tester") or status not in ("pending", "accepted", "rejected"):
+        return jsonify({"error": "invalid_params"}), 400
+
+    collection_key = "staff" if app_type == "staff" else "testers"
+
+    with applications_lock:
+        data = _read_applications()
+        collection = data.get(collection_key, [])
+        for entry in collection:
+            if entry.get("id") == app_id:
+                entry["status"] = status
+                break
+        else:
+            return jsonify({"error": "not_found"}), 404
+        save_applications(data)
+
+    return jsonify({"ok": True, "status": status})
 
 
 if __name__ == "__main__":

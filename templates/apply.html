@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}Apply | Solaris{% endblock %}
+{% block description %}Join the Solaris team. Apply for a staff position or join our tester programme.{% endblock %}
+{% block og_title %}Join the Solaris Team{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/apply.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="apply-hero">
+    <div class="apply-hero-bg"></div>
+    <div class="section-container">
+        <div class="apply-hero-content fade-in">
+            <h1>Join the Team</h1>
+            <p class="apply-hero-sub">Help us build something incredible. Whether you want to shape Solaris behind the scenes or play it before anyone else, there's a place for you here.</p>
+            <p class="apply-volunteer-note">All staff positions are currently voluntary. We hope to change this as the server grows.</p>
+        </div>
+    </div>
+</section>
+
+<section class="apply-cards-section">
+    <div class="section-container">
+        <div class="apply-cards">
+
+            <a href="/apply/staff" class="apply-card fade-in">
+                <div class="apply-card-icon">
+                    <i class="fa-solid fa-hammer"></i>
+                </div>
+                <div class="apply-card-body">
+                    <h2>Staff Application</h2>
+                    <p>Join the Solaris development and operations team. We're looking for developers, builders, artists, moderators, and more.</p>
+                    <ul class="apply-roles-list">
+                        <li><i class="fa-solid fa-code"></i> Java / Kotlin Developer</li>
+                        <li><i class="fa-solid fa-cubes"></i> Builder</li>
+                        <li><i class="fa-solid fa-palette"></i> 2D Artist / 3D Modeler</li>
+                        <li><i class="fa-solid fa-headset"></i> Support Staff / Moderator</li>
+                        <li><i class="fa-solid fa-server"></i> System Administrator</li>
+                        <li><i class="fa-solid fa-ellipsis"></i> And more...</li>
+                    </ul>
+                </div>
+                <div class="apply-card-cta">
+                    Apply for Staff <i class="fa-solid fa-arrow-right"></i>
+                </div>
+            </a>
+
+            <a href="/apply/tester" class="apply-card apply-card-tester fade-in">
+                <div class="apply-card-icon">
+                    <i class="fa-solid fa-flask"></i>
+                </div>
+                <div class="apply-card-body">
+                    <h2>Tester Programme</h2>
+                    <p>Get early access to upcoming content before anyone else. Play test events, hunt bugs, and give feedback that shapes the final experience.</p>
+                    <ul class="apply-roles-list">
+                        <li><i class="fa-solid fa-gamepad"></i> Early access to new content</li>
+                        <li><i class="fa-solid fa-bug"></i> Bug hunting &amp; feedback</li>
+                        <li><i class="fa-solid fa-users"></i> Exclusive tester community</li>
+                        <li><i class="fa-solid fa-star"></i> Help shape Solaris</li>
+                    </ul>
+                    <p class="apply-tester-note">Requires a valid Minecraft Java Edition account.</p>
+                </div>
+                <div class="apply-card-cta">
+                    Apply as Tester <i class="fa-solid fa-arrow-right"></i>
+                </div>
+            </a>
+
+        </div>
+    </div>
+</section>
+
+
+<section class="apply-process-section">
+    <div class="section-container">
+        <h2 class="apply-process-title fade-in">How it works</h2>
+        <div class="apply-process-steps">
+            <div class="apply-process-step fade-in">
+                <div class="apply-step-num">1</div>
+                <h3>Fill out the form</h3>
+                <p>Answer a few questions about yourself and your experience. Only takes a few minutes.</p>
+            </div>
+            <div class="apply-process-arrow fade-in"><i class="fa-solid fa-chevron-right"></i></div>
+            <div class="apply-process-step fade-in">
+                <div class="apply-step-num">2</div>
+                <h3>We review</h3>
+                <p>Our team reads every application carefully. We'll get back to you via Discord.</p>
+            </div>
+            <div class="apply-process-arrow fade-in"><i class="fa-solid fa-chevron-right"></i></div>
+            <div class="apply-process-step fade-in">
+                <div class="apply-step-num">3</div>
+                <h3>Interview (staff only)</h3>
+                <p>If you're a strong fit for a staff role, we'll invite you to a short interview.</p>
+            </div>
+            <div class="apply-process-arrow fade-in"><i class="fa-solid fa-chevron-right"></i></div>
+            <div class="apply-process-step fade-in">
+                <div class="apply-step-num">4</div>
+                <h3>Welcome aboard</h3>
+                <p>Accepted? You'll get access to our private channels and briefed on what's next.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

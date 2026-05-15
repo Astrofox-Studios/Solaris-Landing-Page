@@ -1,0 +1,462 @@
+{% extends "base.html" %}
+
+{% block title %}Staff Application | Solaris{% endblock %}
+{% block description %}Apply for a staff position at Solaris, Minecraft's new dawn.{% endblock %}
+{% block og_title %}Staff Application | Solaris{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/apply.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="apply-form-page">
+    <div class="apply-form-header fade-in">
+        <a href="/apply" class="apply-back-link"><i class="fa-solid fa-arrow-left"></i> Back</a>
+        <h1>Staff Application</h1>
+        <p>Welcome! Fill this out honestly. There are no trick questions. If you're a great fit, we'll reach out via Discord for an interview.</p>
+        <p class="apply-volunteer-note">All positions are currently voluntary.</p>
+    </div>
+
+    <!-- Step indicator -->
+    <div class="apply-steps-indicator fade-in">
+        <div class="apply-step-dot active" data-step="1"><span>1</span><label>Role</label></div>
+        <div class="apply-step-line"></div>
+        <div class="apply-step-dot" data-step="2"><span>2</span><label>Experience</label></div>
+        <div class="apply-step-line"></div>
+        <div class="apply-step-dot" data-step="3"><span>3</span><label>About You</label></div>
+        <div class="apply-step-line"></div>
+        <div class="apply-step-dot" data-step="4"><span>4</span><label>Submit</label></div>
+    </div>
+
+    <form id="staff-form" class="apply-form" novalidate>
+
+        <!-- Step 1: Role Selection -->
+        <div class="apply-form-step active" data-step="1">
+            <div class="apply-section-header">
+                <h2>What position are you applying for?</h2>
+                <p>Select the role that best matches your skills. You'll answer role-specific questions next.</p>
+            </div>
+            <div class="role-grid">
+                <label class="role-card" data-role="Java / Kotlin Developer">
+                    <input type="radio" name="role" value="Java / Kotlin Developer">
+                    <div class="role-card-inner">
+                        <i class="fa-solid fa-code"></i>
+                        <span class="role-name">Java / Kotlin Developer</span>
+                        <span class="role-desc">Build and maintain the Minecraft plugins and game systems that power Solaris.</span>
+                    </div>
+                </label>
+                <label class="role-card" data-role="Builder">
+                    <input type="radio" name="role" value="Builder">
+                    <div class="role-card-inner">
+                        <i class="fa-solid fa-cubes"></i>
+                        <span class="role-name">Builder</span>
+                        <span class="role-desc">Create stunning Minecraft worlds, arenas, lobbies, and environments.</span>
+                    </div>
+                </label>
+                <label class="role-card" data-role="Support Staff / Moderator">
+                    <input type="radio" name="role" value="Support Staff / Moderator">
+                    <div class="role-card-inner">
+                        <i class="fa-solid fa-headset"></i>
+                        <span class="role-name">Support Staff / Moderator</span>
+                        <span class="role-desc">Keep the community safe and help players with issues and queries.</span>
+                    </div>
+                </label>
+                <label class="role-card" data-role="System Administrator">
+                    <input type="radio" name="role" value="System Administrator">
+                    <div class="role-card-inner">
+                        <i class="fa-solid fa-server"></i>
+                        <span class="role-name">System Administrator</span>
+                        <span class="role-desc">Manage infrastructure, deployments, and keep the servers running smoothly.</span>
+                    </div>
+                </label>
+                <label class="role-card" data-role="2D Artist">
+                    <input type="radio" name="role" value="2D Artist">
+                    <div class="role-card-inner">
+                        <i class="fa-solid fa-pen-nib"></i>
+                        <span class="role-name">2D Artist</span>
+                        <span class="role-desc">Design UI, textures, illustrations, and promotional artwork for Solaris.</span>
+                    </div>
+                </label>
+                <label class="role-card" data-role="3D Modeler">
+                    <input type="radio" name="role" value="3D Modeler">
+                    <div class="role-card-inner">
+                        <i class="fa-solid fa-cube"></i>
+                        <span class="role-name">3D Modeler</span>
+                        <span class="role-desc">Create custom 3D models for items, characters, environments, and cosmetics.</span>
+                    </div>
+                </label>
+                <label class="role-card" data-role="Game / Content Designer">
+                    <input type="radio" name="role" value="Game / Content Designer">
+                    <div class="role-card-inner">
+                        <i class="fa-solid fa-dice-d20"></i>
+                        <span class="role-name">Game / Content Designer</span>
+                        <span class="role-desc">Design gameplay systems, mechanics, events, and content for the server.</span>
+                    </div>
+                </label>
+                <label class="role-card" data-role="Animator">
+                    <input type="radio" name="role" value="Animator">
+                    <div class="role-card-inner">
+                        <i class="fa-solid fa-film"></i>
+                        <span class="role-name">Animator</span>
+                        <span class="role-desc">Produce animations for promotional content, trailers, and in-game elements.</span>
+                    </div>
+                </label>
+                <label class="role-card" data-role="Marketing">
+                    <input type="radio" name="role" value="Marketing">
+                    <div class="role-card-inner">
+                        <i class="fa-solid fa-bullhorn"></i>
+                        <span class="role-name">Marketing</span>
+                        <span class="role-desc">Grow the Solaris brand through social media, content creation, and community outreach.</span>
+                    </div>
+                </label>
+                <label class="role-card" data-role="Other">
+                    <input type="radio" name="role" value="Other">
+                    <div class="role-card-inner">
+                        <i class="fa-solid fa-ellipsis"></i>
+                        <span class="role-name">Other</span>
+                        <span class="role-desc">Have a skill that doesn't fit the above? Tell us what you can bring to the team.</span>
+                    </div>
+                </label>
+            </div>
+            <div class="apply-step-nav">
+                <button type="button" class="btn btn-primary apply-next-btn" id="step1-next" disabled>
+                    Continue <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 2: Role-Specific Questions -->
+        <div class="apply-form-step" data-step="2">
+            <div class="apply-section-header">
+                <h2 id="step2-title">About your experience</h2>
+                <p id="step2-desc">Tell us about your background in this role.</p>
+            </div>
+
+            <!-- Java / Kotlin Developer -->
+            <div class="role-fields" data-role="Java / Kotlin Developer">
+                <div class="apply-field">
+                    <label for="r-github">GitHub username</label>
+                    <input type="text" id="r-github" name="github" placeholder="e.g. octocat" autocomplete="off">
+                </div>
+                <div class="apply-field">
+                    <label>Languages you can confidently code in <span class="req">*</span></label>
+                    <div class="apply-checkboxes">
+                        <label class="apply-checkbox"><input type="checkbox" name="languages" value="Java"> Java</label>
+                        <label class="apply-checkbox"><input type="checkbox" name="languages" value="Kotlin"> Kotlin</label>
+                        <label class="apply-checkbox"><input type="checkbox" name="languages" value="Python"> Python</label>
+                        <label class="apply-checkbox"><input type="checkbox" name="languages" value="JavaScript"> JavaScript</label>
+                        <label class="apply-checkbox"><input type="checkbox" name="languages" value="Other"> Other</label>
+                    </div>
+                </div>
+                <div class="apply-field">
+                    <label for="r-dev-exp">What experience do you have as a developer? <span class="req">*</span></label>
+                    <textarea id="r-dev-exp" name="experience" rows="4" placeholder="Tell us about projects you've worked on, plugins you've built, etc."></textarea>
+                </div>
+                <div class="apply-field apply-field-half">
+                    <label for="r-dev-years">How long have you been coding? <span class="req">*</span></label>
+                    <input type="text" id="r-dev-years" name="years_coding" placeholder="e.g. 3 years">
+                </div>
+            </div>
+
+            <!-- Builder -->
+            <div class="role-fields" data-role="Builder">
+                <div class="apply-field">
+                    <label for="r-build-exp">What experience do you have as a Minecraft builder? <span class="req">*</span></label>
+                    <textarea id="r-build-exp" name="experience" rows="4" placeholder="Servers you've built for, projects you're proud of, your specialties..."></textarea>
+                </div>
+                <div class="apply-field apply-field-half">
+                    <label for="r-build-years">How long have you been building? <span class="req">*</span></label>
+                    <input type="text" id="r-build-years" name="years_building" placeholder="e.g. 5 years">
+                </div>
+                <div class="apply-field apply-field-half">
+                    <label for="r-build-style">What style do you specialise in?</label>
+                    <input type="text" id="r-build-style" name="style" placeholder="e.g. medieval, modern, organic, fantasy">
+                </div>
+                <div class="apply-field">
+                    <label for="r-build-port">Portfolio / world download link</label>
+                    <input type="text" id="r-build-port" name="portfolio" placeholder="Planet Minecraft, PMC, Imgur, etc.">
+                </div>
+            </div>
+
+            <!-- Support Staff / Moderator -->
+            <div class="role-fields" data-role="Support Staff / Moderator">
+                <div class="apply-field">
+                    <label for="r-sup-exp">What experience do you have as support staff or a moderator? <span class="req">*</span></label>
+                    <textarea id="r-sup-exp" name="experience" rows="4" placeholder="Servers you've moderated, how many players, what tools you used..."></textarea>
+                </div>
+                <div class="apply-field apply-field-half">
+                    <label for="r-sup-years">How long have you been in this kind of role? <span class="req">*</span></label>
+                    <input type="text" id="r-sup-years" name="years_support" placeholder="e.g. 2 years">
+                </div>
+            </div>
+
+            <!-- System Administrator -->
+            <div class="role-fields" data-role="System Administrator">
+                <div class="apply-field">
+                    <label for="r-sys-exp">What experience do you have as a System Administrator? <span class="req">*</span></label>
+                    <textarea id="r-sys-exp" name="experience" rows="4" placeholder="Systems you've managed, technologies you're familiar with..."></textarea>
+                </div>
+                <div class="apply-field apply-field-half">
+                    <label for="r-sys-years">How long have you been a System Administrator? <span class="req">*</span></label>
+                    <input type="text" id="r-sys-years" name="years_sysadmin" placeholder="e.g. 3 years">
+                </div>
+            </div>
+
+            <!-- 2D Artist -->
+            <div class="role-fields" data-role="2D Artist">
+                <div class="apply-field apply-field-half">
+                    <label for="r-art-type">What kind of 2D art do you make? <span class="req">*</span></label>
+                    <input type="text" id="r-art-type" name="art_type" placeholder="e.g. UI, textures, illustrations, pixel art">
+                </div>
+                <div class="apply-field">
+                    <label for="r-art-exp">What experience do you have as a 2D artist? <span class="req">*</span></label>
+                    <textarea id="r-art-exp" name="experience" rows="4" placeholder="Projects you've worked on, clients, tools you use (Photoshop, Aseprite, etc.)..."></textarea>
+                </div>
+                <div class="apply-field apply-field-half">
+                    <label for="r-art-years">How long have you been making art? <span class="req">*</span></label>
+                    <input type="text" id="r-art-years" name="years_art" placeholder="e.g. 4 years">
+                </div>
+                <div class="apply-field">
+                    <label for="r-art-port">Portfolio link</label>
+                    <input type="text" id="r-art-port" name="portfolio" placeholder="Behance, ArtStation, personal site, etc.">
+                </div>
+            </div>
+
+            <!-- 3D Modeler -->
+            <div class="role-fields" data-role="3D Modeler">
+                <div class="apply-field apply-field-half">
+                    <label for="r-3d-type">What kind of 3D work do you do? <span class="req">*</span></label>
+                    <input type="text" id="r-3d-type" name="model_type" placeholder="e.g. characters, props, environments, cosmetics">
+                </div>
+                <div class="apply-field apply-field-half">
+                    <label for="r-3d-soft">What software do you use? <span class="req">*</span></label>
+                    <input type="text" id="r-3d-soft" name="software" placeholder="e.g. Blender, Cinema 4D, Maya">
+                </div>
+                <div class="apply-field">
+                    <label for="r-3d-exp">What experience do you have as a 3D modeler? <span class="req">*</span></label>
+                    <textarea id="r-3d-exp" name="experience" rows="4" placeholder="Projects you've worked on, specialties, game assets you've created..."></textarea>
+                </div>
+                <div class="apply-field apply-field-half">
+                    <label for="r-3d-years">How long have you been modeling? <span class="req">*</span></label>
+                    <input type="text" id="r-3d-years" name="years_modeling" placeholder="e.g. 2 years">
+                </div>
+                <div class="apply-field">
+                    <label for="r-3d-port">Portfolio link</label>
+                    <input type="text" id="r-3d-port" name="portfolio" placeholder="ArtStation, Sketchfab, personal site, etc.">
+                </div>
+            </div>
+
+            <!-- Game / Content Designer -->
+            <div class="role-fields" data-role="Game / Content Designer">
+                <div class="apply-field">
+                    <label for="r-gd-fav">What's your favourite part of game design? <span class="req">*</span></label>
+                    <input type="text" id="r-gd-fav" name="fav_aspect" placeholder="e.g. level design, economy systems, UI, balancing">
+                </div>
+                <div class="apply-field">
+                    <label for="r-gd-exp">What experience do you have as a game / content designer? <span class="req">*</span></label>
+                    <textarea id="r-gd-exp" name="experience" rows="4" placeholder="Games, servers, or projects you've designed for..."></textarea>
+                </div>
+                <div class="apply-field apply-field-half">
+                    <label for="r-gd-years">How long have you been doing this? <span class="req">*</span></label>
+                    <input type="text" id="r-gd-years" name="years_design" placeholder="e.g. 1 year">
+                </div>
+                <div class="apply-field">
+                    <label for="r-gd-proc">Describe your design process</label>
+                    <textarea id="r-gd-proc" name="process" rows="3" placeholder="How do you go from idea to finished design?"></textarea>
+                </div>
+            </div>
+
+            <!-- Animator -->
+            <div class="role-fields" data-role="Animator">
+                <div class="apply-field">
+                    <label>What type of animation do you do? <span class="req">*</span></label>
+                    <div class="apply-radio-group">
+                        <label class="apply-radio"><input type="radio" name="anim_type" value="3D"> 3D (Preferred)</label>
+                        <label class="apply-radio"><input type="radio" name="anim_type" value="2D"> 2D</label>
+                        <label class="apply-radio"><input type="radio" name="anim_type" value="Both"> Both</label>
+                    </div>
+                </div>
+                <div class="apply-field">
+                    <label for="r-anim-exp">What experience do you have as an animator? <span class="req">*</span></label>
+                    <textarea id="r-anim-exp" name="experience" rows="4" placeholder="Projects, clients, software you use (Blender, After Effects, etc.)..."></textarea>
+                </div>
+                <div class="apply-field apply-field-half">
+                    <label for="r-anim-years">How long have you been animating? <span class="req">*</span></label>
+                    <input type="text" id="r-anim-years" name="years_animating" placeholder="e.g. 2 years">
+                </div>
+            </div>
+
+            <!-- Marketing -->
+            <div class="role-fields" data-role="Marketing">
+                <div class="apply-field">
+                    <label for="r-mkt-exp">What experience do you have in marketing? <span class="req">*</span></label>
+                    <textarea id="r-mkt-exp" name="experience" rows="4" placeholder="Platforms you've grown, campaigns you've run, audiences you've reached..."></textarea>
+                </div>
+                <div class="apply-field apply-field-half">
+                    <label for="r-mkt-years">How long have you been doing marketing? <span class="req">*</span></label>
+                    <input type="text" id="r-mkt-years" name="years_marketing" placeholder="e.g. 1 year">
+                </div>
+                <div class="apply-field">
+                    <label for="r-mkt-best">What's your best method of marketing?</label>
+                    <input type="text" id="r-mkt-best" name="best_method" placeholder="e.g. short-form video, community engagement, paid ads...">
+                </div>
+            </div>
+
+            <!-- Other -->
+            <div class="role-fields" data-role="Other">
+                <div class="apply-field">
+                    <label for="r-oth-role">What role are you applying for? <span class="req">*</span></label>
+                    <input type="text" id="r-oth-role" name="custom_role" placeholder="Describe the role you have in mind">
+                </div>
+                <div class="apply-field">
+                    <label for="r-oth-exp">What experience do you have? <span class="req">*</span></label>
+                    <textarea id="r-oth-exp" name="experience" rows="4" placeholder="Why would you be a great addition to the Solaris team?"></textarea>
+                </div>
+            </div>
+
+            <div class="apply-step-nav">
+                <button type="button" class="btn btn-secondary apply-prev-btn">
+                    <i class="fa-solid fa-arrow-left"></i> Back
+                </button>
+                <button type="button" class="btn btn-primary apply-next-btn" id="step2-next">
+                    Continue <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 3: General Questions -->
+        <div class="apply-form-step" data-step="3">
+            <div class="apply-section-header">
+                <h2>About you</h2>
+                <p>These questions apply to everyone, regardless of role.</p>
+            </div>
+
+            <div class="apply-fields-row">
+                <div class="apply-field">
+                    <label for="g-discord">Your Discord @ <span class="req">*</span></label>
+                    <input type="text" id="g-discord" name="discord" placeholder="e.g. @username" autocomplete="off" required>
+                </div>
+                <div class="apply-field apply-field-sm">
+                    <label for="g-age">Your age <span class="req">*</span></label>
+                    <input type="number" id="g-age" name="age" placeholder="Age" min="10" max="99" required>
+                </div>
+            </div>
+
+            <div class="apply-field">
+                <label>Do you have a working microphone? <span class="req">*</span></label>
+                <div class="apply-radio-group">
+                    <label class="apply-radio"><input type="radio" name="microphone" value="Yes" required> Yes</label>
+                    <label class="apply-radio"><input type="radio" name="microphone" value="No"> No</label>
+                    <label class="apply-radio"><input type="radio" name="microphone" value="Sometimes"> Sometimes</label>
+                </div>
+            </div>
+
+            <div class="apply-section-divider">
+                <span>Optional, but recommended</span>
+            </div>
+
+            <div class="apply-field">
+                <label for="g-socials">What are your socials?</label>
+                <input type="text" id="g-socials" name="socials" placeholder="Twitter, TikTok, YouTube, Instagram, wherever you're active">
+            </div>
+            <div class="apply-field">
+                <label for="g-portfolio">Portfolio link</label>
+                <input type="text" id="g-portfolio" name="portfolio_link" placeholder="GitHub, ArtStation, personal site, YouTube channel...">
+            </div>
+            <div class="apply-field">
+                <label for="g-extra">Anything else you'd like to add?</label>
+                <textarea id="g-extra" name="extra" rows="3" placeholder="Questions, extra context, why you're excited about Solaris..."></textarea>
+            </div>
+
+            <div class="apply-step-nav">
+                <button type="button" class="btn btn-secondary apply-prev-btn">
+                    <i class="fa-solid fa-arrow-left"></i> Back
+                </button>
+                <button type="button" class="btn btn-primary apply-next-btn" id="step3-next">
+                    Review <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 4: Review & Submit -->
+        <div class="apply-form-step" data-step="4">
+            <div class="apply-section-header">
+                <h2>Ready to submit?</h2>
+                <p>Take a moment to confirm everything looks right. We'll review your application and reach out on Discord.</p>
+            </div>
+
+            <div class="apply-review-box">
+                <div class="apply-review-row">
+                    <span class="apply-review-label">Role</span>
+                    <span class="apply-review-value" id="review-role"></span>
+                </div>
+                <div class="apply-review-row" id="review-row-github" style="display:none;">
+                    <span class="apply-review-label">GitHub</span>
+                    <span class="apply-review-value" id="review-github"></span>
+                </div>
+                <div class="apply-review-row" id="review-row-languages" style="display:none;">
+                    <span class="apply-review-label">Languages</span>
+                    <span class="apply-review-value" id="review-languages"></span>
+                </div>
+                <div class="apply-review-row" id="review-row-roleextra" style="display:none;">
+                    <span class="apply-review-label" id="review-roleextra-label">Details</span>
+                    <span class="apply-review-value" id="review-roleextra"></span>
+                </div>
+                <div class="apply-review-row">
+                    <span class="apply-review-label">Experience</span>
+                    <span class="apply-review-value" id="review-experience" style="white-space: pre-wrap; word-break: break-word;"></span>
+                </div>
+                <div class="apply-review-row">
+                    <span class="apply-review-label">Discord</span>
+                    <span class="apply-review-value" id="review-discord"></span>
+                </div>
+                <div class="apply-review-row">
+                    <span class="apply-review-label">Age</span>
+                    <span class="apply-review-value" id="review-age"></span>
+                </div>
+                <div class="apply-review-row">
+                    <span class="apply-review-label">Microphone</span>
+                    <span class="apply-review-value" id="review-mic"></span>
+                </div>
+                <div class="apply-review-row" id="review-row-socials" style="display:none;">
+                    <span class="apply-review-label">Socials</span>
+                    <span class="apply-review-value" id="review-socials"></span>
+                </div>
+                <div class="apply-review-row" id="review-row-portfolio" style="display:none;">
+                    <span class="apply-review-label">Portfolio</span>
+                    <span class="apply-review-value" id="review-portfolio"></span>
+                </div>
+            </div>
+
+            <div class="apply-disclaimer">
+                By submitting, you confirm that all information is accurate and that you're genuinely interested in joining the Solaris team.
+            </div>
+
+            <div id="apply-error" class="apply-error-msg" style="display:none;"></div>
+
+            <div class="apply-step-nav">
+                <button type="button" class="btn btn-secondary apply-prev-btn">
+                    <i class="fa-solid fa-arrow-left"></i> Back
+                </button>
+                <button type="submit" class="btn btn-primary apply-submit-btn" id="submit-btn">
+                    Submit Application <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Success -->
+        <div class="apply-success" id="apply-success" style="display:none;">
+            <div class="apply-success-icon"><i class="fa-solid fa-circle-check"></i></div>
+            <h2>Application submitted!</h2>
+            <p>Thanks for applying. We'll review your application and get back to you on Discord. In the meantime, feel free to hang around our community server.</p>
+            <p class="apply-success-id">Application ID: <strong id="success-app-id"></strong></p>
+            <a href="/" class="btn btn-primary">Back to Home</a>
+        </div>
+
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/apply-staff.js') }}"></script>
+{% endblock %}

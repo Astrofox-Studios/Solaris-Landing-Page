@@ -1,0 +1,28 @@
+{
+  "total_signups": 1,
+  "signups": [
+    {
+      "id": 1,
+      "signup_number": 1,
+      "email": "skye@astrofoxstudios.com",
+      "timestamp": "2026-05-15T14:35:14.421065",
+      "date": "2026-05-15",
+      "time": "14:35:14",
+      "ip": "127.0.0.1",
+      "ip_hidden": false,
+      "country": "",
+      "country_code": "",
+      "city": "",
+      "region": "",
+      "interests": [
+        "minigames"
+      ]
+    }
+  ],
+  "ip_attempts": {
+    "127.0.0.1": 1
+  },
+  "ip_signups": {
+    "127.0.0.1": "skye@astrofoxstudios.com"
+  }
+}
