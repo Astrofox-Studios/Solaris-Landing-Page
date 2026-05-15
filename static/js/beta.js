@@ -130,8 +130,8 @@
             fd.set('ip_consent', cookieConsent);
 
             fetch('/beta-signup', { method: 'POST', body: fd })
-                .then(r => r.json())
-                .then(data => {
+                .then(r => r.json().then(data => ({ ok: r.ok, status: r.status, data })))
+                .then(({ data }) => {
                     if (data.success) {
                         betaForm.style.display = 'none';
                         betaSuccess.classList.add('show');
@@ -142,21 +142,24 @@
                         submitBtn.disabled = false;
                         submitBtn.querySelector('.beta-btn-label').textContent = 'Join Early Access';
                         if (data.error === 'already_signed_up') {
-                            showError("You're already on the list! Check your email.");
+                            showError("You're already on the list!");
                         } else if (data.error === 'too_many_attempts') {
                             showError('Too many signup attempts from your location.');
                         } else if (data.error === 'invalid_email') {
                             showError('Please enter a valid email address.');
                         } else if (data.error === 'turnstile_failed') {
-                            showError('Security check failed. Please try again.');
+                            showError('Security check failed. Please refresh and try again.');
+                        } else if (data.error === 'server_error') {
+                            showError('A server error occurred. Please try again later.');
                         } else {
                             showError('Something went wrong. Please try again.');
                         }
                     }
                 })
-                .catch(() => {
+                .catch(err => {
                     submitBtn.disabled = false;
                     submitBtn.querySelector('.beta-btn-label').textContent = 'Join Early Access';
+                    console.error('Signup error:', err);
                     showError('Something went wrong. Please try again.');
                 });
         });

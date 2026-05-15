@@ -317,75 +317,80 @@ def store():
 
 @app.route("/beta-signup", methods=["POST"])
 def beta_signup():
-    turnstile_token = request.form.get("cf-turnstile-response", "")
     try:
-        ts_resp = http_requests.post(
-            "https://challenges.cloudflare.com/turnstile/v0/siteverify",
-            data={"secret": "0x4AAAAAADP2YAS46FJKPtpd62RtX2SP1vs", "response": turnstile_token},
-            timeout=10,
-        )
-        ts_data = ts_resp.json()
-    except Exception:
-        return jsonify({"error": "turnstile_failed"}), 400
+        turnstile_token = request.form.get("cf-turnstile-response", "")
+        try:
+            ts_resp = http_requests.post(
+                "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+                data={"secret": "0x4AAAAAADP2YAS46FJKPtpd62RtX2SP1vs", "response": turnstile_token},
+                timeout=10,
+            )
+            ts_data = ts_resp.json()
+        except Exception:
+            return jsonify({"error": "turnstile_failed"}), 400
 
-    if not ts_data.get("success"):
-        return jsonify({"error": "turnstile_failed"}), 400
+        if not ts_data.get("success"):
+            return jsonify({"error": "turnstile_failed"}), 400
 
-    ip = request.headers.get("X-Forwarded-For", request.remote_addr).split(",")[0].strip()
-    email = request.form.get("email", "").strip().lower()
+        ip = request.headers.get("X-Forwarded-For", request.remote_addr).split(",")[0].strip()
+        email = request.form.get("email", "").strip().lower()
 
-    if not validate_email(email):
-        return jsonify({"error": "invalid_email"}), 400
+        if not validate_email(email):
+            return jsonify({"error": "invalid_email"}), 400
 
-    interests = request.form.getlist("excitement")
-    ip_consent = request.form.get("ip_consent", "false")
+        interests = request.form.getlist("excitement")
+        ip_consent = request.form.get("ip_consent", "false")
 
-    try:
-        geo_resp = http_requests.get(
-            f"http://ip-api.com/json/{ip}?fields=country,countryCode,city,regionName",
-            timeout=5,
-        )
-        geo = geo_resp.json()
-    except Exception:
-        geo = {}
+        try:
+            geo_resp = http_requests.get(
+                f"http://ip-api.com/json/{ip}?fields=country,countryCode,city,regionName",
+                timeout=5,
+            )
+            geo = geo_resp.json()
+        except Exception:
+            geo = {}
 
-    with data_lock:
-        data = _read_data()
+        with data_lock:
+            data = _read_data()
 
-        if data["ip_attempts"].get(ip, 0) >= 3:
-            return jsonify({"error": "too_many_attempts"}), 429
+            if data["ip_attempts"].get(ip, 0) >= 3:
+                return jsonify({"error": "too_many_attempts"}), 429
 
-        if email in {s["email"].lower() for s in data["signups"]}:
-            return jsonify({"error": "already_signed_up"}), 409
+            if email in {s["email"].lower() for s in data["signups"]}:
+                return jsonify({"error": "already_signed_up"}), 409
 
-        total = data["total_signups"] + 1
-        now = datetime.utcnow()
-        signup = {
-            "id": total,
-            "signup_number": total,
-            "email": email,
-            "timestamp": now.isoformat(),
-            "date": now.strftime("%Y-%m-%d"),
-            "time": now.strftime("%H:%M:%S"),
-            "ip": ip if ip_consent == "true" else "hidden",
-            "ip_hidden": ip_consent != "true",
-            "country": geo.get("country", ""),
-            "country_code": geo.get("countryCode", ""),
-            "city": geo.get("city", ""),
-            "region": geo.get("regionName", ""),
-            "interests": interests,
-        }
+            total = data["total_signups"] + 1
+            now = datetime.utcnow()
+            signup = {
+                "id": total,
+                "signup_number": total,
+                "email": email,
+                "timestamp": now.isoformat(),
+                "date": now.strftime("%Y-%m-%d"),
+                "time": now.strftime("%H:%M:%S"),
+                "ip": ip if ip_consent == "true" else "hidden",
+                "ip_hidden": ip_consent != "true",
+                "country": geo.get("country", ""),
+                "country_code": geo.get("countryCode", ""),
+                "city": geo.get("city", ""),
+                "region": geo.get("regionName", ""),
+                "interests": interests,
+            }
 
-        data["total_signups"] = total
-        data["signups"].append(signup)
-        data["ip_attempts"][ip] = data["ip_attempts"].get(ip, 0) + 1
-        data["ip_signups"][ip] = email
+            data["total_signups"] = total
+            data["signups"].append(signup)
+            data["ip_attempts"][ip] = data["ip_attempts"].get(ip, 0) + 1
+            data["ip_signups"][ip] = email
 
-        save_data(data)
-        save_signup_txt(data)
+            save_data(data)
+            save_signup_txt(data)
 
-    notify_signup(signup)
-    return jsonify({"success": True, "number": total})
+        notify_signup(signup)
+        return jsonify({"success": True, "number": total})
+
+    except Exception as e:
+        app.logger.error("beta_signup error: %s", e, exc_info=True)
+        return jsonify({"error": "server_error"}), 500
 
 
 # ── Admin ─────────────────────────────────────────────────────────────────────
