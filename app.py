@@ -492,6 +492,12 @@ def discord_redirect():
     return redirect("https://discord.gg/8nnn25B6pU", 301)
 
 
+@app.route("/api/signup-count")
+def api_signup_count():
+    data = load_data()
+    return jsonify({"count": data["total_signups"]})
+
+
 @app.route("/store")
 def store():
     return render_template("store.html")

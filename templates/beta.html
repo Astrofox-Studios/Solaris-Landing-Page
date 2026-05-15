@@ -28,6 +28,12 @@
 
         <p class="beta-hero-tagline">Play before anyone else. Shape what Solaris becomes.</p>
 
+        <div class="beta-counter fade-in" id="beta-counter" aria-live="polite" aria-atomic="true">
+            <i class="fa-solid fa-user-group" aria-hidden="true"></i>
+            <span class="beta-counter-num" id="beta-counter-num">—</span>
+            <span class="beta-counter-label">people signed up</span>
+        </div>
+
         <div class="beta-signup-card">
             <form class="beta-form" id="beta-form" novalidate>
                 <div class="beta-form-row">
@@ -118,77 +124,28 @@
     </div>
 </section>
 
-<!-- ====== WHAT'S IN BETA ====== -->
+<!-- ====== HOW IT WORKS ====== -->
 <section class="beta-features" id="beta-features">
     <div class="section-container">
-        <h2 class="section-title fade-in">The Early Access Experience</h2>
-        <p class="section-subtitle fade-in">Here's what Early Access players get access to from day one, and what's right around the corner.</p>
+        <h2 class="section-title fade-in">How it works</h2>
 
-        <div class="beta-features-grid">
-            <div class="beta-feature-card fade-in">
-                <div class="beta-feature-icon">
-                    <i class="fa-solid fa-gamepad" aria-hidden="true"></i>
-                </div>
-                <div class="beta-feature-body">
-                    <h3>Launch Minigames</h3>
-                    <p>Jump into the first wave of carefully crafted minigames, tested, tuned, and ready to play. Every game mode built with replayability at its core.</p>
-                </div>
-                <span class="beta-feature-badge">Day 1</span>
+        <div class="beta-how-grid">
+            <div class="beta-how-item fade-in">
+                <span class="beta-how-num">01</span>
+                <h3 class="beta-how-title">Sign up for a chance</h3>
+                <p class="beta-how-desc">Drop your email below and you're in the draw. Spots are handed out at random from the waitlist, completely free.</p>
             </div>
 
-            <div class="beta-feature-card fade-in">
-                <div class="beta-feature-icon beta-feature-icon--purple">
-                    <i class="fa-solid fa-microphone-lines" aria-hidden="true"></i>
-                </div>
-                <div class="beta-feature-body">
-                    <h3>Proximity Voice Chat</h3>
-                    <p>Hear players around you naturally with spatial proximity voice. No mods needed, built right into the server experience.</p>
-                </div>
-                <span class="beta-feature-badge">Day 1</span>
+            <div class="beta-how-item fade-in">
+                <span class="beta-how-num">02</span>
+                <h3 class="beta-how-title">Or buy in for £4.99</h3>
+                <p class="beta-how-desc">Didn't get picked? Early Access is £4.99 and gets you in on day one — June 27th. One-time, no subscription.</p>
             </div>
 
-            <div class="beta-feature-card fade-in">
-                <div class="beta-feature-icon beta-feature-icon--warm">
-                    <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
-                </div>
-                <div class="beta-feature-body">
-                    <h3>Astro Pass &amp; Cosmetics</h3>
-                    <p>Be among the first to try the full cosmetics system. Collect, equip, and flex your style with the Astro Pass — cosmetics only, never pay-to-win.</p>
-                </div>
-                <span class="beta-feature-badge beta-feature-badge--exclusive">Early Access Exclusive</span>
-            </div>
-
-            <div class="beta-feature-card fade-in">
-                <div class="beta-feature-icon beta-feature-icon--green">
-                    <i class="fa-solid fa-comment-dots" aria-hidden="true"></i>
-                </div>
-                <div class="beta-feature-body">
-                    <h3>Shape the Game</h3>
-                    <p>Your bug reports and feedback directly change what we build next. Beta players are co-creators, not just testers.</p>
-                </div>
-                <span class="beta-feature-badge beta-feature-badge--green">High Impact</span>
-            </div>
-
-            <div class="beta-feature-card fade-in">
-                <div class="beta-feature-icon">
-                    <i class="fa-solid fa-coins" aria-hidden="true"></i>
-                </div>
-                <div class="beta-feature-body">
-                    <h3>Economy System</h3>
-                    <p>A full player economy with a marketplace, bank, and base commands. Trade, earn, and spend — a living in-game financial world.</p>
-                </div>
-                <span class="beta-feature-badge beta-feature-badge--upcoming">Coming Soon</span>
-            </div>
-
-            <div class="beta-feature-card fade-in">
-                <div class="beta-feature-icon beta-feature-icon--purple">
-                    <i class="fa-solid fa-house" aria-hidden="true"></i>
-                </div>
-                <div class="beta-feature-body">
-                    <h3>Housing &amp; Planets</h3>
-                    <p>Claim your own space — from apartments to full planets. Customise every block, add game blocks, and make it truly yours.</p>
-                </div>
-                <span class="beta-feature-badge beta-feature-badge--upcoming">Coming Soon</span>
+            <div class="beta-how-item fade-in">
+                <span class="beta-how-num">03</span>
+                <h3 class="beta-how-title">Free from Season 1</h3>
+                <p class="beta-how-desc">Season 1: Starfall launches August 1st and is free for everyone. No purchase needed to keep playing.</p>
             </div>
         </div>
     </div>
@@ -266,4 +223,58 @@
 {% block extra_js %}
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <script src="{{ url_for('static', filename='js/beta.js') }}"></script>
+<script>
+(function () {
+    var numEl = document.getElementById('beta-counter-num');
+    var counterEl = document.getElementById('beta-counter');
+    if (!numEl || !counterEl) return;
+
+    var targetCount = 0;
+    var animated = false;
+
+    function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+
+    function runCountUp(target) {
+        if (animated || target === 0) return;
+        animated = true;
+        var duration = Math.min(1800, 600 + target * 1.2);
+        var startTime = null;
+        function step(ts) {
+            if (!startTime) startTime = ts;
+            var progress = Math.min((ts - startTime) / duration, 1);
+            numEl.textContent = Math.floor(easeOutCubic(progress) * target).toLocaleString();
+            if (progress < 1) requestAnimationFrame(step);
+            else numEl.textContent = target.toLocaleString();
+        }
+        requestAnimationFrame(step);
+    }
+
+    // Trigger count-up when the counter scrolls into view
+    var observer = new IntersectionObserver(function (entries) {
+        if (entries[0].isIntersecting) {
+            runCountUp(targetCount);
+            observer.disconnect();
+        }
+    }, { threshold: 0.5 });
+    observer.observe(counterEl);
+
+    // Fetch count, then fire immediately if already visible
+    fetch('/api/signup-count')
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+            targetCount = data.count || 0;
+            if (targetCount === 0) {
+                numEl.textContent = '0';
+                return;
+            }
+            // If already in viewport (above the fold), start immediately
+            var rect = counterEl.getBoundingClientRect();
+            if (rect.top < window.innerHeight) {
+                observer.disconnect();
+                runCountUp(targetCount);
+            }
+        })
+        .catch(function () { numEl.textContent = '0'; });
+})();
+</script>
 {% endblock %}

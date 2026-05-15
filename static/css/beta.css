@@ -172,6 +172,40 @@
     animation: hero-fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both;
 }
 
+/* ---- Signup counter ---- */
+
+.beta-counter {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 22px;
+    border-radius: 50px;
+    background: rgba(50, 90, 211, 0.1);
+    border: 1.5px solid rgba(50, 90, 211, 0.3);
+    margin-bottom: 2rem;
+    animation: hero-fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.25s both;
+}
+
+.beta-counter i {
+    color: var(--primary-light);
+    font-size: 0.8rem;
+    flex-shrink: 0;
+}
+
+.beta-counter-num {
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    color: var(--text-heading);
+    line-height: 1;
+    min-width: 2ch;
+}
+
+.beta-counter-label {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+}
+
 /* ---- Signup card ---- */
 
 .beta-signup-card {
@@ -451,6 +485,51 @@
     letter-spacing: 2px;
     color: var(--primary-light);
     margin-bottom: 0.5rem;
+}
+
+.beta-how-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 3rem;
+}
+
+.beta-how-item {
+    background: var(--bg-card);
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 2rem;
+}
+
+.beta-how-num {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: 2.5rem;
+    color: var(--primary);
+    opacity: 0.35;
+    line-height: 1;
+    margin-bottom: 1.25rem;
+}
+
+.beta-how-title {
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    color: var(--text-heading);
+    margin-bottom: 0.6rem;
+}
+
+.beta-how-desc {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    line-height: 1.65;
+    margin: 0;
+}
+
+@media (max-width: 720px) {
+    .beta-how-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 .beta-features-grid {
