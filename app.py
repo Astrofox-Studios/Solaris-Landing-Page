@@ -107,10 +107,14 @@ def notify_login(username: str, ip: str, success: bool):
 # ── Data helpers ─────────────────────────────────────────────────────────────
 
 def _read_data():
+    empty = {"total_signups": 0, "signups": [], "ip_attempts": {}, "ip_signups": {}}
     if not DATA_FILE.exists():
-        return {"total_signups": 0, "signups": [], "ip_attempts": {}, "ip_signups": {}}
-    with open(DATA_FILE, "r") as f:
-        data = json.load(f)
+        return empty
+    try:
+        with open(DATA_FILE, "r") as f:
+            data = json.load(f)
+    except (json.JSONDecodeError, ValueError):
+        return empty
     data.setdefault("total_signups", 0)
     data.setdefault("signups", [])
     data.setdefault("ip_attempts", {})
