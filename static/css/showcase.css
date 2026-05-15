@@ -330,6 +330,18 @@
         max-height: 280px;
     }
 
+    .cosmetics-info {
+        padding: var(--space-md) var(--space-sm);
+    }
+
+    .cosmetics-desc {
+        max-width: 100%;
+    }
+
+    .cosmetics-banner {
+        padding: 0 var(--space-sm);
+    }
+
     .cosmetics-title {
         font-size: 2.2rem;
     }

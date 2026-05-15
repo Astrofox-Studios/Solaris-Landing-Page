@@ -250,4 +250,18 @@
         padding: 12px 24px;
         font-size: 0.95rem;
     }
+
+    /* Prevent over-constrained text in card sections */
+    .signup-card {
+        padding: var(--space-sm);
+    }
+
+    .identity-content .identity-lead,
+    .community-inner .community-desc {
+        font-size: 1rem;
+    }
+
+    .apply-wny-banner {
+        padding: 28px 20px;
+    }
 }

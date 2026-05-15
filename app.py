@@ -392,9 +392,19 @@ def about():
     return render_template("about.html")
 
 
+@app.route("/earlyaccess")
+def early_access():
+    return render_template("beta.html")
+
+
 @app.route("/beta")
 def beta():
-    return render_template("beta.html")
+    return redirect(url_for("early_access"), 301)
+
+
+@app.route("/discord")
+def discord_redirect():
+    return redirect("https://discord.gg/8nnn25B6pU", 301)
 
 
 @app.route("/store")

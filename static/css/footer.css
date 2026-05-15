@@ -62,13 +62,17 @@
     padding: 4px 8px;
     border-radius: 8px;
     margin-left: -8px;
+    outline: 3px solid transparent;
+    outline-offset: 2px;
 }
 
 .footer-link:hover {
     color: var(--primary-light);
     background: rgba(0, 134, 217, 0.08);
-    transform: translateY(-2px);
+    transform: translateY(-3px);
     box-shadow: 0 4px 12px rgba(0, 134, 217, 0.15);
+    outline-color: rgba(255, 255, 255, 0.75);
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.2));
 }
 
 /* Social bubbles */
@@ -91,6 +95,8 @@
     font-size: 1rem;
     transition: var(--transition);
     text-decoration: none;
+    outline: 3px solid transparent;
+    outline-offset: 3px;
 }
 
 .social-icon.bubble:hover {
@@ -98,6 +104,8 @@
     border-color: var(--primary);
     transform: translateY(-3px);
     box-shadow: var(--shadow-glow-blue);
+    outline-color: rgba(255, 255, 255, 0.75);
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.2));
 }
 
 .social-icon.bubble svg {
