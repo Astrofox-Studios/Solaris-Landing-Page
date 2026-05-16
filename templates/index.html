@@ -147,7 +147,7 @@
                 <div class="game-card-overlay"></div>
                 <span class="game-card-label">Coming Soon</span>
                 <div class="game-card-content">
-                    <img src="{{ url_for('static', filename='images/icons/aMovementGame.png') }}" alt="Dodgeball" class="game-card-logo">
+                    <img src="{{ url_for('static', filename='images/icons/aBall.png') }}" alt="Dodgeball" class="game-card-logo">
                     <span class="game-card-name">Dodgeball</span>
                     <p class="game-card-hint">Duck, dodge, and fire back. Last one standing wins.</p>
                     <span class="game-card-cta">Read More <i class="fa-solid fa-arrow-right"></i></span>
@@ -482,6 +482,30 @@
                             <p class="team-member-text">Hi, I'm Bitzkyl! I'm responsible for the soundtrack you'll hear throughout the game. I make music heavily inspired by Toby Fox and UTSC artist aytanner, and I love doing what I do, hopefully it makes your experience more immersive! I've been best friends with Lutraa since middle school. If you have questions about the music or just want to chat, my DMs are always open on Discord (@Bitzkyl).</p>
                         </div>
 
+                        <!-- Exp (9) — Lead Systems Admin -->
+                        <div class="team-member-bio" id="team-bio-9">
+                            <div class="team-member-header">
+                                <div>
+                                    <span class="team-member-name">Exp</span>
+                                    <span class="team-member-pronouns">He/Him</span>
+                                </div>
+                                <span class="team-member-role role-infra">Lead Systems Admin</span>
+                            </div>
+                            <p class="team-member-text">Hey, I'm Exp! I handle the infrastructure and server side of Solaris. Think hosting, uptime, and making sure the actual machine keeping everything alive stays alive. Solaris runs on Callisto, my own hosting platform, so I'm pretty invested in keeping things running smoothly. You'll usually find me lurking in the background making sure nothing's on fire.</p>
+                        </div>
+
+                        <!-- Jordy (10) — Builder -->
+                        <div class="team-member-bio" id="team-bio-10">
+                            <div class="team-member-header">
+                                <div>
+                                    <span class="team-member-name">Jordy</span>
+                                    <span class="team-member-pronouns">He/Him</span>
+                                </div>
+                                <span class="team-member-role role-build">Builder</span>
+                            </div>
+                            <p class="team-member-text">Hai! I'm Jordy, some call me Jorts for reasons I don't even know myself. I am a builder for Solaris, if you walk around the lobbies or maps you might see some of my work! Sometimes Skye lets me playtest as well to see how bad I can beat her ;) If I'm not building or beating Skye at her own games, you'll find me jumping round the lobby, probably looking for some random accidental parkour someone made.</p>
+                        </div>
+
                     </div><!-- /.team-bio-area -->
 
                     <!-- Selector carousel -->
@@ -497,6 +521,8 @@
                             <img src="https://mc-heads.net/avatar/TrashBuffoon/40" alt="TrashBuffoon" class="team-selector-head" data-member="6">
                             <img src="https://mc-heads.net/avatar/Dino0guy/40" alt="Dino" class="team-selector-head" data-member="7">
                             <img src="https://mc-heads.net/avatar/Bitzkyl/40" alt="Bitzkyl" class="team-selector-head" data-member="8">
+                            <img src="https://minotar.net/helm/exp_yt/100.png" alt="Exp" class="team-selector-head" data-member="9">
+                            <img src="https://minotar.net/helm/jordygamerr/100.png" alt="Jordy" class="team-selector-head" data-member="10">
                         </div>
                         <button class="team-selector-arrow" id="team-next" aria-label="Next"><i class="fa-solid fa-chevron-right"></i></button>
                     </div>
@@ -512,10 +538,12 @@
                         5: 'images/team/nate.png',
                         6: 'images/team/trashbuffoon.png',
                         7: 'images/team/dino.png',
-                        8: 'images/team/bitzkyl.png'
+                        8: 'images/team/bitzkyl.png',
+                        9: 'images/team/exp.png',
+                        10: 'images/team/jordy.png'
                     } %}
                     <img src="{{ url_for('static', filename=renders[0]) }}" alt="Character render" class="team-render-img" id="team-render-img"
-                         data-renders='[{% for i in range(9) %}"{{ url_for('static', filename=renders[i]) }}"{% if not loop.last %}, {% endif %}{% endfor %}]'>
+                         data-renders='[{% for i in range(11) %}"{{ url_for('static', filename=renders[i]) }}"{% if not loop.last %}, {% endif %}{% endfor %}]'>
                     <div class="team-render-placeholder" id="team-render-placeholder">
                         <i class="fa-solid fa-user"></i>
                     </div>
