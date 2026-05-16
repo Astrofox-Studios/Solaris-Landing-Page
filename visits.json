@@ -1,0 +1,84 @@
+{
+  "total_visits": 8,
+  "visits": [
+    {
+      "timestamp": "2026-05-16T14:55:13.371843",
+      "date": "2026-05-16",
+      "ip": "127.0.0.1",
+      "path": "/",
+      "country": "",
+      "country_code": "",
+      "city": ""
+    },
+    {
+      "timestamp": "2026-05-16T15:00:34.340468",
+      "date": "2026-05-16",
+      "ip": "127.0.0.1",
+      "path": "/",
+      "country": "",
+      "country_code": "",
+      "city": ""
+    },
+    {
+      "timestamp": "2026-05-16T15:04:25.023904",
+      "date": "2026-05-16",
+      "ip": "127.0.0.1",
+      "path": "/privacy-policy",
+      "country": "",
+      "country_code": "",
+      "city": ""
+    },
+    {
+      "timestamp": "2026-05-16T15:13:20.505278",
+      "date": "2026-05-16",
+      "ip": "127.0.0.1",
+      "path": "/countdown",
+      "country": "",
+      "country_code": "",
+      "city": ""
+    },
+    {
+      "timestamp": "2026-05-16T15:13:22.856373",
+      "date": "2026-05-16",
+      "ip": "127.0.0.1",
+      "path": "/store",
+      "country": "",
+      "country_code": "",
+      "city": ""
+    },
+    {
+      "timestamp": "2026-05-16T15:16:40.019845",
+      "date": "2026-05-16",
+      "ip": "127.0.0.1",
+      "path": "/media",
+      "country": "",
+      "country_code": "",
+      "city": ""
+    },
+    {
+      "timestamp": "2026-05-16T15:17:37.339627",
+      "date": "2026-05-16",
+      "ip": "127.0.0.1",
+      "path": "/media",
+      "country": "",
+      "country_code": "",
+      "city": ""
+    },
+    {
+      "timestamp": "2026-05-16T15:19:27.848492",
+      "date": "2026-05-16",
+      "ip": "127.0.0.1",
+      "path": "/",
+      "country": "",
+      "country_code": "",
+      "city": ""
+    }
+  ],
+  "ip_geo_cache": {
+    "127.0.0.1": {
+      "country": "",
+      "country_code": "",
+      "city": ""
+    }
+  }
+}

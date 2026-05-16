@@ -1,436 +1,530 @@
 {% extends "base.html" %}
 
 {% block title %}Admin — Solaris{% endblock %}
-{% block description %}Admin dashboard for Solaris.{% endblock %}
+{% block description %}Solaris admin dashboard{% endblock %}
 {% block og_title %}Admin — Solaris{% endblock %}
 
 {% block extra_css %}
 <style>
-    .admin-wrap {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 120px 24px 60px;
-    }
-    .admin-header {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-        margin-bottom: 36px;
-    }
-    .admin-header h1 {
-        font-size: 2rem;
-        margin: 0;
-        color: var(--text-primary);
-    }
-    .admin-badge {
-        background: var(--primary);
-        color: #fff;
-        font-size: 0.85rem;
-        font-weight: 700;
-        padding: 4px 14px;
-        border-radius: 999px;
-    }
-    .admin-stats {
-        display: flex;
-        gap: 20px;
-        flex-wrap: wrap;
-        margin-bottom: 40px;
-    }
-    .admin-stat {
-        background: var(--bg-card);
-        border: 2px solid var(--border-color);
-        border-radius: var(--border-radius);
-        padding: 20px 28px;
-        min-width: 160px;
-        flex: 1;
-    }
-    .admin-stat-label {
-        font-size: 0.75rem;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        color: var(--text-secondary);
-        margin-bottom: 6px;
-    }
-    .admin-stat-value {
-        font-size: 2rem;
-        font-weight: 700;
-        color: var(--text-primary);
-        font-family: 'Paytone One', sans-serif;
-    }
-    .admin-section {
-        margin-bottom: 48px;
-    }
-    .admin-section h2 {
-        font-size: 1.2rem;
-        color: var(--text-primary);
-        margin-bottom: 20px;
-        border-bottom: 1px solid var(--border-color);
-        padding-bottom: 10px;
-    }
-    .admin-chart-wrap {
-        background: var(--bg-card);
-        border: 2px solid var(--border-color);
-        border-radius: var(--border-radius);
-        padding: 24px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 300px;
-    }
-    .admin-chart-wrap canvas {
-        max-width: 400px;
-        max-height: 400px;
-    }
-    .admin-no-data {
-        color: var(--text-secondary);
-        font-size: 0.95rem;
-        text-align: center;
-        padding: 40px;
-    }
-    .admin-table-wrap {
-        overflow-x: auto;
-        border-radius: var(--border-radius);
-        border: 2px solid var(--border-color);
-    }
-    .admin-table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 0.88rem;
-        background: var(--bg-card);
-    }
-    .admin-table th {
-        background: var(--bg-secondary);
-        color: var(--text-secondary);
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-        font-size: 0.72rem;
-        padding: 12px 14px;
-        text-align: left;
-        white-space: nowrap;
-    }
-    .admin-table td {
-        padding: 10px 14px;
-        border-top: 1px solid var(--border-color);
-        color: var(--text-primary);
-        vertical-align: middle;
-    }
-    .admin-table tr:hover td {
-        background: var(--bg-secondary);
-    }
-    .admin-tag {
-        display: inline-block;
-        background: var(--bg-secondary);
-        border: 1px solid var(--border-color);
-        border-radius: 6px;
-        padding: 2px 7px;
-        font-size: 0.75rem;
-        margin: 1px 2px;
-        color: var(--text-secondary);
-    }
-    .ip-hidden {
-        color: var(--text-secondary);
-        font-style: italic;
-    }
-    .admin-tabs {
-        display: flex;
-        gap: 4px;
-        margin-bottom: 36px;
-        border-bottom: 2px solid var(--border-color);
-        padding-bottom: 0;
-    }
-    .admin-tab-btn {
-        background: none;
-        border: none;
-        padding: 10px 20px;
-        font-size: 0.9rem;
-        font-weight: 700;
-        font-family: 'Nunito', sans-serif;
-        color: var(--text-secondary);
-        cursor: pointer;
-        border-bottom: 3px solid transparent;
-        margin-bottom: -2px;
-        transition: color 0.2s, border-color 0.2s;
-    }
-    .admin-tab-btn.active {
-        color: var(--primary);
-        border-bottom-color: var(--primary);
-    }
-    .admin-tab-btn:hover:not(.active) {
-        color: var(--text-primary);
-    }
-    .admin-tab-panel {
-        display: none;
-    }
-    .admin-tab-panel.active {
-        display: block;
-    }
-    .admin-badge-count {
-        background: var(--bg-secondary);
-        border: 1px solid var(--border-color);
-        border-radius: 999px;
-        font-size: 0.72rem;
-        padding: 1px 7px;
-        margin-left: 6px;
-        font-weight: 700;
-        color: var(--text-secondary);
-    }
-    .status-badge {
-        display: inline-block;
-        padding: 2px 10px;
-        border-radius: 999px;
-        font-size: 0.72rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-    }
-    .status-pending { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
-    .status-accepted { background: rgba(16, 185, 129, 0.15); color: #10b981; }
-    .status-rejected { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
-    .app-detail-row {
-        cursor: pointer;
-    }
-    .app-detail-cell {
-        font-size: 0.8rem;
-        color: var(--text-secondary);
-        max-width: 260px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-    tr[data-app] { cursor: pointer; }
-    tr[data-app]:hover td { background: rgba(50, 90, 211, 0.06); }
+/* ── Layout ─────────────────────────────────────────────────────────────── */
+.admin-wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 100px 24px 60px;
+}
+@media (max-width: 640px) {
+    .admin-wrap { padding: 76px 14px 40px; }
+}
 
-    /* ── Detail drawer ── */
-    .app-drawer-overlay {
-        position: fixed;
-        inset: 0;
-        background: rgba(0,0,0,0.5);
-        z-index: 1000;
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.25s;
-    }
-    .app-drawer-overlay.open {
-        opacity: 1;
-        pointer-events: all;
-    }
-    .app-drawer {
-        position: fixed;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        width: min(520px, 100vw);
-        background: var(--bg-primary);
-        border-left: 2px solid var(--border-color);
-        z-index: 1001;
-        display: flex;
-        flex-direction: column;
-        transform: translateX(100%);
-        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        overflow: hidden;
-    }
-    .app-drawer.open { transform: translateX(0); }
-    .app-drawer-head {
-        padding: 24px 24px 20px;
-        border-bottom: 1px solid var(--border-color);
-        flex-shrink: 0;
-    }
-    .app-drawer-close {
-        background: none;
-        border: none;
-        color: var(--text-secondary);
-        font-size: 1.2rem;
-        cursor: pointer;
-        float: right;
-        margin-top: -2px;
-        padding: 0;
-        transition: color 0.15s;
-    }
-    .app-drawer-close:hover { color: var(--text-primary); }
-    .app-drawer-title {
-        font-size: 1.1rem;
-        font-weight: 700;
-        color: var(--text-primary);
-        margin: 0 0 4px;
-    }
-    .app-drawer-sub {
-        font-size: 0.82rem;
-        color: var(--text-secondary);
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        flex-wrap: wrap;
-    }
-    .app-drawer-body {
-        flex: 1;
-        overflow-y: auto;
-        padding: 0 0 32px;
-    }
-    .app-drawer-section {
-        padding: 18px 24px 0;
-    }
-    .app-drawer-section-label {
-        font-size: 0.68rem;
-        font-weight: 800;
-        text-transform: uppercase;
-        letter-spacing: 0.12em;
-        color: var(--text-secondary);
-        margin-bottom: 10px;
-        padding-bottom: 6px;
-        border-bottom: 1px solid var(--border-color);
-    }
-    .app-drawer-row {
-        display: flex;
-        gap: 12px;
-        padding: 7px 0;
-        border-bottom: 1px solid rgba(255,255,255,0.04);
-        font-size: 0.88rem;
-    }
-    .app-drawer-row:last-child { border-bottom: none; }
-    .app-drawer-key {
-        width: 130px;
-        flex-shrink: 0;
-        color: var(--text-secondary);
-        font-weight: 600;
-    }
-    .app-drawer-val {
-        color: var(--text-primary);
-        word-break: break-word;
-        white-space: pre-wrap;
-        flex: 1;
-    }
-    .app-drawer-val:empty::after {
-        content: 'Not provided';
-        color: var(--text-secondary);
-        font-style: italic;
-    }
-    .app-drawer-footer {
-        flex-shrink: 0;
-        padding: 16px 24px;
-        border-top: 1px solid var(--border-color);
-        display: flex;
-        gap: 10px;
-        align-items: center;
-    }
-    .drawer-action-btn {
-        flex: 1;
-        padding: 10px 16px;
-        border-radius: 10px;
-        border: none;
-        font-family: 'Nunito', sans-serif;
-        font-size: 0.88rem;
-        font-weight: 700;
-        cursor: pointer;
-        transition: opacity 0.15s, transform 0.1s;
-    }
-    .drawer-action-btn:hover { opacity: 0.85; transform: translateY(-1px); }
-    .drawer-action-btn:active { transform: translateY(0); }
-    .drawer-accept { background: rgba(16, 185, 129, 0.18); color: #10b981; border: 1.5px solid rgba(16, 185, 129, 0.4); }
-    .drawer-accept.active-status { background: #10b981; color: #fff; }
-    .drawer-reject { background: rgba(239, 68, 68, 0.14); color: #ef4444; border: 1.5px solid rgba(239, 68, 68, 0.35); }
-    .drawer-reject.active-status { background: #ef4444; color: #fff; }
-    .drawer-pending { background: rgba(245, 158, 11, 0.14); color: #f59e0b; border: 1.5px solid rgba(245, 158, 11, 0.35); }
-    .drawer-pending.active-status { background: #f59e0b; color: #fff; }
-    .drawer-action-btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+/* ── Header ─────────────────────────────────────────────────────────────── */
+.admin-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+.admin-header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.admin-header h1 {
+    font-size: clamp(1.3rem, 4vw, 1.9rem);
+    margin: 0;
+    color: var(--text-primary);
+}
+.admin-badge {
+    background: var(--primary);
+    color: #fff;
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 3px 12px;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+.admin-logout-btn {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 10px;
+    border: 1.5px solid var(--border-color);
+    transition: color 0.15s, border-color 0.15s;
+    white-space: nowrap;
+}
+.admin-logout-btn:hover { color: var(--text-primary); border-color: var(--text-secondary); }
 
+/* ── Tabs ───────────────────────────────────────────────────────────────── */
+.admin-tabs-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    border-bottom: 2px solid var(--border-color);
+    margin-bottom: 24px;
+}
+.admin-tabs-wrap::-webkit-scrollbar { display: none; }
+.admin-tabs { display: flex; gap: 2px; min-width: max-content; }
+.admin-tab-btn {
+    background: none;
+    border: none;
+    padding: 10px 18px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    font-family: 'Nunito', sans-serif;
+    color: var(--text-secondary);
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    transition: color 0.2s, border-color 0.2s;
+    white-space: nowrap;
+}
+.admin-tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+.admin-tab-btn:hover:not(.active) { color: var(--text-primary); }
+.admin-badge-count {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 999px;
+    font-size: 0.7rem;
+    padding: 1px 7px;
+    margin-left: 4px;
+    font-weight: 700;
+    color: var(--text-secondary);
+}
+.admin-tab-panel { display: none; }
+.admin-tab-panel.active { display: block; }
+
+/* ── Stat cards ─────────────────────────────────────────────────────────── */
+.admin-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 12px;
+    margin-bottom: 28px;
+}
+.admin-stat {
+    background: var(--bg-card);
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 16px 18px;
+}
+.admin-stat-label {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+}
+.admin-stat-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    font-family: 'Paytone One', sans-serif;
+    line-height: 1.1;
+}
+.admin-stat-value.small { font-size: 0.95rem; padding-top: 4px; font-family: 'Nunito', sans-serif; }
+
+/* ── Charts ─────────────────────────────────────────────────────────────── */
+.admin-charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 14px;
+    margin-bottom: 28px;
+}
+.admin-chart-card {
+    background: var(--bg-card);
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 18px 20px;
+}
+.admin-chart-card h3 {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-secondary);
+    margin: 0 0 14px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+}
+.admin-chart-inner {
+    position: relative;
+    height: 210px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.admin-chart-inner canvas { max-width: 100%; max-height: 100%; }
+.admin-no-data {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    text-align: center;
+    padding: 40px 0;
+}
+
+/* ── Section ─────────────────────────────────────────────────────────────── */
+.admin-section { margin-bottom: 36px; }
+.admin-section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
+    flex-wrap: wrap;
+}
+.admin-section-head h2 {
+    font-size: 1rem;
+    color: var(--text-primary);
+    margin: 0;
+}
+.btn-add {
+    background: rgba(50, 90, 211, 0.1);
+    color: var(--primary);
+    border: 1.5px solid rgba(50, 90, 211, 0.3);
+    border-radius: 10px;
+    padding: 7px 14px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+    transition: background 0.15s;
+    white-space: nowrap;
+}
+.btn-add:hover { background: rgba(50, 90, 211, 0.2); }
+
+/* ── Table ───────────────────────────────────────────────────────────────── */
+.admin-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: var(--border-radius);
+    border: 2px solid var(--border-color);
+    scrollbar-width: thin;
+}
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.83rem;
+    background: var(--bg-card);
+    min-width: 560px;
+}
+.admin-table th {
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 0.66rem;
+    padding: 10px 12px;
+    text-align: left;
+    white-space: nowrap;
+}
+.admin-table td {
+    padding: 9px 12px;
+    border-top: 1px solid var(--border-color);
+    color: var(--text-primary);
+    vertical-align: middle;
+}
+.admin-table tr:hover td { background: var(--bg-secondary); }
+.admin-tag {
+    display: inline-block;
+    background: rgba(50, 90, 211, 0.1);
+    border: 1px solid rgba(50, 90, 211, 0.25);
+    border-radius: 6px;
+    padding: 1px 6px;
+    font-size: 0.7rem;
+    margin: 1px 2px;
+    color: #7da4ff;
+}
+.ip-hidden { color: var(--text-secondary); font-style: italic; }
+
+/* ── Row remove action ───────────────────────────────────────────────────── */
+.row-remove-btn {
+    background: none;
+    border: 1.5px solid rgba(239, 68, 68, 0.3);
+    color: #ef4444;
+    border-radius: 8px;
+    padding: 4px 9px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+    transition: background 0.15s, border-color 0.15s;
+    white-space: nowrap;
+}
+.row-remove-btn:hover { background: rgba(239, 68, 68, 0.12); border-color: #ef4444; }
+.row-confirm-wrap { display: none; align-items: center; gap: 6px; }
+.row-actions.confirming .row-remove-btn { display: none; }
+.row-actions.confirming .row-confirm-wrap { display: flex; }
+.row-confirm-yes {
+    background: #ef4444; color: #fff; border: none;
+    border-radius: 8px; padding: 4px 10px;
+    font-size: 0.72rem; font-weight: 700; cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+}
+.row-confirm-no {
+    background: var(--bg-secondary); color: var(--text-secondary);
+    border: 1.5px solid var(--border-color);
+    border-radius: 8px; padding: 4px 8px;
+    font-size: 0.72rem; font-weight: 700; cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+}
+@keyframes fadeOut { to { opacity: 0; transform: scaleY(0); } }
+
+/* ── Add Signup Modal ────────────────────────────────────────────────────── */
+.add-modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 2000; opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+}
+.add-modal-overlay.open { opacity: 1; pointer-events: all; }
+.add-modal {
+    position: fixed; top: 50%; left: 50%;
+    transform: translate(-50%, -46%);
+    width: min(420px, calc(100vw - 32px));
+    background: var(--bg-primary);
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius-lg);
+    padding: 26px 28px;
+    z-index: 2001;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.2s, transform 0.2s;
+}
+.add-modal.open { opacity: 1; pointer-events: all; transform: translate(-50%, -50%); }
+.add-modal h3 { margin: 0 0 18px; font-size: 1.05rem; }
+.add-modal label {
+    display: block; font-size: 0.75rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--text-secondary); margin-bottom: 6px;
+}
+.add-modal input[type="email"] {
+    width: 100%; box-sizing: border-box;
+    background: var(--bg-secondary);
+    border: 1.5px solid var(--border-color);
+    border-radius: 10px; color: var(--text-primary);
+    padding: 10px 14px; font-size: 0.9rem;
+    font-family: 'Nunito', sans-serif; margin-bottom: 18px;
+}
+.add-modal input[type="email"]:focus { outline: none; border-color: var(--primary); }
+.add-modal-footer { display: flex; gap: 10px; justify-content: flex-end; }
+.add-modal-error { color: #ef4444; font-size: 0.8rem; margin-bottom: 12px; display: none; }
+
+/* ── Status badges ───────────────────────────────────────────────────────── */
+.status-badge {
+    display: inline-block; padding: 2px 10px;
+    border-radius: 999px; font-size: 0.7rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.05em;
+}
+.status-pending  { background: rgba(245,158,11,0.15);  color: #f59e0b; }
+.status-accepted { background: rgba(16,185,129,0.15);  color: #10b981; }
+.status-rejected { background: rgba(239,68,68,0.15);   color: #ef4444; }
+
+/* ── App detail drawer ───────────────────────────────────────────────────── */
+.app-drawer-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000; opacity: 0; pointer-events: none;
+    transition: opacity 0.25s;
+}
+.app-drawer-overlay.open { opacity: 1; pointer-events: all; }
+.app-drawer {
+    position: fixed; top: 0; right: 0; bottom: 0;
+    width: min(520px, 100vw);
+    background: var(--bg-primary);
+    border-left: 2px solid var(--border-color);
+    z-index: 1001; display: flex; flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+    overflow: hidden;
+}
+.app-drawer.open { transform: translateX(0); }
+.app-drawer-head {
+    padding: 20px 20px 16px;
+    border-bottom: 1px solid var(--border-color); flex-shrink: 0;
+}
+.app-drawer-close {
+    background: none; border: none; color: var(--text-secondary);
+    font-size: 1.2rem; cursor: pointer; float: right;
+    margin-top: -2px; padding: 0; transition: color 0.15s;
+}
+.app-drawer-close:hover { color: var(--text-primary); }
+.app-drawer-title { font-size: 1rem; font-weight: 700; color: var(--text-primary); margin: 0 0 4px; }
+.app-drawer-sub {
+    font-size: 0.8rem; color: var(--text-secondary);
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+}
+.app-drawer-body { flex: 1; overflow-y: auto; padding: 0 0 24px; }
+.app-drawer-section { padding: 14px 20px 0; }
+.app-drawer-section-label {
+    font-size: 0.66rem; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 0.12em; color: var(--text-secondary);
+    margin-bottom: 8px; padding-bottom: 6px;
+    border-bottom: 1px solid var(--border-color);
+}
+.app-drawer-row {
+    display: flex; gap: 10px; padding: 6px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 0.85rem;
+}
+.app-drawer-row:last-child { border-bottom: none; }
+.app-drawer-key { width: 120px; flex-shrink: 0; color: var(--text-secondary); font-weight: 600; }
+.app-drawer-val { color: var(--text-primary); word-break: break-word; white-space: pre-wrap; flex: 1; }
+.app-drawer-val:empty::after { content: 'Not provided'; color: var(--text-secondary); font-style: italic; }
+.app-drawer-footer {
+    flex-shrink: 0; padding: 14px 20px;
+    border-top: 1px solid var(--border-color);
+    display: flex; gap: 8px; align-items: center;
+}
+.drawer-action-btn {
+    flex: 1; padding: 9px 10px; border-radius: 10px; border: none;
+    font-family: 'Nunito', sans-serif; font-size: 0.82rem; font-weight: 700;
+    cursor: pointer; transition: opacity 0.15s, transform 0.1s;
+}
+.drawer-action-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+.drawer-action-btn:active { transform: translateY(0); }
+.drawer-accept { background: rgba(16,185,129,0.18); color: #10b981; border: 1.5px solid rgba(16,185,129,0.4); }
+.drawer-accept.active-status { background: #10b981; color: #fff; }
+.drawer-reject { background: rgba(239,68,68,0.14); color: #ef4444; border: 1.5px solid rgba(239,68,68,0.35); }
+.drawer-reject.active-status { background: #ef4444; color: #fff; }
+.drawer-pending { background: rgba(245,158,11,0.14); color: #f59e0b; border: 1.5px solid rgba(245,158,11,0.35); }
+.drawer-pending.active-status { background: #f59e0b; color: #fff; }
+.drawer-action-btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+tr[data-app] { cursor: pointer; }
+tr[data-app]:hover td { background: rgba(50,90,211,0.06); }
+.app-detail-cell {
+    font-size: 0.78rem; color: var(--text-secondary);
+    max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="admin-wrap">
+
+    <!-- Header -->
     <div class="admin-header">
-        <h1>Admin — Solaris</h1>
-        <span class="admin-badge">{{ total }} signups</span>
-        <a href="/admin/logout" style="margin-left:auto; font-size:0.8rem; font-weight:700; color:var(--text-secondary); text-decoration:none; display:flex; align-items:center; gap:6px;">
+        <div class="admin-header-left">
+            <h1>Admin — Solaris</h1>
+            <span class="admin-badge">{{ total }} signups</span>
+        </div>
+        <a href="/admin/logout" class="admin-logout-btn">
             <i class="fa-solid fa-right-from-bracket"></i> Logout
         </a>
     </div>
 
-    <!-- Tab Navigation -->
-    <div class="admin-tabs">
-        <button class="admin-tab-btn active" data-tab="signups">
-            Early Access Signups
-            <span class="admin-badge-count">{{ total }}</span>
-        </button>
-        <button class="admin-tab-btn" data-tab="staff">
-            Staff Applications
-            <span class="admin-badge-count">{{ staff_apps | length }}</span>
-        </button>
-        <button class="admin-tab-btn" data-tab="testers">
-            Tester Applications
-            <span class="admin-badge-count">{{ tester_apps | length }}</span>
-        </button>
+    <!-- Tabs -->
+    <div class="admin-tabs-wrap">
+        <div class="admin-tabs">
+            <button class="admin-tab-btn active" data-tab="signups">
+                Signups <span class="admin-badge-count">{{ total }}</span>
+            </button>
+            <button class="admin-tab-btn" data-tab="visitors">
+                Visitors <span class="admin-badge-count">{{ total_visits }}</span>
+            </button>
+            <button class="admin-tab-btn" data-tab="staff">
+                Staff <span class="admin-badge-count">{{ staff_apps | length }}</span>
+            </button>
+            <button class="admin-tab-btn" data-tab="testers">
+                Testers <span class="admin-badge-count">{{ tester_apps | length }}</span>
+            </button>
+        </div>
     </div>
 
-    <!-- ── Tab: Signups ───────────────────────────────────────────────────── -->
+    <!-- ══ SIGNUPS TAB ══════════════════════════════════════════════════════ -->
     <div class="admin-tab-panel active" data-panel="signups">
+
         <div class="admin-stats">
             <div class="admin-stat">
                 <div class="admin-stat-label">Total Signups</div>
                 <div class="admin-stat-value">{{ total }}</div>
             </div>
             <div class="admin-stat">
-                <div class="admin-stat-label">Unique Countries</div>
+                <div class="admin-stat-label">Countries</div>
                 <div class="admin-stat-value">{{ country_breakdown | length }}</div>
             </div>
             <div class="admin-stat">
+                <div class="admin-stat-label">Interest Types</div>
+                <div class="admin-stat-value">{{ interests_breakdown | length }}</div>
+            </div>
+            <div class="admin-stat">
                 <div class="admin-stat-label">Last Signup</div>
-                <div class="admin-stat-value" style="font-size:1.1rem; padding-top:6px;">
+                <div class="admin-stat-value small">
                     {% if signups %}{{ signups[0].date }}{% else %}—{% endif %}
                 </div>
             </div>
         </div>
 
-        <div class="admin-section">
-            <h2>Country Breakdown</h2>
-            <div class="admin-chart-wrap">
+        <div class="admin-charts-grid">
+            <div class="admin-chart-card">
+                <h3>Country Distribution</h3>
                 {% if country_breakdown %}
-                <canvas id="country-chart"></canvas>
-                {% else %}
-                <p class="admin-no-data">No data yet.</p>
-                {% endif %}
+                <div class="admin-chart-inner"><canvas id="country-chart"></canvas></div>
+                {% else %}<p class="admin-no-data">No data yet</p>{% endif %}
+            </div>
+            <div class="admin-chart-card">
+                <h3>Interests Breakdown</h3>
+                {% if interests_breakdown %}
+                <div class="admin-chart-inner"><canvas id="interests-chart"></canvas></div>
+                {% else %}<p class="admin-no-data">No data yet</p>{% endif %}
+            </div>
+            <div class="admin-chart-card" style="grid-column: 1 / -1;">
+                <h3>Signups — Last 30 Days</h3>
+                <div class="admin-chart-inner" style="height:160px;"><canvas id="signup-timeline"></canvas></div>
             </div>
         </div>
 
         <div class="admin-section">
-            <h2>All Signups (newest first)</h2>
+            <div class="admin-section-head">
+                <h2>All Signups <span style="color:var(--text-secondary);font-size:0.85em;font-weight:400;">(newest first)</span></h2>
+                <button class="btn-add" id="open-add-modal"><i class="fa-solid fa-plus"></i> Add Signup</button>
+            </div>
             {% if signups %}
             <div class="admin-table-wrap">
-                <table class="admin-table">
+                <table class="admin-table" id="signups-table">
                     <thead>
                         <tr>
                             <th>#</th>
                             <th>Email</th>
                             <th>Date</th>
-                            <th>Time</th>
                             <th>Country</th>
                             <th>City</th>
                             <th>IP</th>
                             <th>Interests</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for s in signups %}
-                        <tr>
+                        <tr id="row-{{ s.id }}">
                             <td>{{ s.signup_number }}</td>
-                            <td>{{ s.email[:40] }}{% if s.email|length > 40 %}…{% endif %}</td>
-                            <td>{{ s.date }}</td>
-                            <td>{{ s.time }}</td>
+                            <td>{{ s.email }}</td>
+                            <td style="white-space:nowrap">{{ s.date }}</td>
                             <td>{{ s.country or '—' }}</td>
                             <td>{{ s.city or '—' }}</td>
                             <td>
-                                {% if s.ip_hidden %}
-                                <span class="ip-hidden">hidden</span>
-                                {% else %}
-                                {{ s.ip }}
-                                {% endif %}
+                                {% if s.ip_hidden %}<span class="ip-hidden">hidden</span>
+                                {% else %}{{ s.ip }}{% endif %}
                             </td>
                             <td>
-                                {% for tag in s.interests %}
-                                <span class="admin-tag">{{ tag }}</span>
-                                {% else %}
-                                <span style="color:var(--text-secondary)">—</span>
-                                {% endfor %}
+                                {% for tag in s.interests %}<span class="admin-tag">{{ tag }}</span>
+                                {% else %}<span style="color:var(--text-secondary)">—</span>{% endfor %}
+                            </td>
+                            <td style="white-space:nowrap">
+                                <div class="row-actions" data-id="{{ s.id }}">
+                                    <button class="row-remove-btn" onclick="startRemove(this)">
+                                        <i class="fa-solid fa-trash-can"></i> Remove
+                                    </button>
+                                    <div class="row-confirm-wrap">
+                                        <button class="row-confirm-yes" onclick="confirmRemove(this)">Confirm</button>
+                                        <button class="row-confirm-no" onclick="cancelRemove(this)">Cancel</button>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                         {% endfor %}
@@ -443,34 +537,100 @@
         </div>
     </div>
 
-    <!-- ── Tab: Staff Applications ───────────────────────────────────────── -->
-    <div class="admin-tab-panel" data-panel="staff">
+    <!-- ══ VISITORS TAB ═════════════════════════════════════════════════════ -->
+    <div class="admin-tab-panel" data-panel="visitors">
+
         <div class="admin-stats">
             <div class="admin-stat">
-                <div class="admin-stat-label">Total Applications</div>
-                <div class="admin-stat-value">{{ staff_apps | length }}</div>
+                <div class="admin-stat-label">Total Page Views</div>
+                <div class="admin-stat-value">{{ total_visits }}</div>
             </div>
             <div class="admin-stat">
-                <div class="admin-stat-label">Pending</div>
-                <div class="admin-stat-value">{{ staff_apps | selectattr('status', 'equalto', 'pending') | list | length }}</div>
+                <div class="admin-stat-label">Unique Visitors</div>
+                <div class="admin-stat-value">{{ unique_ips }}</div>
+            </div>
+            <div class="admin-stat">
+                <div class="admin-stat-label">Today</div>
+                <div class="admin-stat-value">{{ today_visits }}</div>
+            </div>
+            <div class="admin-stat">
+                <div class="admin-stat-label">Countries</div>
+                <div class="admin-stat-value">{{ visit_country_breakdown | length }}</div>
+            </div>
+        </div>
+
+        <div class="admin-charts-grid">
+            <div class="admin-chart-card">
+                <h3>Visitor Countries</h3>
+                {% if visit_country_breakdown %}
+                <div class="admin-chart-inner"><canvas id="visit-country-chart"></canvas></div>
+                {% else %}<p class="admin-no-data">No data yet</p>{% endif %}
+            </div>
+            <div class="admin-chart-card" style="grid-column: 1 / -1;">
+                <h3>Visits — Last 30 Days</h3>
+                <div class="admin-chart-inner" style="height:160px;"><canvas id="visit-timeline"></canvas></div>
             </div>
         </div>
 
         <div class="admin-section">
-            <h2>Staff Applications (newest first)</h2>
+            <div class="admin-section-head"><h2>Recent Visits <span style="color:var(--text-secondary);font-size:0.85em;font-weight:400;">(last 100)</span></h2></div>
+            {% if recent_visits %}
+            <div class="admin-table-wrap">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Time (UTC)</th>
+                            <th>Path</th>
+                            <th>Country</th>
+                            <th>City</th>
+                            <th>IP</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for v in recent_visits %}
+                        <tr>
+                            <td style="white-space:nowrap">{{ v.timestamp[:16].replace('T',' ') }}</td>
+                            <td>{{ v.path }}</td>
+                            <td>{{ v.country or '—' }}</td>
+                            <td>{{ v.city or '—' }}</td>
+                            <td>{{ v.ip }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p style="color:var(--text-secondary)">No visits recorded yet.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- ══ STAFF TAB ════════════════════════════════════════════════════════ -->
+    <div class="admin-tab-panel" data-panel="staff">
+
+        <div class="admin-stats">
+            <div class="admin-stat">
+                <div class="admin-stat-label">Total</div>
+                <div class="admin-stat-value">{{ staff_apps | length }}</div>
+            </div>
+            <div class="admin-stat">
+                <div class="admin-stat-label">Pending</div>
+                <div class="admin-stat-value">{{ staff_apps | selectattr('status','equalto','pending') | list | length }}</div>
+            </div>
+            <div class="admin-stat">
+                <div class="admin-stat-label">Accepted</div>
+                <div class="admin-stat-value">{{ staff_apps | selectattr('status','equalto','accepted') | list | length }}</div>
+            </div>
+        </div>
+
+        <div class="admin-section">
+            <div class="admin-section-head"><h2>Staff Applications <span style="color:var(--text-secondary);font-size:0.85em;font-weight:400;">(newest first)</span></h2></div>
             {% if staff_apps %}
             <div class="admin-table-wrap">
                 <table class="admin-table">
                     <thead>
                         <tr>
-                            <th>#</th>
-                            <th>Role</th>
-                            <th>Discord</th>
-                            <th>Age</th>
-                            <th>Mic</th>
-                            <th>Date</th>
-                            <th>Status</th>
-                            <th>Experience (excerpt)</th>
+                            <th>#</th><th>Role</th><th>Discord</th><th>Age</th><th>Date</th><th>Status</th><th>Experience</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -480,15 +640,9 @@
                             <td><strong>{{ app.role }}</strong></td>
                             <td>{{ app.general.discord or '' }}</td>
                             <td>{{ app.general.age or '' }}</td>
-                            <td>{{ app.general.microphone or '' }}</td>
-                            <td>{{ app.date }}</td>
-                            <td>
-                                <span class="status-badge status-{{ app.status }}">{{ app.status }}</span>
-                            </td>
-                            <td class="app-detail-cell">
-                                {% set exp = app.role_fields.get('experience', '') %}
-                                {{ exp[:80] }}{% if exp|length > 80 %}…{% endif %}
-                            </td>
+                            <td style="white-space:nowrap">{{ app.date }}</td>
+                            <td><span class="status-badge status-{{ app.status }}">{{ app.status }}</span></td>
+                            <td class="app-detail-cell">{% set exp = app.role_fields.get('experience','') %}{{ exp[:80] }}{% if exp|length > 80 %}…{% endif %}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -500,35 +654,32 @@
         </div>
     </div>
 
-    <!-- ── Tab: Tester Applications ──────────────────────────────────────── -->
+    <!-- ══ TESTERS TAB ══════════════════════════════════════════════════════ -->
     <div class="admin-tab-panel" data-panel="testers">
+
         <div class="admin-stats">
             <div class="admin-stat">
-                <div class="admin-stat-label">Total Applications</div>
+                <div class="admin-stat-label">Total</div>
                 <div class="admin-stat-value">{{ tester_apps | length }}</div>
             </div>
             <div class="admin-stat">
                 <div class="admin-stat-label">Pending</div>
-                <div class="admin-stat-value">{{ tester_apps | selectattr('status', 'equalto', 'pending') | list | length }}</div>
+                <div class="admin-stat-value">{{ tester_apps | selectattr('status','equalto','pending') | list | length }}</div>
+            </div>
+            <div class="admin-stat">
+                <div class="admin-stat-label">Accepted</div>
+                <div class="admin-stat-value">{{ tester_apps | selectattr('status','equalto','accepted') | list | length }}</div>
             </div>
         </div>
 
         <div class="admin-section">
-            <h2>Tester Applications (newest first)</h2>
+            <div class="admin-section-head"><h2>Tester Applications <span style="color:var(--text-secondary);font-size:0.85em;font-weight:400;">(newest first)</span></h2></div>
             {% if tester_apps %}
             <div class="admin-table-wrap">
                 <table class="admin-table">
                     <thead>
                         <tr>
-                            <th>#</th>
-                            <th>IGN</th>
-                            <th>Discord</th>
-                            <th>Age</th>
-                            <th>Pronouns</th>
-                            <th>Skill</th>
-                            <th>Tested Before</th>
-                            <th>Date</th>
-                            <th>Status</th>
+                            <th>#</th><th>IGN</th><th>Discord</th><th>Age</th><th>Skill</th><th>Date</th><th>Status</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -538,13 +689,9 @@
                             <td><strong>{{ app.minecraft_ign }}</strong></td>
                             <td>{{ app.discord }}</td>
                             <td>{{ app.age }}</td>
-                            <td>{{ app.pronouns }}</td>
                             <td>{{ app.skill_level }}/10</td>
-                            <td>{{ 'Yes' if app.tested_before == 'yes' else 'No' }}</td>
-                            <td>{{ app.date }}</td>
-                            <td>
-                                <span class="status-badge status-{{ app.status }}">{{ app.status }}</span>
-                            </td>
+                            <td style="white-space:nowrap">{{ app.date }}</td>
+                            <td><span class="status-badge status-{{ app.status }}">{{ app.status }}</span></td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -558,7 +705,18 @@
 
 </div>
 
-
+<!-- Add Signup Modal -->
+<div class="add-modal-overlay" id="add-modal-overlay">
+    <div class="add-modal" id="add-modal">
+        <h3>Add Signup Manually</h3>
+        <div class="add-modal-error" id="add-modal-error"></div>
+        <label for="add-email">Email Address</label>
+        <input type="email" id="add-email" placeholder="user@example.com" autocomplete="off">
+        <div class="add-modal-footer">
+            <button class="btn btn-outline" id="close-add-modal" style="padding:9px 18px;font-size:0.85rem;">Cancel</button>
+            <button class="btn btn-primary" id="confirm-add-signup" style="padding:9px 18px;font-size:0.85rem;">Add Signup</button>
+        </div>
+    </div>
 </div>
 
 <!-- Application detail drawer -->
@@ -571,262 +729,327 @@
     </div>
     <div class="app-drawer-body" id="drawer-body"></div>
     <div class="app-drawer-footer">
-        <button class="drawer-action-btn drawer-accept" id="drawer-accept-btn">
-            <i class="fa-solid fa-check"></i> Accept
-        </button>
-        <button class="drawer-action-btn drawer-reject" id="drawer-reject-btn">
-            <i class="fa-solid fa-xmark"></i> Reject
-        </button>
-        <button class="drawer-action-btn drawer-pending" id="drawer-pending-btn">
-            <i class="fa-solid fa-clock"></i> Pending
-        </button>
+        <button class="drawer-action-btn drawer-accept"  id="drawer-accept-btn"><i class="fa-solid fa-check"></i> Accept</button>
+        <button class="drawer-action-btn drawer-reject"  id="drawer-reject-btn"><i class="fa-solid fa-xmark"></i> Reject</button>
+        <button class="drawer-action-btn drawer-pending" id="drawer-pending-btn"><i class="fa-solid fa-clock"></i> Pending</button>
     </div>
 </div>
-
 {% endblock %}
 
 {% block extra_js %}
-<script>
-(function () {
-    // ── Tabs ──────────────────────────────────────────────────────────────
-    var tabBtns = document.querySelectorAll('.admin-tab-btn');
-    var panels = document.querySelectorAll('.admin-tab-panel');
-    tabBtns.forEach(function (btn) {
-        btn.addEventListener('click', function () {
-            tabBtns.forEach(function (b) { b.classList.remove('active'); });
-            panels.forEach(function (p) { p.classList.remove('active'); });
-            btn.classList.add('active');
-            var panel = document.querySelector('[data-panel="' + btn.dataset.tab + '"]');
-            if (panel) panel.classList.add('active');
-        });
-    });
-
-    // ── Drawer ────────────────────────────────────────────────────────────
-    var overlay   = document.getElementById('app-drawer-overlay');
-    var drawer    = document.getElementById('app-drawer');
-    var closeBtn  = document.getElementById('app-drawer-close');
-    var acceptBtn = document.getElementById('drawer-accept-btn');
-    var rejectBtn = document.getElementById('drawer-reject-btn');
-    var pendingBtn= document.getElementById('drawer-pending-btn');
-
-    var currentApp = null;
-    var currentAppType = null;
-    var currentRow = null;
-
-    function openDrawer() {
-        overlay.classList.add('open');
-        drawer.classList.add('open');
-        document.body.style.overflow = 'hidden';
-    }
-    function closeDrawer() {
-        overlay.classList.remove('open');
-        drawer.classList.remove('open');
-        document.body.style.overflow = '';
-    }
-
-    overlay.addEventListener('click', closeDrawer);
-    closeBtn.addEventListener('click', closeDrawer);
-    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeDrawer(); });
-
-    function setStatusButtons(status) {
-        [acceptBtn, rejectBtn, pendingBtn].forEach(function (b) { b.classList.remove('active-status'); });
-        if (status === 'accepted') acceptBtn.classList.add('active-status');
-        if (status === 'rejected') rejectBtn.classList.add('active-status');
-        if (status === 'pending')  pendingBtn.classList.add('active-status');
-    }
-
-    function updateStatus(newStatus) {
-        if (!currentApp) return;
-        [acceptBtn, rejectBtn, pendingBtn].forEach(function (b) { b.disabled = true; });
-
-        fetch('/admin/applications/status', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ type: currentAppType, id: currentApp.id, status: newStatus })
-        })
-        .then(function (r) { return r.json(); })
-        .then(function (data) {
-            if (data.ok) {
-                currentApp.status = newStatus;
-                setStatusButtons(newStatus);
-                // update badge in drawer sub
-                var subEl = document.getElementById('drawer-sub');
-                var oldBadge = subEl.querySelector('.status-badge');
-                if (oldBadge) {
-                    oldBadge.className = 'status-badge status-' + newStatus;
-                    oldBadge.textContent = newStatus;
-                }
-                // update badge in table row
-                if (currentRow) {
-                    var rowBadge = currentRow.querySelector('.status-badge');
-                    if (rowBadge) {
-                        rowBadge.className = 'status-badge status-' + newStatus;
-                        rowBadge.textContent = newStatus;
-                    }
-                    // keep data-app in sync so re-opening shows correct status
-                    currentRow.dataset.app = JSON.stringify(currentApp);
-                }
-            }
-        })
-        .finally(function () {
-            [acceptBtn, rejectBtn, pendingBtn].forEach(function (b) { b.disabled = false; });
-        });
-    }
-
-    acceptBtn.addEventListener('click', function () { updateStatus('accepted'); });
-    rejectBtn.addEventListener('click', function () { updateStatus('rejected'); });
-    pendingBtn.addEventListener('click', function () { updateStatus('pending'); });
-
-    function row(key, val) {
-        if (!val && val !== 0) return '';
-        return '<div class="app-drawer-row"><span class="app-drawer-key">' + esc(key) + '</span><span class="app-drawer-val">' + esc(String(val)) + '</span></div>';
-    }
-    function section(label, rows) {
-        var content = rows.filter(Boolean).join('');
-        if (!content) return '';
-        return '<div class="app-drawer-section"><div class="app-drawer-section-label">' + label + '</div>' + content + '</div>';
-    }
-    function badge(status) {
-        return '<span class="status-badge status-' + status + '">' + status + '</span>';
-    }
-    function esc(s) {
-        return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-    }
-
-    function buildStaffDrawer(app) {
-        document.getElementById('drawer-title').textContent = 'Staff Application #' + app.id + ' — ' + app.role;
-        document.getElementById('drawer-sub').innerHTML =
-            badge(app.status) +
-            '<span>' + esc(app.date) + ' at ' + esc(app.time) + '</span>' +
-            '<span>IP: ' + esc(app.ip || 'unknown') + '</span>';
-
-        var rf = app.role_fields || {};
-        var g  = app.general   || {};
-
-        var roleRows = [
-            rf.github       ? row('GitHub', rf.github) : '',
-            rf.languages && rf.languages.length ? row('Languages', rf.languages.join(', ')) : '',
-            rf.art_type     ? row('Art type', rf.art_type) : '',
-            rf.model_type   ? row('Model type', rf.model_type) : '',
-            rf.software     ? row('Software', rf.software) : '',
-            rf.anim_type    ? row('Animation type', rf.anim_type) : '',
-            rf.fav_aspect   ? row('Favourite aspect', rf.fav_aspect) : '',
-            rf.style        ? row('Build style', rf.style) : '',
-            rf.best_method  ? row('Best method', rf.best_method) : '',
-            rf.custom_role  ? row('Custom role', rf.custom_role) : '',
-            rf.experience   ? row('Experience', rf.experience) : '',
-            rf.years_coding     ? row('Years coding', rf.years_coding) : '',
-            rf.years_building   ? row('Years building', rf.years_building) : '',
-            rf.years_support    ? row('Years in role', rf.years_support) : '',
-            rf.years_sysadmin   ? row('Years in role', rf.years_sysadmin) : '',
-            rf.years_art        ? row('Years making art', rf.years_art) : '',
-            rf.years_modeling   ? row('Years modeling', rf.years_modeling) : '',
-            rf.years_design     ? row('Years designing', rf.years_design) : '',
-            rf.years_animating  ? row('Years animating', rf.years_animating) : '',
-            rf.years_marketing  ? row('Years in marketing', rf.years_marketing) : '',
-            rf.process      ? row('Design process', rf.process) : '',
-            rf.portfolio    ? row('Portfolio', rf.portfolio) : '',
-        ];
-
-        var html =
-            section('Role-specific', roleRows) +
-            section('Contact', [
-                row('Discord', g.discord),
-                row('Age', g.age),
-                row('Microphone', g.microphone),
-            ]) +
-            section('Optional', [
-                row('Socials', g.socials),
-                row('Portfolio link', g.portfolio_link),
-                row('Anything else', g.extra),
-            ]);
-
-        document.getElementById('drawer-body').innerHTML = html;
-    }
-
-    function buildTesterDrawer(app) {
-        document.getElementById('drawer-title').textContent = 'Tester Application #' + app.id + ' — ' + esc(app.minecraft_ign);
-        document.getElementById('drawer-sub').innerHTML =
-            badge(app.status) +
-            '<span>' + esc(app.date) + ' at ' + esc(app.time) + '</span>' +
-            '<span>IP: ' + esc(app.ip || 'unknown') + '</span>';
-
-        var html =
-            section('Contact', [
-                row('Minecraft IGN', app.minecraft_ign),
-                row('Email', app.email),
-                row('Discord', app.discord),
-                row('Age', app.age),
-                row('Pronouns', app.pronouns),
-            ]) +
-            section('Eligibility', [
-                row('Owns Java', app.owns_java === 'yes' ? 'Yes' : 'No'),
-                row('Tested before', app.tested_before === 'yes' ? 'Yes' : 'No'),
-                row('Rules agreed', app.rules_agreed === 'yes' ? 'Yes' : 'No'),
-                row('Blacklist agreed', app.blacklist_agreed === 'yes' ? 'Yes' : 'No'),
-                row('Feedback OK', app.feedback_ok === 'yes' ? 'Yes' : 'No'),
-            ]) +
-            section('Experience', [
-                row('Skill level', app.skill_level + ' / 10'),
-                row('Prior testing', app.prior_testing),
-                row('Other experience', app.other_experience),
-            ]) +
-            section('Opinions', [
-                row('Opinion on projects', app.opinion),
-                row('Improvements', app.improvements),
-            ]) +
-            section('Extra', [
-                row('Anything else', app.extra),
-            ]);
-
-        document.getElementById('drawer-body').innerHTML = html;
-    }
-
-    document.querySelectorAll('tr[data-app]').forEach(function (tr) {
-        tr.addEventListener('click', function () {
-            currentApp     = JSON.parse(tr.dataset.app);
-            currentAppType = tr.dataset.appType;
-            currentRow     = tr;
-            if (currentAppType === 'staff')  buildStaffDrawer(currentApp);
-            if (currentAppType === 'tester') buildTesterDrawer(currentApp);
-            setStatusButtons(currentApp.status || 'pending');
-            openDrawer();
-        });
-    });
-})();
-</script>
-{% if country_breakdown %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
 (function () {
-    var labels = {{ country_breakdown.keys() | list | tojson }};
-    var values = {{ country_breakdown.values() | list | tojson }};
-    var palette = [
-        '#325ad3','#6929b7','#f59e0b','#10b981','#ef4444','#3b82f6',
-        '#8b5cf6','#ec4899','#14b8a6','#f97316','#84cc16','#06b6d4'
-    ];
-    var colors = labels.map(function(_, i) { return palette[i % palette.length]; });
 
-    new Chart(document.getElementById('country-chart'), {
-        type: 'pie',
+/* ── Shared chart defaults ─────────────────────────────────────────────── */
+Chart.defaults.color = '#94a3b8';
+Chart.defaults.font.family = 'Nunito';
+
+var PALETTE = ['#325ad3','#6929b7','#f59e0b','#10b981','#ef4444','#3b82f6',
+               '#8b5cf6','#ec4899','#14b8a6','#f97316','#84cc16','#06b6d4',
+               '#a855f7','#fb923c','#34d399','#60a5fa'];
+function colors(n) { return Array.from({length:n}, function(_,i){ return PALETTE[i % PALETTE.length]; }); }
+
+function doughnut(id, labels, values) {
+    var c = document.getElementById(id);
+    if (!c) return;
+    new Chart(c, {
+        type: 'doughnut',
         data: {
             labels: labels,
-            datasets: [{
-                data: values,
-                backgroundColor: colors,
-                borderColor: 'var(--bg-card)',
-                borderWidth: 2,
-            }]
+            datasets: [{ data: values, backgroundColor: colors(values.length),
+                         borderColor: '#1a1a24', borderWidth: 3, hoverOffset: 6 }]
         },
         options: {
+            cutout: '62%',
             plugins: {
                 legend: {
-                    labels: { color: '#e2e8f0', font: { family: 'Nunito' } }
+                    position: 'right',
+                    labels: { boxWidth: 12, padding: 14, font: { size: 12 } }
                 }
             }
         }
     });
+}
+
+function barH(id, labels, values) {
+    var c = document.getElementById(id);
+    if (!c) return;
+    new Chart(c, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{ data: values, backgroundColor: colors(values.length),
+                         borderRadius: 6, borderSkipped: false }]
+        },
+        options: {
+            indexAxis: 'y',
+            plugins: { legend: { display: false } },
+            scales: {
+                x: { grid: { color: 'rgba(255,255,255,0.06)' }, ticks: { precision: 0 } },
+                y: { grid: { display: false } }
+            }
+        }
+    });
+}
+
+function line(id, labels, values, label) {
+    var c = document.getElementById(id);
+    if (!c) return;
+    new Chart(c, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: label || 'Count',
+                data: values,
+                fill: true,
+                tension: 0.4,
+                borderColor: '#325ad3',
+                backgroundColor: 'rgba(50,90,211,0.12)',
+                pointRadius: 3,
+                pointHoverRadius: 5,
+                pointBackgroundColor: '#325ad3',
+            }]
+        },
+        options: {
+            plugins: { legend: { display: false } },
+            scales: {
+                x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { maxTicksLimit: 10 } },
+                y: { grid: { color: 'rgba(255,255,255,0.06)' }, ticks: { precision: 0 }, min: 0 }
+            }
+        }
+    });
+}
+
+/* ── Chart data from server ────────────────────────────────────────────── */
+var cCountryLabels = {{ country_breakdown.keys()  | list | tojson }};
+var cCountryVals   = {{ country_breakdown.values() | list | tojson }};
+doughnut('country-chart', cCountryLabels, cCountryVals);
+
+var intLabels = {{ interests_breakdown.keys()  | list | tojson }};
+var intVals   = {{ interests_breakdown.values() | list | tojson }};
+barH('interests-chart', intLabels, intVals);
+
+var sdKeys = {{ signup_daily_counts.keys()   | list | tojson }};
+var sdVals = {{ signup_daily_counts.values() | list | tojson }};
+line('signup-timeline', sdKeys, sdVals, 'Signups');
+
+var vcCountryLabels = {{ visit_country_breakdown.keys()  | list | tojson }};
+var vcCountryVals   = {{ visit_country_breakdown.values() | list | tojson }};
+doughnut('visit-country-chart', vcCountryLabels, vcCountryVals);
+
+var vdKeys = {{ visit_daily_counts.keys()   | list | tojson }};
+var vdVals = {{ visit_daily_counts.values() | list | tojson }};
+line('visit-timeline', vdKeys, vdVals, 'Visits');
+
+/* ── Tabs ──────────────────────────────────────────────────────────────── */
+document.querySelectorAll('.admin-tab-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.admin-tab-btn').forEach(function(b){ b.classList.remove('active'); });
+        document.querySelectorAll('.admin-tab-panel').forEach(function(p){ p.classList.remove('active'); });
+        btn.classList.add('active');
+        var panel = document.querySelector('[data-panel="' + btn.dataset.tab + '"]');
+        if (panel) panel.classList.add('active');
+    });
+});
+
+/* ── Remove signup ─────────────────────────────────────────────────────── */
+function startRemove(btn) {
+    var actions = btn.closest('.row-actions');
+    actions.classList.add('confirming');
+    var timer = setTimeout(function(){ actions.classList.remove('confirming'); }, 5000);
+    actions._cancelTimer = timer;
+}
+function cancelRemove(btn) {
+    var actions = btn.closest('.row-actions');
+    clearTimeout(actions._cancelTimer);
+    actions.classList.remove('confirming');
+}
+function confirmRemove(btn) {
+    var actions = btn.closest('.row-actions');
+    var id = parseInt(actions.dataset.id, 10);
+    var row = document.getElementById('row-' + id);
+    clearTimeout(actions._cancelTimer);
+    actions.classList.remove('confirming');
+    fetch('/admin/signups/remove', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: id })
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+        if (d.ok && row) {
+            row.style.transition = 'opacity 0.3s, transform 0.3s';
+            row.style.opacity = '0';
+            row.style.transform = 'scaleY(0)';
+            setTimeout(function(){ row.remove(); }, 320);
+        }
+    });
+}
+window.startRemove   = startRemove;
+window.cancelRemove  = cancelRemove;
+window.confirmRemove = confirmRemove;
+
+/* ── Add signup modal ──────────────────────────────────────────────────── */
+var addOverlay = document.getElementById('add-modal-overlay');
+var addModal   = document.getElementById('add-modal');
+var addEmail   = document.getElementById('add-email');
+var addError   = document.getElementById('add-modal-error');
+
+function openAddModal() {
+    addEmail.value = '';
+    addError.style.display = 'none';
+    addOverlay.classList.add('open');
+    addModal.classList.add('open');
+    setTimeout(function(){ addEmail.focus(); }, 200);
+}
+function closeAddModal() {
+    addOverlay.classList.remove('open');
+    addModal.classList.remove('open');
+}
+document.getElementById('open-add-modal').addEventListener('click', openAddModal);
+document.getElementById('close-add-modal').addEventListener('click', closeAddModal);
+addOverlay.addEventListener('click', function(e){ if (e.target === addOverlay) closeAddModal(); });
+
+document.getElementById('confirm-add-signup').addEventListener('click', function() {
+    var email = addEmail.value.trim();
+    if (!email) { addError.textContent = 'Email is required.'; addError.style.display = 'block'; return; }
+    var btn = this;
+    btn.disabled = true;
+    addError.style.display = 'none';
+    fetch('/admin/signups/add', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email })
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+        if (d.ok) {
+            closeAddModal();
+            window.location.reload();
+        } else {
+            addError.textContent = d.error || 'Something went wrong.';
+            addError.style.display = 'block';
+        }
+    })
+    .finally(function(){ btn.disabled = false; });
+});
+
+/* ── Application drawer ────────────────────────────────────────────────── */
+var overlay    = document.getElementById('app-drawer-overlay');
+var drawer     = document.getElementById('app-drawer');
+var closeBtn   = document.getElementById('app-drawer-close');
+var acceptBtn  = document.getElementById('drawer-accept-btn');
+var rejectBtn  = document.getElementById('drawer-reject-btn');
+var pendingBtn = document.getElementById('drawer-pending-btn');
+var currentApp = null, currentAppType = null, currentRow = null;
+
+function openDrawer()  { overlay.classList.add('open'); drawer.classList.add('open'); document.body.style.overflow = 'hidden'; }
+function closeDrawer() { overlay.classList.remove('open'); drawer.classList.remove('open'); document.body.style.overflow = ''; }
+
+overlay.addEventListener('click', closeDrawer);
+closeBtn.addEventListener('click', closeDrawer);
+document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeDrawer(); });
+
+function setStatusBtns(s) {
+    [acceptBtn, rejectBtn, pendingBtn].forEach(function(b){ b.classList.remove('active-status'); });
+    if (s === 'accepted') acceptBtn.classList.add('active-status');
+    if (s === 'rejected') rejectBtn.classList.add('active-status');
+    if (s === 'pending')  pendingBtn.classList.add('active-status');
+}
+
+function updateStatus(newStatus) {
+    if (!currentApp) return;
+    [acceptBtn, rejectBtn, pendingBtn].forEach(function(b){ b.disabled = true; });
+    fetch('/admin/applications/status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: currentAppType, id: currentApp.id, status: newStatus })
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+        if (d.ok) {
+            currentApp.status = newStatus;
+            setStatusBtns(newStatus);
+            var sub = document.getElementById('drawer-sub').querySelector('.status-badge');
+            if (sub) { sub.className = 'status-badge status-' + newStatus; sub.textContent = newStatus; }
+            if (currentRow) {
+                var rb = currentRow.querySelector('.status-badge');
+                if (rb) { rb.className = 'status-badge status-' + newStatus; rb.textContent = newStatus; }
+                currentRow.dataset.app = JSON.stringify(currentApp);
+            }
+        }
+    })
+    .finally(function(){ [acceptBtn, rejectBtn, pendingBtn].forEach(function(b){ b.disabled = false; }); });
+}
+
+acceptBtn.addEventListener('click',  function(){ updateStatus('accepted'); });
+rejectBtn.addEventListener('click',  function(){ updateStatus('rejected'); });
+pendingBtn.addEventListener('click', function(){ updateStatus('pending'); });
+
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function row(k, v) {
+    if (!v && v !== 0) return '';
+    return '<div class="app-drawer-row"><span class="app-drawer-key">'+esc(k)+'</span><span class="app-drawer-val">'+esc(String(v))+'</span></div>';
+}
+function section(label, rows) {
+    var c = rows.filter(Boolean).join('');
+    if (!c) return '';
+    return '<div class="app-drawer-section"><div class="app-drawer-section-label">'+label+'</div>'+c+'</div>';
+}
+function badge(s) { return '<span class="status-badge status-'+s+'">'+s+'</span>'; }
+
+function buildStaffDrawer(app) {
+    document.getElementById('drawer-title').textContent = 'Staff #'+app.id+' — '+app.role;
+    document.getElementById('drawer-sub').innerHTML = badge(app.status)+
+        '<span>'+esc(app.date)+' at '+esc(app.time)+'</span>'+
+        '<span>IP: '+esc(app.ip||'unknown')+'</span>';
+    var rf = app.role_fields||{}, g = app.general||{};
+    document.getElementById('drawer-body').innerHTML =
+        section('Role-specific', [
+            rf.github?row('GitHub',rf.github):'',
+            rf.languages&&rf.languages.length?row('Languages',rf.languages.join(', ')):'',
+            rf.art_type?row('Art type',rf.art_type):'',
+            rf.software?row('Software',rf.software):'',
+            rf.experience?row('Experience',rf.experience):'',
+            rf.years_coding?row('Years coding',rf.years_coding):'',
+            rf.years_building?row('Years building',rf.years_building):'',
+            rf.years_support?row('Years in role',rf.years_support):'',
+            rf.years_art?row('Years making art',rf.years_art):'',
+            rf.portfolio?row('Portfolio',rf.portfolio):'',
+            rf.process?row('Process',rf.process):'',
+            rf.custom_role?row('Custom role',rf.custom_role):'',
+        ])+
+        section('Contact',[row('Discord',g.discord),row('Age',g.age),row('Microphone',g.microphone)])+
+        section('Optional',[row('Socials',g.socials),row('Portfolio link',g.portfolio_link),row('Anything else',g.extra)]);
+}
+
+function buildTesterDrawer(app) {
+    document.getElementById('drawer-title').textContent = 'Tester #'+app.id+' — '+esc(app.minecraft_ign);
+    document.getElementById('drawer-sub').innerHTML = badge(app.status)+
+        '<span>'+esc(app.date)+' at '+esc(app.time)+'</span>'+
+        '<span>IP: '+esc(app.ip||'unknown')+'</span>';
+    document.getElementById('drawer-body').innerHTML =
+        section('Contact',[row('IGN',app.minecraft_ign),row('Email',app.email),row('Discord',app.discord),row('Age',app.age),row('Pronouns',app.pronouns)])+
+        section('Eligibility',[row('Owns Java',app.owns_java==='yes'?'Yes':'No'),row('Tested before',app.tested_before==='yes'?'Yes':'No'),row('Rules agreed',app.rules_agreed==='yes'?'Yes':'No')])+
+        section('Experience',[row('Skill level',app.skill_level+' / 10'),row('Prior testing',app.prior_testing),row('Other exp.',app.other_experience)])+
+        section('Opinions',[row('Opinion',app.opinion),row('Improvements',app.improvements)])+
+        section('Extra',[row('Anything else',app.extra)]);
+}
+
+document.querySelectorAll('tr[data-app]').forEach(function(tr) {
+    tr.addEventListener('click', function() {
+        currentApp     = JSON.parse(tr.dataset.app);
+        currentAppType = tr.dataset.appType;
+        currentRow     = tr;
+        if (currentAppType === 'staff')  buildStaffDrawer(currentApp);
+        if (currentAppType === 'tester') buildTesterDrawer(currentApp);
+        setStatusBtns(currentApp.status || 'pending');
+        openDrawer();
+    });
+});
+
 })();
 </script>
-{% endif %}
 {% endblock %}

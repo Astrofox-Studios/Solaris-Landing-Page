@@ -46,6 +46,10 @@ COUNTDOWN_VISIBLE = os.environ.get("COUNTDOWN_VISIBLE", "false").lower() == "tru
 data_lock = threading.Lock()
 applications_lock = threading.Lock()
 
+VISITS_FILE = Path("visits.json")
+visits_lock  = threading.Lock()
+MAX_VISITS   = 10_000
+
 VALID_STAFF_ROLES = {
     "Java / Kotlin Developer",
     "Builder",
@@ -236,6 +240,92 @@ def save_signup_txt(data):
         )
     with open(SIGNUPS_FILE, "w") as f:
         f.writelines(lines)
+
+
+# ── Visitor tracking ─────────────────────────────────────────────────────────
+
+def _read_visits():
+    empty = {"total_visits": 0, "visits": [], "ip_geo_cache": {}}
+    if not VISITS_FILE.exists():
+        return empty
+    try:
+        with open(VISITS_FILE, "r") as f:
+            d = json.load(f)
+    except (json.JSONDecodeError, ValueError):
+        return empty
+    d.setdefault("total_visits", 0)
+    d.setdefault("visits", [])
+    d.setdefault("ip_geo_cache", {})
+    return d
+
+
+def _save_visits(data):
+    tmp = Path(str(VISITS_FILE) + ".tmp")
+    with open(tmp, "w") as f:
+        json.dump(data, f, indent=2)
+    tmp.replace(VISITS_FILE)
+
+
+def _geo_and_update_visit(ip: str, timestamp: str):
+    try:
+        geo_resp = http_requests.get(
+            f"http://ip-api.com/json/{ip}?fields=country,countryCode,city",
+            timeout=5,
+        )
+        geo = geo_resp.json()
+    except Exception:
+        geo = {}
+    geo_entry = {
+        "country": geo.get("country", ""),
+        "country_code": geo.get("countryCode", ""),
+        "city": geo.get("city", ""),
+    }
+    with visits_lock:
+        data = _read_visits()
+        data["ip_geo_cache"][ip] = geo_entry
+        for v in reversed(data["visits"]):
+            if v.get("ip") == ip and v.get("timestamp") == timestamp:
+                v.update(geo_entry)
+                break
+        _save_visits(data)
+
+
+_VISIT_SKIP_PREFIXES = ("/admin", "/static", "/favicon", "/beta-signup", "/apply")
+
+def record_visit():
+    if request.method != "GET":
+        return
+    path = request.path
+    if any(path.startswith(p) for p in _VISIT_SKIP_PREFIXES):
+        return
+    ip = request.headers.get("X-Forwarded-For", request.remote_addr).split(",")[0].strip()
+    now = datetime.utcnow()
+    timestamp = now.isoformat()
+    date_str  = now.strftime("%Y-%m-%d")
+    needs_geo = False
+    try:
+        with visits_lock:
+            data = _read_visits()
+            geo_cached = data["ip_geo_cache"].get(ip)
+            visit = {
+                "timestamp": timestamp,
+                "date": date_str,
+                "ip": ip,
+                "path": path,
+                "country":      (geo_cached or {}).get("country", ""),
+                "country_code": (geo_cached or {}).get("country_code", ""),
+                "city":         (geo_cached or {}).get("city", ""),
+            }
+            data["visits"].append(visit)
+            if len(data["visits"]) > MAX_VISITS:
+                data["visits"] = data["visits"][-MAX_VISITS:]
+            data["total_visits"] = len(data["visits"])
+            needs_geo = geo_cached is None
+            _save_visits(data)
+    except Exception:
+        pass
+    if needs_geo:
+        threading.Thread(target=_geo_and_update_visit, args=(ip, timestamp), daemon=True).start()
 
 
 # ── Backups ───────────────────────────────────────────────────────────────────
@@ -437,6 +527,13 @@ def get_post(slug):
         "latest_posts": other_posts[:5],
         "recommended_posts": recommended,
     }
+
+
+# ── Visitor hook ─────────────────────────────────────────────────────────────
+
+@app.before_request
+def _track():
+    record_visit()
 
 
 # ── Public routes ─────────────────────────────────────────────────────────────
@@ -807,15 +904,49 @@ def admin():
     if not session.get("admin"):
         return render_template("admin_login.html")
 
+    from datetime import timedelta
+
     data = load_data()
     signups = list(reversed(data["signups"]))
-    country_breakdown = {}
+
+    country_breakdown: dict = {}
+    interests_breakdown: dict = {}
     for s in data["signups"]:
-        c = s.get("country", "") or "Unknown"
+        c = s.get("country") or "Unknown"
         country_breakdown[c] = country_breakdown.get(c, 0) + 1
+        for interest in s.get("interests", []):
+            interests_breakdown[interest] = interests_breakdown.get(interest, 0) + 1
+
+    today_date = datetime.utcnow().date()
+    date_range = [(today_date - timedelta(days=i)).strftime("%Y-%m-%d") for i in range(29, -1, -1)]
+
+    signup_by_date: dict = {}
+    for s in data["signups"]:
+        signup_by_date[s["date"]] = signup_by_date.get(s["date"], 0) + 1
+    signup_daily_counts = {d: signup_by_date.get(d, 0) for d in date_range}
+
+    # Visitor stats
+    with visits_lock:
+        vdata = _read_visits()
+    all_visits = vdata["visits"]
+    today_str   = today_date.strftime("%Y-%m-%d")
+    today_visits = sum(1 for v in all_visits if v.get("date") == today_str)
+    unique_ips   = len({v.get("ip") for v in all_visits})
+
+    visit_country_breakdown: dict = {}
+    for v in all_visits:
+        c = v.get("country") or "Unknown"
+        visit_country_breakdown[c] = visit_country_breakdown.get(c, 0) + 1
+
+    visit_by_date: dict = {}
+    for v in all_visits:
+        visit_by_date[v["date"]] = visit_by_date.get(v["date"], 0) + 1
+    visit_daily_counts = {d: visit_by_date.get(d, 0) for d in date_range}
+
+    recent_visits = list(reversed(all_visits))[:100]
 
     apps = load_applications()
-    staff_apps = list(reversed(apps["staff"]))
+    staff_apps  = list(reversed(apps["staff"]))
     tester_apps = list(reversed(apps["testers"]))
 
     return render_template(
@@ -823,9 +954,17 @@ def admin():
         total=data["total_signups"],
         signups=signups,
         country_breakdown=country_breakdown,
+        interests_breakdown=interests_breakdown,
+        signup_daily_counts=signup_daily_counts,
         ip_attempts=data["ip_attempts"],
         staff_apps=staff_apps,
         tester_apps=tester_apps,
+        total_visits=vdata["total_visits"],
+        unique_ips=unique_ips,
+        today_visits=today_visits,
+        visit_country_breakdown=visit_country_breakdown,
+        visit_daily_counts=visit_daily_counts,
+        recent_visits=recent_visits,
     )
 
 
@@ -923,6 +1062,65 @@ def admin_update_application_status():
         save_applications(data)
 
     return jsonify({"ok": True, "status": status})
+
+
+@app.route("/admin/signups/remove", methods=["POST"])
+def admin_remove_signup():
+    if not session.get("admin"):
+        return jsonify({"error": "unauthorized"}), 401
+    signup_id = (request.json or {}).get("id")
+    if signup_id is None:
+        return jsonify({"error": "missing id"}), 400
+    with data_lock:
+        d = _read_data()
+        before = len(d["signups"])
+        d["signups"] = [s for s in d["signups"] if s.get("id") != signup_id]
+        if len(d["signups"]) == before:
+            return jsonify({"error": "not_found"}), 404
+        d["total_signups"] = len(d["signups"])
+        save_data(d)
+    return jsonify({"ok": True})
+
+
+@app.route("/admin/signups/add", methods=["POST"])
+def admin_add_signup():
+    if not session.get("admin"):
+        return jsonify({"error": "unauthorized"}), 401
+    body  = request.json or {}
+    email = body.get("email", "").strip().lower()
+    if not email or not EMAIL_RE.match(email):
+        return jsonify({"error": "Invalid email address"}), 400
+    with data_lock:
+        d = _read_data()
+        if email in {s["email"].lower() for s in d["signups"]}:
+            return jsonify({"error": "Email already exists"}), 409
+        new_id  = max((s.get("id", 0) for s in d["signups"]), default=0) + 1
+        new_num = max((s.get("signup_number", 0) for s in d["signups"]), default=0) + 1
+        now = datetime.utcnow()
+        signup = {
+            "id": new_id,
+            "signup_number": new_num,
+            "email": email,
+            "timestamp": now.isoformat(),
+            "date": now.strftime("%Y-%m-%d"),
+            "time": now.strftime("%H:%M:%S"),
+            "ip": "admin-added",
+            "ip_hidden": False,
+            "country": "",
+            "country_code": "",
+            "city": "",
+            "region": "",
+            "interests": body.get("interests", []),
+        }
+        d["signups"].append(signup)
+        d["total_signups"] = len(d["signups"])
+        save_data(d)
+    return jsonify({"ok": True, "signup": signup})
+
+
+@app.route("/privacy-policy")
+def privacy_policy():
+    return render_template("privacy.html")
 
 
 if __name__ == "__main__":

@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}Privacy Policy — Solaris{% endblock %}
+{% block description %}Privacy policy for the Solaris website operated by Astrofox Studios Ltd.{% endblock %}
+{% block og_title %}Privacy Policy — Solaris{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/blog.css') }}">
+<style>
+    .privacy-wrap {
+        max-width: 780px;
+        margin: 0 auto;
+        padding: 120px 24px 80px;
+    }
+    .privacy-wrap h1 {
+        font-size: clamp(1.8rem, 4vw, 2.4rem);
+        margin-bottom: 0.5rem;
+    }
+    .privacy-wrap .last-updated {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        margin-bottom: 3rem;
+    }
+    .privacy-wrap h2 {
+        font-size: 1.15rem;
+        color: var(--text-primary);
+        margin: 2.5rem 0 0.75rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid var(--border-color);
+    }
+    .privacy-wrap p, .privacy-wrap li {
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+        line-height: 1.8;
+        margin-bottom: 0.75rem;
+    }
+    .privacy-wrap ul {
+        padding-left: 1.5rem;
+    }
+    .privacy-wrap a { color: var(--primary-light); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="privacy-wrap">
+    <h1>Privacy Policy</h1>
+    <p class="last-updated">Last updated: May 2026 &nbsp;·&nbsp; Operated by <strong>Astrofox Studios Ltd</strong></p>
+
+    <p>This privacy policy explains what information we collect when you visit the Solaris website (<strong>playsolaris.net</strong>), why we collect it, and how we use it. We are committed to protecting your personal information in line with UK GDPR and the Data Protection Act 2018.</p>
+
+    <h2>Who we are</h2>
+    <p>Astrofox Studios Ltd, registered in England and Wales. Registered address: Suite Ra01, 195-197 Wood Street, London, England, E17 3NU. For data-related enquiries, contact us via our <a href="https://discord.gg/8nnn25B6pU" target="_blank" rel="noopener">Discord server</a>.</p>
+
+    <h2>What we collect and why</h2>
+
+    <p><strong>Website visit data.</strong> When you visit any page on this site, our servers automatically record:</p>
+    <ul>
+        <li>Your IP address</li>
+        <li>The page you visited and the time of the visit</li>
+        <li>Your approximate country and city (derived from your IP via a third-party geolocation service)</li>
+    </ul>
+    <p>We collect this to understand how many people visit the site, which pages are popular, and where our audience is located. This helps us make decisions about server infrastructure and content. This data is stored on our private servers and is not shared with third parties or used for advertising.</p>
+
+    <p><strong>Early Access signups.</strong> If you submit your email address to register interest in Early Access, we collect:</p>
+    <ul>
+        <li>Your email address</li>
+        <li>Your selected interests</li>
+        <li>Your IP address and approximate location (if you consent)</li>
+        <li>The date and time of your submission</li>
+    </ul>
+    <p>We use this to contact you about Early Access, product updates, and launch announcements. We will not share your email with third parties or use it for unrelated marketing.</p>
+
+    <p><strong>Applications (staff & tester).</strong> Application forms collect personal details you voluntarily provide (Discord username, age, experience). This is used solely to evaluate your application.</p>
+
+    <h2>Legal basis for processing</h2>
+    <p>We process visit analytics data under our <em>legitimate interest</em> in understanding our audience to operate a viable game service. We process signup and application data on the basis of your explicit <em>consent</em> (submitting the form).</p>
+
+    <h2>How long we keep your data</h2>
+    <p>Visit logs are retained for up to 12 months and then deleted. Signup data is retained until you request deletion or the service closes. Application data is retained for up to 6 months after a decision is made.</p>
+
+    <h2>Your rights</h2>
+    <p>Under UK GDPR you have the right to:</p>
+    <ul>
+        <li>Access the personal data we hold about you</li>
+        <li>Request correction of inaccurate data</li>
+        <li>Request deletion of your data ("right to be forgotten")</li>
+        <li>Object to processing based on legitimate interest</li>
+        <li>Lodge a complaint with the ICO (<a href="https://ico.org.uk" target="_blank" rel="noopener">ico.org.uk</a>)</li>
+    </ul>
+    <p>To exercise any of these rights, contact us via Discord.</p>
+
+    <h2>Cookies</h2>
+    <p>We use a single cookie to remember your preferred light/dark theme. No tracking cookies, no advertising cookies, no cross-site cookies. You can clear this at any time via your browser settings.</p>
+
+    <h2>Third-party services</h2>
+    <ul>
+        <li><strong>ip-api.com</strong> — used for IP geolocation. Your IP is sent to their API when you visit the site. See their privacy policy at <a href="https://ip-api.com/docs/legal" target="_blank" rel="noopener">ip-api.com/docs/legal</a>.</li>
+        <li><strong>Cloudflare Turnstile</strong> — used on sign-up forms to prevent bots. See Cloudflare's privacy policy for details.</li>
+        <li><strong>Callisto.host</strong> — our hosting provider. Server infrastructure is operated by Callisto.host.</li>
+        <li><strong>Google Fonts</strong> — fonts (Paytone One, Nunito) are loaded from Google's CDN.</li>
+    </ul>
+
+    <h2>Changes to this policy</h2>
+    <p>We may update this policy as the service evolves. The "last updated" date at the top will reflect any changes. Continued use of the site after a change constitutes acceptance of the revised policy.</p>
+</div>
+{% endblock %}
