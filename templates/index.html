@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/team.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/signup.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/apply.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/countdown.css') }}">
 {% endblock %}
 
 {% block content %}
@@ -127,12 +128,61 @@
     </div>
 </section>
 
+{% if countdown_visible %}
+<!-- ====== COUNTDOWN ====== -->
+<div class="countdown-wave-top">
+    <svg viewBox="0 0 1440 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,100 L0,55 C360,100 720,20 1080,55 C1260,75 1380,65 1440,50 L1440,100 Z" fill="#0a0a15"/>
+    </svg>
+</div>
+
+<section class="countdown-section" id="countdown">
+    <div class="section-container" style="position:relative;z-index:1;">
+        <span class="countdown-badge">{{ countdown_label }}</span>
+        <h2 class="countdown-heading">Coming Soon</h2>
+        {% if countdown_target_formatted %}<p class="countdown-date-display">{{ countdown_target_formatted }}</p>{% endif %}
+
+        <div class="countdown-timer"
+             {% if countdown_target %}data-target="{{ countdown_target }}"{% endif %}>
+            <div class="countdown-unit">
+                <span class="countdown-value" data-unit="days">SO</span>
+                <span class="countdown-unit-label">Days</span>
+            </div>
+            <span class="countdown-sep">:</span>
+            <div class="countdown-unit">
+                <span class="countdown-value" data-unit="hours">ON</span>
+                <span class="countdown-unit-label">Hrs</span>
+            </div>
+            <span class="countdown-sep">:</span>
+            <div class="countdown-unit">
+                <span class="countdown-value" data-unit="minutes">TM</span>
+                <span class="countdown-unit-label">Mins</span>
+            </div>
+            <span class="countdown-sep">:</span>
+            <div class="countdown-unit">
+                <span class="countdown-value" data-unit="seconds">!!</span>
+                <span class="countdown-unit-label">Secs</span>
+            </div>
+        </div>
+
+        <a href="/earlyaccess" class="btn btn-primary countdown-cta">Get Early Access</a>
+    </div>
+</section>
+
+<div class="countdown-wave-bottom">
+    <svg viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,0 L1440,55 L1440,80 L0,80 Z" fill="var(--bg-secondary)"/>
+    </svg>
+</div>
+
+{% else %}
 <!-- Angled divider -->
 <div class="section-divider">
     <svg viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M0,0 L1440,60 L1440,80 L0,80 Z" fill="var(--bg-secondary)"/>
     </svg>
 </div>
+{% endif %}
 
 <!-- ====== GAMES ====== -->
 <section class="games-section" id="games">
@@ -598,4 +648,5 @@
 <script src="{{ url_for('static', filename='js/team.js') }}"></script>
 <script src="{{ url_for('static', filename='js/season-carousel.js') }}"></script>
 <script src="{{ url_for('static', filename='js/news-carousel.js') }}"></script>
+<script src="{{ url_for('static', filename='js/countdown.js') }}"></script>
 {% endblock %}

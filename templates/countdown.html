@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}{{ countdown_label }} Countdown — Solaris{% endblock %}
+{% block description %}{% if countdown_target_formatted %}Launching {{ countdown_target_formatted }}. {% endif %}{{ countdown_label }} is coming soon to Solaris — A new dawn in Minecraft awaits. Join us at playsolaris.net{% endblock %}
+{% block og_title %}{{ countdown_label }} — Solaris{% endblock %}
+{% block og_description %}{% if countdown_target_formatted %}Launching {{ countdown_target_formatted }}. {% endif %}{{ countdown_label }} is coming to Solaris. A new dawn in Minecraft awaits — join us at playsolaris.net{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/countdown.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="countdown-standalone">
+    <div class="countdown-standalone-inner">
+
+        <span class="countdown-standalone-logo">SOLARIS</span>
+        <span class="countdown-badge">{{ countdown_label }}</span>
+
+        <div class="countdown-timer"
+             {% if countdown_target %}data-target="{{ countdown_target }}"{% endif %}>
+            <div class="countdown-unit">
+                <span class="countdown-value" data-unit="days">SO</span>
+                <span class="countdown-unit-label">Days</span>
+            </div>
+            <span class="countdown-sep">:</span>
+            <div class="countdown-unit">
+                <span class="countdown-value" data-unit="hours">ON</span>
+                <span class="countdown-unit-label">Hrs</span>
+            </div>
+            <span class="countdown-sep">:</span>
+            <div class="countdown-unit">
+                <span class="countdown-value" data-unit="minutes">TM</span>
+                <span class="countdown-unit-label">Mins</span>
+            </div>
+            <span class="countdown-sep">:</span>
+            <div class="countdown-unit">
+                <span class="countdown-value" data-unit="seconds">!!</span>
+                <span class="countdown-unit-label">Secs</span>
+            </div>
+        </div>
+
+        {% if countdown_target_formatted %}
+        <p class="countdown-date-display">{{ countdown_target_formatted }}</p>
+        {% endif %}
+
+        <div class="countdown-standalone-actions">
+            <a href="/" class="btn btn-outline">← Back to Home</a>
+            <a href="/earlyaccess" class="btn btn-primary">Get Early Access</a>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/countdown.js') }}"></script>
+{% endblock %}

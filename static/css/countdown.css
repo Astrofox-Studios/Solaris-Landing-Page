@@ -1,0 +1,190 @@
+/* ── Countdown Section (homepage band) ──────────────────────────────────── */
+
+.countdown-wave-top {
+    display: block;
+    width: 100%;
+    line-height: 0;
+    background: var(--bg-primary);
+}
+
+.countdown-wave-bottom {
+    display: block;
+    width: 100%;
+    line-height: 0;
+    background: #0a0a15;
+}
+
+.countdown-section {
+    position: relative;
+    background: #0a0a15;
+    padding: 4rem 1.5rem;
+    overflow: hidden;
+    text-align: center;
+}
+
+.countdown-section::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 700px;
+    height: 400px;
+    background: radial-gradient(ellipse at center,
+        rgba(50, 90, 211, 0.18) 0%,
+        rgba(105, 41, 183, 0.10) 50%,
+        transparent 70%);
+    pointer-events: none;
+}
+
+.countdown-badge {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #5b7ee8;
+    background: rgba(50, 90, 211, 0.12);
+    border: 1px solid rgba(50, 90, 211, 0.35);
+    border-radius: 100px;
+    padding: 0.3em 1.1em;
+    margin-bottom: 1.25rem;
+}
+
+.countdown-heading {
+    font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+    font-family: 'Paytone One', sans-serif;
+    color: #ffffff;
+    margin: 0 0 0.5rem;
+}
+
+.countdown-date-display {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.4);
+    margin: 0 0 2.5rem;
+    letter-spacing: 0.06em;
+}
+
+.countdown-timer {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 0;
+    flex-wrap: nowrap;
+    margin-bottom: 2.5rem;
+    position: relative;
+    z-index: 1;
+}
+
+.countdown-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 90px;
+}
+
+.countdown-value {
+    font-family: 'Paytone One', sans-serif;
+    font-size: clamp(3rem, 7vw, 5.5rem);
+    line-height: 1;
+    color: #325ad3;
+    background: linear-gradient(135deg, #325ad3 0%, #6929b7 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: block;
+}
+
+.countdown-unit-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.3);
+    margin-top: 0.6rem;
+    display: block;
+}
+
+.countdown-sep {
+    font-family: 'Paytone One', sans-serif;
+    font-size: clamp(2.5rem, 6vw, 4.8rem);
+    color: rgba(255, 255, 255, 0.14);
+    padding: 0 0.1rem;
+    line-height: 1;
+    margin-top: 0.05em;
+    user-select: none;
+}
+
+.countdown-cta {
+    position: relative;
+    z-index: 1;
+}
+
+/* ── Standalone countdown page ────────────────────────────────────────────── */
+
+.countdown-standalone {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0a0a15;
+    position: relative;
+    overflow: hidden;
+    padding: 6rem 1.5rem 4rem;
+}
+
+.countdown-standalone::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 800px;
+    height: 600px;
+    background: radial-gradient(ellipse at center,
+        rgba(50, 90, 211, 0.2) 0%,
+        rgba(105, 41, 183, 0.12) 45%,
+        transparent 70%);
+    pointer-events: none;
+}
+
+.countdown-standalone-inner {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    max-width: 800px;
+    width: 100%;
+}
+
+.countdown-standalone-logo {
+    font-family: 'Paytone One', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    letter-spacing: 0.12em;
+    margin-bottom: 0.75rem;
+    color: #ffffff;
+    background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.65) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: block;
+}
+
+.countdown-standalone-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+}
+
+/* ── Responsive ───────────────────────────────────────────────────────────── */
+
+@media (max-width: 600px) {
+    .countdown-unit {
+        min-width: 60px;
+    }
+
+    .countdown-sep {
+        padding: 0 0.05rem;
+    }
+}

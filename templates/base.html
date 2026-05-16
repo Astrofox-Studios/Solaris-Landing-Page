@@ -6,8 +6,15 @@
     <title>{% block title %}Solaris{% endblock %}</title>
     <meta name="description" content="{% block description %}Solaris — A new dawn in Minecraft awaits. Join us at playsolaris.net{% endblock %}">
     <meta property="og:title" content="{% block og_title %}Solaris{% endblock %}">
-    <meta property="og:description" content="A new dawn in Minecraft awaits">
+    <meta property="og:description" content="{% block og_description %}A new dawn in Minecraft awaits. Join us at playsolaris.net{% endblock %}">
     <meta property="og:type" content="website">
+    <meta property="og:image" content="{% block og_image %}{{ url_for('static', filename='images/blog/early-access.png', _external=True) }}{% endblock %}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:url" content="{{ request.url }}">
+    <meta property="og:site_name" content="Solaris">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="{% block twitter_image %}{{ url_for('static', filename='images/blog/early-access.png', _external=True) }}{% endblock %}">
 
     <!-- Fonts loaded via main.css @import -->
 

@@ -3,6 +3,9 @@
 {% block title %}{{ post.title }}{% endblock %}
 {% block description %}{{ post.summary }}{% endblock %}
 {% block og_title %}{{ post.title }} — Solaris{% endblock %}
+{% block og_description %}{{ post.summary }}{% endblock %}
+{% block og_image %}{% if post.header_image %}{{ request.host_url.rstrip('/') }}{{ post.header_image }}{% else %}{{ url_for('static', filename='images/blog/early-access.png', _external=True) }}{% endif %}{% endblock %}
+{% block twitter_image %}{% if post.header_image %}{{ request.host_url.rstrip('/') }}{{ post.header_image }}{% else %}{{ url_for('static', filename='images/blog/early-access.png', _external=True) }}{% endif %}{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/blog.css') }}">

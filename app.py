@@ -39,6 +39,10 @@ ADMIN_PASSWORD  = os.environ.get("ADMIN_PASSWORD", "")
 BOT_TOKEN       = os.environ.get("DISCORD_BOT_TOKEN", "")
 ADMIN_AUTH_FILE = Path("admin_auth.json")
 
+COUNTDOWN_TARGET  = os.environ.get("COUNTDOWN_TARGET", "")    # ISO datetime, e.g. "2026-06-27T12:00:00"
+COUNTDOWN_LABEL   = os.environ.get("COUNTDOWN_LABEL", "Early Access")
+COUNTDOWN_VISIBLE = os.environ.get("COUNTDOWN_VISIBLE", "false").lower() == "true"
+
 data_lock = threading.Lock()
 applications_lock = threading.Lock()
 
@@ -437,10 +441,40 @@ def get_post(slug):
 
 # ── Public routes ─────────────────────────────────────────────────────────────
 
+@app.context_processor
+def inject_globals():
+    formatted = ""
+    if COUNTDOWN_TARGET:
+        try:
+            dt = datetime.fromisoformat(COUNTDOWN_TARGET.rstrip('Z'))
+            date_str = dt.strftime("%B %d, %Y")
+            hour12 = dt.hour % 12 or 12
+            ampm = "PM" if dt.hour >= 12 else "AM"
+            minute = f":{dt.minute:02d}" if dt.minute else ""
+            tz_map = {-5: "EST", -4: "EST", 0: "UTC", 1: "BST"}
+            tz_label = ""
+            if dt.utcoffset() is not None:
+                tz_label = " " + tz_map.get(int(dt.utcoffset().total_seconds() / 3600), "")
+            formatted = f"{date_str} at {hour12}{minute} {ampm}{tz_label}".strip()
+        except (ValueError, AttributeError):
+            formatted = COUNTDOWN_TARGET
+    return dict(
+        countdown_visible=COUNTDOWN_VISIBLE,
+        countdown_target=COUNTDOWN_TARGET,
+        countdown_label=COUNTDOWN_LABEL,
+        countdown_target_formatted=formatted,
+    )
+
+
 @app.route("/")
 def index():
     posts = get_all_posts()[:5]
     return render_template("index.html", posts=posts)
+
+
+@app.route("/countdown")
+def countdown_page():
+    return render_template("countdown.html")
 
 
 @app.route("/blog")
