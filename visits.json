@@ -1,5 +1,5 @@
 {
-  "total_visits": 8,
+  "total_visits": 28,
   "visits": [
     {
       "timestamp": "2026-05-16T14:55:13.371843",
@@ -69,6 +69,186 @@
       "date": "2026-05-16",
       "ip": "127.0.0.1",
       "path": "/",
+      "country": "",
+      "country_code": "",
+      "city": ""
+    },
+    {
+      "timestamp": "2026-05-18T20:35:02.198025",
+      "date": "2026-05-18",
+      "ip": "127.0.0.1",
+      "path": "/",
+      "country": "",
+      "country_code": "",
+      "city": ""
+    },
+    {
+      "timestamp": "2026-05-18T20:45:24.594689",
+      "date": "2026-05-18",
+      "ip": "127.0.0.1",
+      "path": "/",
+      "country": "",
+      "country_code": "",
+      "city": ""
+    },
+    {
+      "timestamp": "2026-05-18T20:46:08.630734",
+      "date": "2026-05-18",
+      "ip": "127.0.0.1",
+      "path": "/",
+      "country": "",
+      "country_code": "",
+      "city": ""
+    },
+    {
+      "timestamp": "2026-05-18T20:46:08.669016",
+      "date": "2026-05-18",
+      "ip": "127.0.0.1",
+      "path": "/branding",
+      "country": "",
+      "country_code": "",
+      "city": ""
+    },
+    {
+      "timestamp": "2026-05-18T20:46:08.680746",
+      "date": "2026-05-18",
+      "ip": "127.0.0.1",
+      "path": "/blog/2026-05-18-new-logo-and-branding",
+      "country": "",
+      "country_code": "",
+      "city": ""
+    },
+    {
+      "timestamp": "2026-05-18T20:46:11.972097",
+      "date": "2026-05-18",
+      "ip": "127.0.0.1",
+      "path": "/blog",
+      "country": "",
+      "country_code": "",
+      "city": ""
+    },
+    {
+      "timestamp": "2026-05-18T20:46:54.769665",
+      "date": "2026-05-18",
+      "ip": "127.0.0.1",
+      "path": "/",
+      "country": "",
+      "country_code": "",
+      "city": ""
+    },
+    {
+      "timestamp": "2026-05-18T20:46:58.235997",
+      "date": "2026-05-18",
+      "ip": "127.0.0.1",
+      "path": "/branding",
+      "country": "",
+      "country_code": "",
+      "city": ""
+    },
+    {
+      "timestamp": "2026-05-18T20:48:05.552552",
+      "date": "2026-05-18",
+      "ip": "127.0.0.1",
+      "path": "/branding",
+      "country": "",
+      "country_code": "",
+      "city": ""
+    },
+    {
+      "timestamp": "2026-05-18T20:48:10.207682",
+      "date": "2026-05-18",
+      "ip": "127.0.0.1",
+      "path": "/",
+      "country": "",
+      "country_code": "",
+      "city": ""
+    },
+    {
+      "timestamp": "2026-05-18T20:48:13.225097",
+      "date": "2026-05-18",
+      "ip": "127.0.0.1",
+      "path": "/blog/2026-05-18-new-logo-and-branding",
+      "country": "",
+      "country_code": "",
+      "city": ""
+    },
+    {
+      "timestamp": "2026-05-18T20:49:25.557719",
+      "date": "2026-05-18",
+      "ip": "127.0.0.1",
+      "path": "/branding",
+      "country": "",
+      "country_code": "",
+      "city": ""
+    },
+    {
+      "timestamp": "2026-05-18T20:51:15.373373",
+      "date": "2026-05-18",
+      "ip": "127.0.0.1",
+      "path": "/",
+      "country": "",
+      "country_code": "",
+      "city": ""
+    },
+    {
+      "timestamp": "2026-05-18T20:51:19.041398",
+      "date": "2026-05-18",
+      "ip": "127.0.0.1",
+      "path": "/blog/2026-05-18-new-logo-and-branding",
+      "country": "",
+      "country_code": "",
+      "city": ""
+    },
+    {
+      "timestamp": "2026-05-18T20:51:44.166724",
+      "date": "2026-05-18",
+      "ip": "127.0.0.1",
+      "path": "/branding",
+      "country": "",
+      "country_code": "",
+      "city": ""
+    },
+    {
+      "timestamp": "2026-05-18T20:51:44.177641",
+      "date": "2026-05-18",
+      "ip": "127.0.0.1",
+      "path": "/blog/2026-05-18-new-logo-and-branding",
+      "country": "",
+      "country_code": "",
+      "city": ""
+    },
+    {
+      "timestamp": "2026-05-18T20:53:16.479988",
+      "date": "2026-05-18",
+      "ip": "127.0.0.1",
+      "path": "/blog/2026-05-18-new-logo-and-branding",
+      "country": "",
+      "country_code": "",
+      "city": ""
+    },
+    {
+      "timestamp": "2026-05-18T20:55:42.590755",
+      "date": "2026-05-18",
+      "ip": "127.0.0.1",
+      "path": "/blog/2026-05-18-new-logo-and-branding",
+      "country": "",
+      "country_code": "",
+      "city": ""
+    },
+    {
+      "timestamp": "2026-05-18T20:55:52.811916",
+      "date": "2026-05-18",
+      "ip": "127.0.0.1",
+      "path": "/",
+      "country": "",
+      "country_code": "",
+      "city": ""
+    },
+    {
+      "timestamp": "2026-05-18T20:56:01.893268",
+      "date": "2026-05-18",
+      "ip": "127.0.0.1",
+      "path": "/branding",
       "country": "",
       "country_code": "",
       "city": ""

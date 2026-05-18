@@ -1123,5 +1123,10 @@ def privacy_policy():
     return render_template("privacy.html")
 
 
+@app.route("/branding")
+def branding():
+    return render_template("branding.html")
+
+
 if __name__ == "__main__":
     app.run(debug=True, port=7060, host="127.0.0.1")

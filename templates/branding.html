@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+
+{% block title %}Press Kit & Brand Guidelines | Solaris{% endblock %}
+{% block description %}Official Solaris brand assets, colour palette, typography, and usage guidelines for press and content creators.{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/branding.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="branding-page">
+<div class="section-container">
+
+    <!-- Hero -->
+    <div class="branding-hero fade-in">
+        <span class="page-tag">Press Kit</span>
+        <h1>Brand Guidelines</h1>
+        <p>Logos, colours, fonts, and usage rules for press and content creators.</p>
+    </div>
+
+    <!-- Logo -->
+    <div class="branding-section fade-in">
+        <h2 class="branding-section-title">Logo</h2>
+        <p class="branding-section-subtitle">A stylised astronaut helmet. Use it as the primary mark wherever a square icon is needed.</p>
+        <div class="branding-divider"></div>
+
+        <div class="logo-grid">
+            <div class="logo-card logo-card-dark">
+                <img src="{{ url_for('static', filename='images/logos/Solaris_Clear.png') }}" alt="Solaris icon on dark background">
+                <span class="logo-card-label">Icon on dark</span>
+            </div>
+            <div class="logo-card logo-card-light">
+                <img src="{{ url_for('static', filename='images/logos/Solaris_Clear.png') }}" alt="Solaris icon on light background">
+                <span class="logo-card-label" style="color:#555;">Icon on light</span>
+            </div>
+            <div class="logo-card logo-card-dark" style="flex-direction:row; justify-content:center; gap:10px;">
+                <img src="{{ url_for('static', filename='images/logos/Solaris_Clear.png') }}" alt="Solaris lockup" style="max-width:44px; max-height:44px;">
+                <span style="font-family:var(--font-heading); font-size:1.6rem; background:var(--gradient-primary); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">SOLARIS</span>
+            </div>
+            <div class="logo-card logo-card-light" style="flex-direction:row; justify-content:center; gap:10px;">
+                <img src="{{ url_for('static', filename='images/logos/Solaris_Clear.png') }}" alt="Solaris lockup light" style="max-width:44px; max-height:44px;">
+                <span style="font-family:var(--font-heading); font-size:1.6rem; color:#1a1a2e;">SOLARIS</span>
+            </div>
+        </div>
+
+        <div class="logo-download-row">
+            <a href="{{ url_for('static', filename='images/logos/Solaris_Clear.png') }}" download="Solaris_Clear.png" class="btn btn-primary">
+                <i class="fa-solid fa-download"></i> Download Logo (PNG)
+            </a>
+            <a href="{{ url_for('static', filename='images/logos/Solaris.png') }}" download="Solaris.png" class="btn btn-outline">
+                <i class="fa-solid fa-download"></i> Download Logo with Background (PNG)
+            </a>
+        </div>
+    </div>
+
+    <!-- Wordmark -->
+    <div class="branding-section fade-in">
+        <h2 class="branding-section-title">Wordmark</h2>
+        <p class="branding-section-subtitle">When space allows, use the full wordmark alongside the icon. Always uppercase.</p>
+        <div class="branding-divider"></div>
+        <div class="wordmark-display">
+            <span class="wordmark-text">SOLARIS</span>
+        </div>
+        <p style="font-size:0.85rem; color:var(--text-secondary); text-align:center;">Paytone One &nbsp;·&nbsp; All caps &nbsp;·&nbsp; Brand gradient on dark, dark on light</p>
+    </div>
+
+    <!-- Colours -->
+    <div class="branding-section fade-in">
+        <h2 class="branding-section-title">Colour Palette</h2>
+        <p class="branding-section-subtitle">Core brand colours. Use these exact values.</p>
+        <div class="branding-divider"></div>
+
+        <div class="colour-grid">
+            <div class="colour-swatch">
+                <div class="colour-block" style="background:#325ad3;"></div>
+                <div class="colour-info">
+                    <div class="colour-name">Primary Blue</div>
+                    <div class="colour-hex">#325AD3</div>
+                    <div class="colour-role">Primary brand colour</div>
+                </div>
+            </div>
+            <div class="colour-swatch">
+                <div class="colour-block" style="background:#6929b7;"></div>
+                <div class="colour-info">
+                    <div class="colour-name">Secondary Purple</div>
+                    <div class="colour-hex">#6929B7</div>
+                    <div class="colour-role">Gradient end</div>
+                </div>
+            </div>
+            <div class="colour-swatch">
+                <div class="colour-block" style="background:linear-gradient(135deg,#325ad3,#6929b7);"></div>
+                <div class="colour-info">
+                    <div class="colour-name">Brand Gradient</div>
+                    <div class="colour-hex">#325AD3 to #6929B7</div>
+                    <div class="colour-role">Primary gradient (135deg)</div>
+                </div>
+            </div>
+            <div class="colour-swatch">
+                <div class="colour-block" style="background:#389cff;"></div>
+                <div class="colour-info">
+                    <div class="colour-name">Season Blue</div>
+                    <div class="colour-hex">#389CFF</div>
+                    <div class="colour-role">Season / highlight accent</div>
+                </div>
+            </div>
+            <div class="colour-swatch">
+                <div class="colour-block" style="background:#f59e0b;"></div>
+                <div class="colour-info">
+                    <div class="colour-name">Accent Warm</div>
+                    <div class="colour-hex">#F59E0B</div>
+                    <div class="colour-role">Warnings, highlights</div>
+                </div>
+            </div>
+            <div class="colour-swatch">
+                <div class="colour-block" style="background:#10b981;"></div>
+                <div class="colour-info">
+                    <div class="colour-name">Accent Green</div>
+                    <div class="colour-hex">#10B981</div>
+                    <div class="colour-role">Success states</div>
+                </div>
+            </div>
+            <div class="colour-swatch">
+                <div class="colour-block" style="background:#121218;"></div>
+                <div class="colour-info">
+                    <div class="colour-name">Background Dark</div>
+                    <div class="colour-hex">#121218</div>
+                    <div class="colour-role">Primary background</div>
+                </div>
+            </div>
+            <div class="colour-swatch">
+                <div class="colour-block" style="background:#1e1e2c; border-bottom:1px solid #2c2c3e;"></div>
+                <div class="colour-info">
+                    <div class="colour-name">Card Background</div>
+                    <div class="colour-hex">#1E1E2C</div>
+                    <div class="colour-role">Cards, elevated surfaces</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Typography -->
+    <div class="branding-section fade-in">
+        <h2 class="branding-section-title">Typography</h2>
+        <p class="branding-section-subtitle">Two typefaces, both free on Google Fonts.</p>
+        <div class="branding-divider"></div>
+
+        <div class="type-grid">
+            <div class="type-card">
+                <div class="type-label">Display / Headings</div>
+                <div class="type-sample-heading">Paytone One</div>
+                <div class="type-sample-heading" style="font-size:1.1rem; margin-top:0;">SOLARIS: A New Dawn</div>
+                <div class="type-meta">Paytone One · Regular (400) · Always caps for the wordmark · Google Fonts</div>
+            </div>
+            <div class="type-card">
+                <div class="type-label">Body / UI</div>
+                <div class="type-sample-body" style="font-size:1.3rem; font-weight:800; margin-bottom:6px;">Nunito</div>
+                <div class="type-sample-body">The quick brown fox jumps over the lazy dog. Body copy, labels, and UI text all use Nunito at various weights.</div>
+                <div class="type-meta">Nunito · 400 / 600 / 700 / 800 / 900 · Google Fonts</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Usage Rules -->
+    <div class="branding-section fade-in">
+        <h2 class="branding-section-title">Usage</h2>
+        <p class="branding-section-subtitle">Keep it consistent.</p>
+        <div class="branding-divider"></div>
+
+        <div class="rules-columns">
+            <div class="rules-col rules-col-do">
+                <h3 class="rules-col-title">Do</h3>
+                <ul class="rules-list">
+                    <li>Use the official PNG downloaded from this page</li>
+                    <li>Give it breathing room and don't crowd it against other elements</li>
+                    <li>Write SOLARIS in all caps when referencing the brand name</li>
+                    <li>Use it on both dark and light backgrounds, the transparent PNG works for both</li>
+                    <li>Scale it proportionally</li>
+                </ul>
+            </div>
+            <div class="rules-col rules-col-dont">
+                <h3 class="rules-col-title">Don't</h3>
+                <ul class="rules-list">
+                    <li>Recolour it or swap the gradient for something else</li>
+                    <li>Stretch, squash, or skew it</li>
+                    <li>Add drop shadows, glows, or outlines to the logo itself</li>
+                    <li>Drop it on a busy background where it gets lost</li>
+                    <li>Recreate it from scratch or modify the shape</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="branding-cta fade-in">
+        <h3>Need More?</h3>
+        <p>A full branding package with logo variants, wallpapers, and additional assets is coming soon. Until then, reach out on Discord.</p>
+        <div class="branding-cta-actions">
+            <a href="https://discord.gg/8nnn25B6pU" target="_blank" rel="noopener" class="btn btn-primary">Join our Discord</a>
+            <a href="/blog/2026-05-18-new-logo-and-branding" class="btn btn-outline">Read the Announcement</a>
+        </div>
+    </div>
+
+</div>
+</div>
+{% endblock %}
