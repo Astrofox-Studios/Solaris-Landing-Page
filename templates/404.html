@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}404 — Solaris{% endblock %}
+{% block description %}This page doesn't exist. Head back to Solaris.{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/404.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="not-found-page">
+    <div class="not-found-glow"></div>
+    <div class="not-found-content fade-in">
+        <div class="not-found-code">404</div>
+        <h1 class="not-found-title">Page Not Found</h1>
+        <p class="not-found-desc">This page doesn't exist or may have moved. Head back home or catch up on the latest news.</p>
+        <div class="not-found-actions">
+            <a href="/" class="btn btn-primary">Back to Home</a>
+            <a href="/blog" class="btn btn-secondary">Read the Blog</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

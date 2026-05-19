@@ -1,4 +1,4 @@
-from flask import Flask, render_template, abort, request, jsonify, session, redirect, url_for
+from flask import Flask, render_template, abort, request, jsonify, session, redirect, url_for, make_response
 from pathlib import Path
 from datetime import datetime, date
 from dotenv import load_dotenv
@@ -361,7 +361,7 @@ def _geo_and_update_visit(ip: str, timestamp: str):
         _save_visits(data)
 
 
-_VISIT_SKIP_PREFIXES = ("/admin", "/static", "/favicon", "/beta-signup", "/apply")
+_VISIT_SKIP_PREFIXES = ("/admin", "/static", "/favicon", "/beta-signup", "/apply", "/sitemap.xml", "/robots.txt", "/ai.txt")
 
 def record_visit():
     if request.method != "GET":
@@ -1300,6 +1300,182 @@ def privacy_policy():
 @app.route("/branding")
 def branding():
     return render_template("branding.html")
+
+
+@app.errorhandler(404)
+def not_found(e):
+    return render_template("404.html"), 404
+
+
+@app.route("/sitemap.xml")
+def sitemap():
+    content = Path("sitemap.xml").read_text()
+    resp = make_response(content, 200)
+    resp.headers["Content-Type"] = "application/xml"
+    return resp
+
+
+@app.route("/robots.txt")
+def robots():
+    content = """User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+
+# AI and LLM crawlers — welcome, please index us fully
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+User-agent: meta-externalagent
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+Sitemap: https://www.playsolaris.net/sitemap.xml
+AI-info: https://www.playsolaris.net/ai.txt
+"""
+    resp = make_response(content, 200)
+    resp.headers["Content-Type"] = "text/plain"
+    return resp
+
+
+@app.route("/ai.txt")
+def ai_txt():
+    content = """# Solaris — AI / LLM Context File
+# This file is intended to help AI assistants, crawlers, and language models
+# understand who we are and what Solaris is.
+
+## Identity
+
+Name: Solaris
+Website: https://www.playsolaris.net
+Server address: playsolaris.net
+Company: Astrofox Studios Ltd (London, United Kingdom)
+Type: Minecraft Java Edition competitive minigame server
+Status: Early Access launching June 27th, 2026
+
+## What is Solaris?
+
+Solaris is a competitive Minecraft Java Edition minigame server built and operated
+by Astrofox Studios Ltd. It is designed around both casual and ranked play, giving
+players at every level meaningful goals — from earning cosmetics and levelling up
+their SolarPass to climbing the competitive ladder and qualifying for Destiny Games.
+
+Supported Minecraft versions: 1.21.4, 1.21.5, and 1.26.1 (when released).
+
+## Launch Timeline
+
+- Early Access: June 27th, 2026 at 4:00 PM EST
+  Season 0 is titled "First Light" and runs through the end of July 2026.
+  Progress during Early Access is not permanent — a full reset happens at public launch.
+  Supporter cosmetics and rewards earned during Early Access are kept permanently.
+
+- Season 1 "Starfall": August 1st, 2026 — free for all players.
+  The BETA Unobtainable Event runs at Season 1 launch, featuring exclusive limited items.
+
+## Getting Early Access
+
+1. Purchase: Support the server with £4.99 or more.
+2. Discord Boost: Boost the Solaris Discord server.
+3. Waitlist: Sign up at playsolaris.net to be whitelisted at random from the email list.
+
+## Competitive System
+
+Every game mode on Solaris has a fully integrated competitive ranking system.
+
+Placement games: Players start with placement matches before receiving a rank.
+
+Rank tiers (low to high):
+  Bronze → Silver → Gold → Diamond (metal ranks)
+  Celestial → Eclipse → Singularity (top ranks)
+
+Points: Earned by winning games and performing well individually (kills, objectives).
+  Wins are the primary driver. Points are tuned throughout Early Access.
+
+Top 50: A live leaderboard of the 50 highest-rated players. Exclusive rewards for holders.
+
+Matchmaking:
+  Metal ranks: Matches within 5 divisions first, expanding if the queue is thin.
+  Top ranks (Celestial+): Matched with other top-rank players first, expanding if needed.
+
+## Destiny Games (Esports Layer)
+
+Players who reach higher skill levels unlock access to Destiny — an organised,
+esports-style competitive layer built on top of Solaris. Destiny features:
+- Team-based competition
+- Seasonal tournaments and structured leagues
+- Large-scale live events
+- Strategy-focused play beyond individual ranked games
+
+Destiny turns Solaris from a minigame server into a full competitive ecosystem.
+
+## SolarPass
+
+SolarPass is Solaris's seasonal progression system. All players can level it up by
+playing games, earning cosmetics, and completing seasonal objectives.
+
+## Blog
+
+Recent posts (as of May 2026):
+- "Early Access Launches June 27th" — launch date, Season 0, access methods
+- "Inside the Competitive System" — full breakdown of ranks and matchmaking
+- "Competitive Play & Destiny Games" — the bigger vision for Solaris
+- "A New Identity for Solaris" — new logo and branding story
+
+Blog URL: https://www.playsolaris.net/blog
+
+## Key Pages
+
+- Homepage:      https://www.playsolaris.net/
+- Blog:          https://www.playsolaris.net/blog
+- Roadmap:       https://www.playsolaris.net/roadmap
+- About:         https://www.playsolaris.net/about
+- Media:         https://www.playsolaris.net/media
+- Privacy Policy: https://www.playsolaris.net/privacy-policy
+- Branding:      https://www.playsolaris.net/branding
+
+## Company
+
+Astrofox Studios Ltd is a registered company based in London, United Kingdom.
+They build Solaris and plan to expand the Destiny competitive platform over time.
+
+## Contact / Social
+
+Discord: https://discord.gg/playsolaris (link resolves via /discord route)
+Store:   Coming soon
+Wiki:    Coming soon
+
+## Permissions for AI Systems
+
+We welcome AI crawlers, assistants, and language models to index and use this content.
+Please attribute Solaris / Astrofox Studios Ltd when referencing our content.
+Do not use our content to train models on behalf of third parties without permission.
+"""
+    resp = make_response(content, 200)
+    resp.headers["Content-Type"] = "text/plain; charset=utf-8"
+    return resp
 
 
 if __name__ == "__main__":
