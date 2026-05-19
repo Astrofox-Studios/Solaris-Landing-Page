@@ -99,6 +99,28 @@ _CONTINENT_MAP: dict[str, str] = {
 def _code_to_continent(code: str) -> str:
     return _CONTINENT_MAP.get((code or "").upper(), "Other")
 
+def _parse_referrer(ref: str) -> str:
+    if not ref:
+        return "Direct"
+    try:
+        from urllib.parse import urlparse
+        host = urlparse(ref).netloc.lower().lstrip("www.")
+        if not host:
+            return "Direct"
+        if "discord" in host:        return "Discord"
+        if "google" in host:         return "Google"
+        if "twitter" in host or host in ("t.co", "x.com"): return "Twitter / X"
+        if "reddit" in host:         return "Reddit"
+        if "youtube" in host:        return "YouTube"
+        if "facebook" in host or host.startswith("fb."): return "Facebook"
+        if "tiktok" in host:         return "TikTok"
+        if "instagram" in host:      return "Instagram"
+        return host
+    except Exception:
+        return "Other"
+
+_DOW = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+
 VALID_STAFF_ROLES = {
     "Java / Kotlin Developer",
     "Builder",
@@ -356,11 +378,21 @@ def record_visit():
         with visits_lock:
             data = _read_visits()
             geo_cached = data["ip_geo_cache"].get(ip)
+            raw_ua = request.user_agent.string or ""
+            ua_l = raw_ua.lower()
+            if "mobile" in ua_l or ("android" in ua_l and "mobile" in ua_l):
+                device = "Mobile"
+            elif "ipad" in ua_l or ("android" in ua_l and "mobile" not in ua_l) or "tablet" in ua_l:
+                device = "Tablet"
+            else:
+                device = "Desktop"
             visit = {
                 "timestamp": timestamp,
                 "date": date_str,
                 "ip": ip,
                 "path": path,
+                "referrer": request.referrer or "",
+                "device": device,
                 "country":      (geo_cached or {}).get("country", ""),
                 "country_code": (geo_cached or {}).get("country_code", ""),
                 "city":         (geo_cached or {}).get("city", ""),
@@ -974,15 +1006,20 @@ def admin():
         signup_by_date[s["date"]] = signup_by_date.get(s["date"], 0) + 1
     signup_daily_counts = {d: signup_by_date.get(d, 0) for d in date_range}
 
-    # Signup continent + top cities
+    # Signup continent + top cities + day-of-week
     signup_continent_breakdown: dict = {}
     signup_city_counts: dict = {}
+    signup_dow: dict = {d: 0 for d in _DOW}
     for s in data["signups"]:
         cont = _code_to_continent(s.get("country_code", ""))
         signup_continent_breakdown[cont] = signup_continent_breakdown.get(cont, 0) + 1
         city = s.get("city") or ""
         if city:
             signup_city_counts[city] = signup_city_counts.get(city, 0) + 1
+        try:
+            signup_dow[_DOW[datetime.strptime(s["date"], "%Y-%m-%d").weekday()]] += 1
+        except Exception:
+            pass
     signup_top_cities = dict(sorted(signup_city_counts.items(), key=lambda x: x[1], reverse=True)[:8])
 
     # Visitor stats
@@ -998,6 +1035,11 @@ def admin():
     visit_page_counts: dict = {}
     visit_hourly_counts: dict = {str(h).zfill(2): 0 for h in range(24)}
     visit_city_counts: dict = {}
+    visit_dow: dict = {d: 0 for d in _DOW}
+    visit_referrer_counts: dict = {}
+    visit_device_counts: dict = {}
+    ip_visit_counts: dict = {}
+    blog_view_counts: dict = {}
     for v in all_visits:
         c = v.get("country") or "Unknown"
         visit_country_breakdown[c] = visit_country_breakdown.get(c, 0) + 1
@@ -1013,9 +1055,29 @@ def admin():
         city = v.get("city") or ""
         if city:
             visit_city_counts[city] = visit_city_counts.get(city, 0) + 1
+        try:
+            visit_dow[_DOW[datetime.strptime(v["date"], "%Y-%m-%d").weekday()]] += 1
+        except Exception:
+            pass
+        ref = _parse_referrer(v.get("referrer", ""))
+        visit_referrer_counts[ref] = visit_referrer_counts.get(ref, 0) + 1
+        dev = v.get("device") or "Desktop"
+        visit_device_counts[dev] = visit_device_counts.get(dev, 0) + 1
+        vip = v.get("ip", "")
+        ip_visit_counts[vip] = ip_visit_counts.get(vip, 0) + 1
+        if page.startswith("/blog/") and len(page) > 6:
+            slug = page[6:].strip("/") or "index"
+            blog_view_counts[slug] = blog_view_counts.get(slug, 0) + 1
 
     visit_top_pages = dict(sorted(visit_page_counts.items(), key=lambda x: x[1], reverse=True)[:10])
     visit_top_cities = dict(sorted(visit_city_counts.items(), key=lambda x: x[1], reverse=True)[:8])
+    visit_referrer_breakdown = dict(sorted(visit_referrer_counts.items(), key=lambda x: x[1], reverse=True)[:10])
+    visit_device_breakdown = dict(sorted(visit_device_counts.items(), key=lambda x: x[1], reverse=True))
+    blog_popularity = dict(sorted(blog_view_counts.items(), key=lambda x: x[1], reverse=True)[:10])
+
+    returning_visitors = sum(1 for n in ip_visit_counts.values() if n > 1)
+    return_visitor_rate = round(returning_visitors / unique_ips * 100, 1) if unique_ips else 0.0
+    pages_per_visit = round(len(all_visits) / unique_ips, 1) if unique_ips else 0.0
 
     visit_by_date: dict = {}
     for v in all_visits:
@@ -1054,6 +1116,7 @@ def admin():
         signup_daily_counts=signup_daily_counts,
         signup_continent_breakdown=signup_continent_breakdown,
         signup_top_cities=signup_top_cities,
+        signup_dow=signup_dow,
         ip_attempts=data["ip_attempts"],
         staff_apps=staff_apps,
         tester_apps=tester_apps,
@@ -1063,11 +1126,17 @@ def admin():
         unique_ips=unique_ips,
         today_visits=today_visits,
         conversion_rate=conversion_rate,
+        return_visitor_rate=return_visitor_rate,
+        pages_per_visit=pages_per_visit,
         visit_country_breakdown=visit_country_breakdown,
         visit_continent_breakdown=visit_continent_breakdown,
         visit_top_pages=visit_top_pages,
         visit_top_cities=visit_top_cities,
         visit_hourly_counts=visit_hourly_counts,
+        visit_dow=visit_dow,
+        visit_referrer_breakdown=visit_referrer_breakdown,
+        visit_device_breakdown=visit_device_breakdown,
+        blog_popularity=blog_popularity,
         visit_daily_counts=visit_daily_counts,
         recent_visits=recent_visits,
     )

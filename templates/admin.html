@@ -489,6 +489,10 @@ tr[data-app]:hover td { background: rgba(50,90,211,0.06); }
                 <div class="admin-chart-inner"><canvas id="signup-cities-chart"></canvas></div>
                 {% else %}<p class="admin-no-data">No data yet</p>{% endif %}
             </div>
+            <div class="admin-chart-card">
+                <h3>Signups by Day of Week</h3>
+                <div class="admin-chart-inner"><canvas id="signup-dow-chart"></canvas></div>
+            </div>
             <div class="admin-chart-card" style="grid-column: 1 / -1;">
                 <h3>Signups — Last 30 Days</h3>
                 <div class="admin-chart-inner" style="height:160px;"><canvas id="signup-timeline"></canvas></div>
@@ -574,8 +578,12 @@ tr[data-app]:hover td { background: rgba(50,90,211,0.06); }
                 <div class="admin-stat-value">{{ visit_country_breakdown | length }}</div>
             </div>
             <div class="admin-stat">
-                <div class="admin-stat-label">Pages Tracked</div>
-                <div class="admin-stat-value">{{ visit_top_pages | length }}</div>
+                <div class="admin-stat-label">Return Rate</div>
+                <div class="admin-stat-value small" style="padding-top:4px;">{{ return_visitor_rate }}%</div>
+            </div>
+            <div class="admin-stat">
+                <div class="admin-stat-label">Pages / Visit</div>
+                <div class="admin-stat-value small" style="padding-top:4px;">{{ pages_per_visit }}</div>
             </div>
         </div>
 
@@ -604,6 +612,28 @@ tr[data-app]:hover td { background: rgba(50,90,211,0.06); }
                 <div class="admin-chart-inner"><canvas id="visit-cities-chart"></canvas></div>
                 {% else %}<p class="admin-no-data">No data yet</p>{% endif %}
             </div>
+            <div class="admin-chart-card">
+                <h3>Traffic Source</h3>
+                {% if visit_referrer_breakdown %}
+                <div class="admin-chart-inner"><canvas id="visit-referrer-chart"></canvas></div>
+                {% else %}<p class="admin-no-data">No data yet</p>{% endif %}
+            </div>
+            <div class="admin-chart-card">
+                <h3>Device Type</h3>
+                {% if visit_device_breakdown %}
+                <div class="admin-chart-inner"><canvas id="visit-device-chart"></canvas></div>
+                {% else %}<p class="admin-no-data">No data yet</p>{% endif %}
+            </div>
+            <div class="admin-chart-card">
+                <h3>Visits by Day of Week</h3>
+                <div class="admin-chart-inner"><canvas id="visit-dow-chart"></canvas></div>
+            </div>
+            {% if blog_popularity %}
+            <div class="admin-chart-card" style="grid-column: 1 / -1;">
+                <h3>Blog Post Views</h3>
+                <div class="admin-chart-inner" style="height:{% if blog_popularity | length > 5 %}220{% else %}160{% endif %}px;"><canvas id="blog-popularity-chart"></canvas></div>
+            </div>
+            {% endif %}
             <div class="admin-chart-card" style="grid-column: 1 / -1;">
                 <h3>Hourly Traffic Distribution (UTC)</h3>
                 <div class="admin-chart-inner" style="height:160px;"><canvas id="visit-hourly-chart"></canvas></div>
@@ -899,6 +929,10 @@ barH('signup-cities-chart',
     {{ signup_top_cities.keys()  | list | tojson }},
     {{ signup_top_cities.values() | list | tojson }});
 
+barH('signup-dow-chart',
+    {{ signup_dow.keys()  | list | tojson }},
+    {{ signup_dow.values() | list | tojson }});
+
 line('signup-timeline',
     {{ signup_daily_counts.keys()  | list | tojson }},
     {{ signup_daily_counts.values() | list | tojson }}, 'Signups');
@@ -919,6 +953,22 @@ barH('visit-pages-chart',
 barH('visit-cities-chart',
     {{ visit_top_cities.keys()  | list | tojson }},
     {{ visit_top_cities.values() | list | tojson }});
+
+doughnut('visit-referrer-chart',
+    {{ visit_referrer_breakdown.keys()  | list | tojson }},
+    {{ visit_referrer_breakdown.values() | list | tojson }});
+
+doughnut('visit-device-chart',
+    {{ visit_device_breakdown.keys()  | list | tojson }},
+    {{ visit_device_breakdown.values() | list | tojson }});
+
+barH('visit-dow-chart',
+    {{ visit_dow.keys()  | list | tojson }},
+    {{ visit_dow.values() | list | tojson }});
+
+barH('blog-popularity-chart',
+    {{ blog_popularity.keys()  | list | tojson }},
+    {{ blog_popularity.values() | list | tojson }});
 
 (function() {
     var hKeys = {{ visit_hourly_counts.keys()  | list | tojson }};
