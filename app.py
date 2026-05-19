@@ -50,6 +50,55 @@ VISITS_FILE = Path("visits.json")
 visits_lock  = threading.Lock()
 MAX_VISITS   = 10_000
 
+_CONTINENT_MAP: dict[str, str] = {
+    # Africa
+    "DZ":"Africa","AO":"Africa","BJ":"Africa","BW":"Africa","BF":"Africa","BI":"Africa","CV":"Africa",
+    "CM":"Africa","CF":"Africa","TD":"Africa","KM":"Africa","CG":"Africa","CD":"Africa","CI":"Africa",
+    "DJ":"Africa","EG":"Africa","GQ":"Africa","ER":"Africa","SZ":"Africa","ET":"Africa","GA":"Africa",
+    "GM":"Africa","GH":"Africa","GN":"Africa","GW":"Africa","KE":"Africa","LS":"Africa","LR":"Africa",
+    "LY":"Africa","MG":"Africa","MW":"Africa","ML":"Africa","MR":"Africa","MU":"Africa","YT":"Africa",
+    "MA":"Africa","MZ":"Africa","NA":"Africa","NE":"Africa","NG":"Africa","RE":"Africa","RW":"Africa",
+    "SH":"Africa","ST":"Africa","SN":"Africa","SC":"Africa","SL":"Africa","SO":"Africa","ZA":"Africa",
+    "SS":"Africa","SD":"Africa","TZ":"Africa","TG":"Africa","TN":"Africa","UG":"Africa","EH":"Africa",
+    "ZM":"Africa","ZW":"Africa",
+    # Antarctica
+    "AQ":"Antarctica",
+    # Asia
+    "AF":"Asia","AM":"Asia","AZ":"Asia","BH":"Asia","BD":"Asia","BT":"Asia","BN":"Asia","KH":"Asia",
+    "CN":"Asia","CY":"Asia","GE":"Asia","HK":"Asia","IN":"Asia","ID":"Asia","IR":"Asia","IQ":"Asia",
+    "IL":"Asia","JP":"Asia","JO":"Asia","KZ":"Asia","KW":"Asia","KG":"Asia","LA":"Asia","LB":"Asia",
+    "MO":"Asia","MY":"Asia","MV":"Asia","MN":"Asia","MM":"Asia","NP":"Asia","KP":"Asia","OM":"Asia",
+    "PK":"Asia","PS":"Asia","PH":"Asia","QA":"Asia","SA":"Asia","SG":"Asia","KR":"Asia","LK":"Asia",
+    "SY":"Asia","TW":"Asia","TJ":"Asia","TH":"Asia","TL":"Asia","TR":"Asia","TM":"Asia","AE":"Asia",
+    "UZ":"Asia","VN":"Asia","YE":"Asia",
+    # Europe
+    "AL":"Europe","AD":"Europe","AT":"Europe","BY":"Europe","BE":"Europe","BA":"Europe","BG":"Europe",
+    "HR":"Europe","CY":"Europe","CZ":"Europe","DK":"Europe","EE":"Europe","FI":"Europe","FR":"Europe",
+    "DE":"Europe","GI":"Europe","GR":"Europe","HU":"Europe","IS":"Europe","IE":"Europe","IT":"Europe",
+    "XK":"Europe","LV":"Europe","LI":"Europe","LT":"Europe","LU":"Europe","MT":"Europe","MD":"Europe",
+    "MC":"Europe","ME":"Europe","NL":"Europe","MK":"Europe","NO":"Europe","PL":"Europe","PT":"Europe",
+    "RO":"Europe","RU":"Europe","SM":"Europe","RS":"Europe","SK":"Europe","SI":"Europe","ES":"Europe",
+    "SE":"Europe","CH":"Europe","UA":"Europe","GB":"Europe","VA":"Europe",
+    # North America
+    "AG":"North America","BS":"North America","BB":"North America","BZ":"North America","CA":"North America",
+    "CR":"North America","CU":"North America","DM":"North America","DO":"North America","SV":"North America",
+    "GD":"North America","GT":"North America","HT":"North America","HN":"North America","JM":"North America",
+    "MX":"North America","NI":"North America","PA":"North America","KN":"North America","LC":"North America",
+    "VC":"North America","TT":"North America","US":"North America",
+    "PR":"North America","VI":"North America","GP":"North America","MQ":"North America",
+    # Oceania
+    "AU":"Oceania","FJ":"Oceania","KI":"Oceania","MH":"Oceania","FM":"Oceania","NR":"Oceania","NZ":"Oceania",
+    "PW":"Oceania","PG":"Oceania","WS":"Oceania","SB":"Oceania","TO":"Oceania","TV":"Oceania","VU":"Oceania",
+    "CK":"Oceania","GU":"Oceania","PF":"Oceania","NC":"Oceania",
+    # South America
+    "AR":"South America","BO":"South America","BR":"South America","CL":"South America","CO":"South America",
+    "EC":"South America","FK":"South America","GF":"South America","GY":"South America","PY":"South America",
+    "PE":"South America","SR":"South America","UY":"South America","VE":"South America",
+}
+
+def _code_to_continent(code: str) -> str:
+    return _CONTINENT_MAP.get((code or "").upper(), "Other")
+
 VALID_STAFF_ROLES = {
     "Java / Kotlin Developer",
     "Builder",
@@ -925,6 +974,17 @@ def admin():
         signup_by_date[s["date"]] = signup_by_date.get(s["date"], 0) + 1
     signup_daily_counts = {d: signup_by_date.get(d, 0) for d in date_range}
 
+    # Signup continent + top cities
+    signup_continent_breakdown: dict = {}
+    signup_city_counts: dict = {}
+    for s in data["signups"]:
+        cont = _code_to_continent(s.get("country_code", ""))
+        signup_continent_breakdown[cont] = signup_continent_breakdown.get(cont, 0) + 1
+        city = s.get("city") or ""
+        if city:
+            signup_city_counts[city] = signup_city_counts.get(city, 0) + 1
+    signup_top_cities = dict(sorted(signup_city_counts.items(), key=lambda x: x[1], reverse=True)[:8])
+
     # Visitor stats
     with visits_lock:
         vdata = _read_visits()
@@ -934,9 +994,28 @@ def admin():
     unique_ips   = len({v.get("ip") for v in all_visits})
 
     visit_country_breakdown: dict = {}
+    visit_continent_breakdown: dict = {}
+    visit_page_counts: dict = {}
+    visit_hourly_counts: dict = {str(h).zfill(2): 0 for h in range(24)}
+    visit_city_counts: dict = {}
     for v in all_visits:
         c = v.get("country") or "Unknown"
         visit_country_breakdown[c] = visit_country_breakdown.get(c, 0) + 1
+        cont = _code_to_continent(v.get("country_code", ""))
+        visit_continent_breakdown[cont] = visit_continent_breakdown.get(cont, 0) + 1
+        page = v.get("path", "/")
+        visit_page_counts[page] = visit_page_counts.get(page, 0) + 1
+        ts = v.get("timestamp", "")
+        if len(ts) >= 13:
+            hour = ts[11:13]
+            if hour in visit_hourly_counts:
+                visit_hourly_counts[hour] += 1
+        city = v.get("city") or ""
+        if city:
+            visit_city_counts[city] = visit_city_counts.get(city, 0) + 1
+
+    visit_top_pages = dict(sorted(visit_page_counts.items(), key=lambda x: x[1], reverse=True)[:10])
+    visit_top_cities = dict(sorted(visit_city_counts.items(), key=lambda x: x[1], reverse=True)[:8])
 
     visit_by_date: dict = {}
     for v in all_visits:
@@ -945,9 +1024,26 @@ def admin():
 
     recent_visits = list(reversed(all_visits))[:100]
 
+    # Conversion rate
+    conversion_rate = round(data["total_signups"] / unique_ips * 100, 1) if unique_ips else 0.0
+
     apps = load_applications()
     staff_apps  = list(reversed(apps["staff"]))
     tester_apps = list(reversed(apps["testers"]))
+
+    # Staff role breakdown
+    staff_role_breakdown: dict = {}
+    for a in apps["staff"]:
+        r = a.get("role", "Unknown")
+        staff_role_breakdown[r] = staff_role_breakdown.get(r, 0) + 1
+    staff_role_breakdown = dict(sorted(staff_role_breakdown.items(), key=lambda x: x[1], reverse=True))
+
+    # Tester skill level distribution
+    tester_skill_breakdown: dict = {str(i): 0 for i in range(1, 11)}
+    for a in apps["testers"]:
+        lvl = str(a.get("skill_level", ""))
+        if lvl in tester_skill_breakdown:
+            tester_skill_breakdown[lvl] += 1
 
     return render_template(
         "admin.html",
@@ -956,13 +1052,22 @@ def admin():
         country_breakdown=country_breakdown,
         interests_breakdown=interests_breakdown,
         signup_daily_counts=signup_daily_counts,
+        signup_continent_breakdown=signup_continent_breakdown,
+        signup_top_cities=signup_top_cities,
         ip_attempts=data["ip_attempts"],
         staff_apps=staff_apps,
         tester_apps=tester_apps,
+        staff_role_breakdown=staff_role_breakdown,
+        tester_skill_breakdown=tester_skill_breakdown,
         total_visits=vdata["total_visits"],
         unique_ips=unique_ips,
         today_visits=today_visits,
+        conversion_rate=conversion_rate,
         visit_country_breakdown=visit_country_breakdown,
+        visit_continent_breakdown=visit_continent_breakdown,
+        visit_top_pages=visit_top_pages,
+        visit_top_cities=visit_top_cities,
+        visit_hourly_counts=visit_hourly_counts,
         visit_daily_counts=visit_daily_counts,
         recent_visits=recent_visits,
     )

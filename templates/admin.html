@@ -453,6 +453,10 @@ tr[data-app]:hover td { background: rgba(50,90,211,0.06); }
                 <div class="admin-stat-value">{{ interests_breakdown | length }}</div>
             </div>
             <div class="admin-stat">
+                <div class="admin-stat-label">Conversion</div>
+                <div class="admin-stat-value small" style="padding-top:4px;">{{ conversion_rate }}%</div>
+            </div>
+            <div class="admin-stat">
                 <div class="admin-stat-label">Last Signup</div>
                 <div class="admin-stat-value small">
                     {% if signups %}{{ signups[0].date }}{% else %}—{% endif %}
@@ -461,6 +465,12 @@ tr[data-app]:hover td { background: rgba(50,90,211,0.06); }
         </div>
 
         <div class="admin-charts-grid">
+            <div class="admin-chart-card">
+                <h3>Continental Distribution</h3>
+                {% if signup_continent_breakdown %}
+                <div class="admin-chart-inner"><canvas id="signup-continent-chart"></canvas></div>
+                {% else %}<p class="admin-no-data">No data yet</p>{% endif %}
+            </div>
             <div class="admin-chart-card">
                 <h3>Country Distribution</h3>
                 {% if country_breakdown %}
@@ -471,6 +481,12 @@ tr[data-app]:hover td { background: rgba(50,90,211,0.06); }
                 <h3>Interests Breakdown</h3>
                 {% if interests_breakdown %}
                 <div class="admin-chart-inner"><canvas id="interests-chart"></canvas></div>
+                {% else %}<p class="admin-no-data">No data yet</p>{% endif %}
+            </div>
+            <div class="admin-chart-card">
+                <h3>Top Cities</h3>
+                {% if signup_top_cities %}
+                <div class="admin-chart-inner"><canvas id="signup-cities-chart"></canvas></div>
                 {% else %}<p class="admin-no-data">No data yet</p>{% endif %}
             </div>
             <div class="admin-chart-card" style="grid-column: 1 / -1;">
@@ -557,14 +573,40 @@ tr[data-app]:hover td { background: rgba(50,90,211,0.06); }
                 <div class="admin-stat-label">Countries</div>
                 <div class="admin-stat-value">{{ visit_country_breakdown | length }}</div>
             </div>
+            <div class="admin-stat">
+                <div class="admin-stat-label">Pages Tracked</div>
+                <div class="admin-stat-value">{{ visit_top_pages | length }}</div>
+            </div>
         </div>
 
         <div class="admin-charts-grid">
+            <div class="admin-chart-card">
+                <h3>Continental Distribution</h3>
+                {% if visit_continent_breakdown %}
+                <div class="admin-chart-inner"><canvas id="visit-continent-chart"></canvas></div>
+                {% else %}<p class="admin-no-data">No data yet</p>{% endif %}
+            </div>
             <div class="admin-chart-card">
                 <h3>Visitor Countries</h3>
                 {% if visit_country_breakdown %}
                 <div class="admin-chart-inner"><canvas id="visit-country-chart"></canvas></div>
                 {% else %}<p class="admin-no-data">No data yet</p>{% endif %}
+            </div>
+            <div class="admin-chart-card">
+                <h3>Top Pages</h3>
+                {% if visit_top_pages %}
+                <div class="admin-chart-inner"><canvas id="visit-pages-chart"></canvas></div>
+                {% else %}<p class="admin-no-data">No data yet</p>{% endif %}
+            </div>
+            <div class="admin-chart-card">
+                <h3>Top Cities</h3>
+                {% if visit_top_cities %}
+                <div class="admin-chart-inner"><canvas id="visit-cities-chart"></canvas></div>
+                {% else %}<p class="admin-no-data">No data yet</p>{% endif %}
+            </div>
+            <div class="admin-chart-card" style="grid-column: 1 / -1;">
+                <h3>Hourly Traffic Distribution (UTC)</h3>
+                <div class="admin-chart-inner" style="height:160px;"><canvas id="visit-hourly-chart"></canvas></div>
             </div>
             <div class="admin-chart-card" style="grid-column: 1 / -1;">
                 <h3>Visits — Last 30 Days</h3>
@@ -623,6 +665,15 @@ tr[data-app]:hover td { background: rgba(50,90,211,0.06); }
             </div>
         </div>
 
+        {% if staff_role_breakdown %}
+        <div class="admin-charts-grid" style="margin-bottom:28px;">
+            <div class="admin-chart-card" style="grid-column: 1 / -1;">
+                <h3>Applications by Role</h3>
+                <div class="admin-chart-inner" style="height:160px;"><canvas id="staff-role-chart"></canvas></div>
+            </div>
+        </div>
+        {% endif %}
+
         <div class="admin-section">
             <div class="admin-section-head"><h2>Staff Applications <span style="color:var(--text-secondary);font-size:0.85em;font-weight:400;">(newest first)</span></h2></div>
             {% if staff_apps %}
@@ -669,6 +720,13 @@ tr[data-app]:hover td { background: rgba(50,90,211,0.06); }
             <div class="admin-stat">
                 <div class="admin-stat-label">Accepted</div>
                 <div class="admin-stat-value">{{ tester_apps | selectattr('status','equalto','accepted') | list | length }}</div>
+            </div>
+        </div>
+
+        <div class="admin-charts-grid" style="margin-bottom:28px;">
+            <div class="admin-chart-card" style="grid-column: 1 / -1;">
+                <h3>Skill Level Distribution</h3>
+                <div class="admin-chart-inner" style="height:160px;"><canvas id="tester-skill-chart"></canvas></div>
             </div>
         </div>
 
@@ -823,25 +881,102 @@ function line(id, labels, values, label) {
 }
 
 /* ── Chart data from server ────────────────────────────────────────────── */
-var cCountryLabels = {{ country_breakdown.keys()  | list | tojson }};
-var cCountryVals   = {{ country_breakdown.values() | list | tojson }};
-doughnut('country-chart', cCountryLabels, cCountryVals);
 
-var intLabels = {{ interests_breakdown.keys()  | list | tojson }};
-var intVals   = {{ interests_breakdown.values() | list | tojson }};
-barH('interests-chart', intLabels, intVals);
+// Signups tab
+doughnut('signup-continent-chart',
+    {{ signup_continent_breakdown.keys()  | list | tojson }},
+    {{ signup_continent_breakdown.values() | list | tojson }});
 
-var sdKeys = {{ signup_daily_counts.keys()   | list | tojson }};
-var sdVals = {{ signup_daily_counts.values() | list | tojson }};
-line('signup-timeline', sdKeys, sdVals, 'Signups');
+doughnut('country-chart',
+    {{ country_breakdown.keys()  | list | tojson }},
+    {{ country_breakdown.values() | list | tojson }});
 
-var vcCountryLabels = {{ visit_country_breakdown.keys()  | list | tojson }};
-var vcCountryVals   = {{ visit_country_breakdown.values() | list | tojson }};
-doughnut('visit-country-chart', vcCountryLabels, vcCountryVals);
+barH('interests-chart',
+    {{ interests_breakdown.keys()  | list | tojson }},
+    {{ interests_breakdown.values() | list | tojson }});
 
-var vdKeys = {{ visit_daily_counts.keys()   | list | tojson }};
-var vdVals = {{ visit_daily_counts.values() | list | tojson }};
-line('visit-timeline', vdKeys, vdVals, 'Visits');
+barH('signup-cities-chart',
+    {{ signup_top_cities.keys()  | list | tojson }},
+    {{ signup_top_cities.values() | list | tojson }});
+
+line('signup-timeline',
+    {{ signup_daily_counts.keys()  | list | tojson }},
+    {{ signup_daily_counts.values() | list | tojson }}, 'Signups');
+
+// Visitors tab
+doughnut('visit-continent-chart',
+    {{ visit_continent_breakdown.keys()  | list | tojson }},
+    {{ visit_continent_breakdown.values() | list | tojson }});
+
+doughnut('visit-country-chart',
+    {{ visit_country_breakdown.keys()  | list | tojson }},
+    {{ visit_country_breakdown.values() | list | tojson }});
+
+barH('visit-pages-chart',
+    {{ visit_top_pages.keys()  | list | tojson }},
+    {{ visit_top_pages.values() | list | tojson }});
+
+barH('visit-cities-chart',
+    {{ visit_top_cities.keys()  | list | tojson }},
+    {{ visit_top_cities.values() | list | tojson }});
+
+(function() {
+    var hKeys = {{ visit_hourly_counts.keys()  | list | tojson }};
+    var hVals = {{ visit_hourly_counts.values() | list | tojson }};
+    var c = document.getElementById('visit-hourly-chart');
+    if (c) new Chart(c, {
+        type: 'bar',
+        data: {
+            labels: hKeys.map(function(h){ return h + ':00'; }),
+            datasets: [{ data: hVals, backgroundColor: 'rgba(50,90,211,0.7)',
+                         borderRadius: 4, borderSkipped: false }]
+        },
+        options: {
+            plugins: { legend: { display: false } },
+            scales: {
+                x: { grid: { color: 'rgba(255,255,255,0.05)' } },
+                y: { grid: { color: 'rgba(255,255,255,0.06)' }, ticks: { precision: 0 }, min: 0 }
+            }
+        }
+    });
+})();
+
+line('visit-timeline',
+    {{ visit_daily_counts.keys()  | list | tojson }},
+    {{ visit_daily_counts.values() | list | tojson }}, 'Visits');
+
+// Staff tab
+barH('staff-role-chart',
+    {{ staff_role_breakdown.keys()  | list | tojson }},
+    {{ staff_role_breakdown.values() | list | tojson }});
+
+// Testers tab
+(function() {
+    var skKeys = {{ tester_skill_breakdown.keys()  | list | tojson }};
+    var skVals = {{ tester_skill_breakdown.values() | list | tojson }};
+    var c = document.getElementById('tester-skill-chart');
+    if (c) new Chart(c, {
+        type: 'bar',
+        data: {
+            labels: skKeys.map(function(k){ return k + '/10'; }),
+            datasets: [{ data: skVals,
+                backgroundColor: skKeys.map(function(k){
+                    var v = parseInt(k);
+                    if (v <= 3) return 'rgba(239,68,68,0.7)';
+                    if (v <= 6) return 'rgba(245,158,11,0.7)';
+                    return 'rgba(16,185,129,0.7)';
+                }),
+                borderRadius: 4, borderSkipped: false }]
+        },
+        options: {
+            plugins: { legend: { display: false } },
+            scales: {
+                x: { grid: { display: false } },
+                y: { grid: { color: 'rgba(255,255,255,0.06)' }, ticks: { precision: 0 }, min: 0 }
+            }
+        }
+    });
+})();
 
 /* ── Tabs ──────────────────────────────────────────────────────────────── */
 document.querySelectorAll('.admin-tab-btn').forEach(function(btn) {
