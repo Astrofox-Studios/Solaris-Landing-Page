@@ -7,6 +7,9 @@ tags:
   - announcement
   - early-access
   - news
+  - minecraft-minigame
+  - java-edition
+  - season-0
 thumbnail: "early-access.png"
 header_image: "/static/images/blog/early-access.png"
 ---

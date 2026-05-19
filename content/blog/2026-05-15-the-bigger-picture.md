@@ -7,6 +7,9 @@ tags:
   - announcement
   - competitive
   - ecosystem
+  - destiny-games
+  - minecraft-minigame
+  - esports
 thumbnail: "solaris-poster.png"
 header_image: "/static/images/blog/solaris-poster.png"
 ---

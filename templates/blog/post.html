@@ -7,6 +7,36 @@
 {% block og_image %}{% if post.header_image %}{{ request.host_url.rstrip('/') }}{{ post.header_image }}{% else %}{{ url_for('static', filename='images/blog/early-access.png', _external=True) }}{% endif %}{% endblock %}
 {% block twitter_image %}{% if post.header_image %}{{ request.host_url.rstrip('/') }}{{ post.header_image }}{% else %}{{ url_for('static', filename='images/blog/early-access.png', _external=True) }}{% endif %}{% endblock %}
 
+{% block extra_head %}
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="{{ post.date.isoformat() if post.date else '' }}">
+<meta property="article:author" content="{{ post.author }}">
+<meta property="article:section" content="Solaris Blog">
+{% if post.tags %}{% for tag in post.tags %}<meta property="article:tag" content="{{ tag }}">
+{% endfor %}{% endif %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": {{ post.title | tojson }},
+  "description": {{ post.summary | tojson }},
+  "datePublished": "{{ post.date.isoformat() if post.date else '' }}",
+  "dateModified": "{{ post.date.isoformat() if post.date else '' }}",
+  "url": "https://www.playsolaris.net/blog/{{ post.slug }}",
+  "author": {
+    "@type": "Person",
+    "name": {{ post.author | tojson }}
+  },
+  "publisher": { "@id": "https://www.playsolaris.net/#organization" },
+  "image": "{% if post.header_image %}{{ request.host_url.rstrip('/') }}{{ post.header_image }}{% else %}{{ url_for('static', filename='images/blog/early-access.png', _external=True) }}{% endif %}",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://www.playsolaris.net/blog/{{ post.slug }}"
+  }
+}
+</script>
+{% endblock %}
+
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/blog.css') }}">
 {% endblock %}

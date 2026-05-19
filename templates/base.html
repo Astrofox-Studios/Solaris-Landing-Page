@@ -3,18 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Solaris{% endblock %}</title>
-    <meta name="description" content="{% block description %}Solaris — A new dawn in Minecraft awaits. Join us at playsolaris.net{% endblock %}">
-    <meta property="og:title" content="{% block og_title %}Solaris{% endblock %}">
-    <meta property="og:description" content="{% block og_description %}A new dawn in Minecraft awaits. Join us at playsolaris.net{% endblock %}">
+    <title>{% block title %}Solaris — Competitive Minecraft Minigame Server{% endblock %}</title>
+    <meta name="description" content="{% block description %}Solaris is a competitive Minecraft Java Edition minigame server. Ranked play, seasonal progression, and a path to esports. Early Access June 27th. Join at playsolaris.net.{% endblock %}">
+    <meta name="keywords" content="{% block keywords %}Solaris, playsolaris.net, competitive Minecraft server, Minecraft minigame server, Minecraft Java Edition server, ranked Minecraft, competitive minigame server, Minecraft server 2026, Minecraft esports, Destiny Games, Astrofox Studios{% endblock %}">
+    <link rel="canonical" href="https://www.playsolaris.net{{ request.path }}">
+    <meta property="og:title" content="{% block og_title %}Solaris — Competitive Minecraft Minigame Server{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Competitive Minecraft Java Edition minigame server. Ranked play, seasonal progression, and a path to esports. Early Access June 27th.{% endblock %}">
     <meta property="og:type" content="website">
     <meta property="og:image" content="{% block og_image %}{{ url_for('static', filename='images/blog/early-access.png', _external=True) }}{% endblock %}">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:url" content="{{ request.url }}">
+    <meta property="og:url" content="https://www.playsolaris.net{{ request.path }}">
     <meta property="og:site_name" content="Solaris">
     <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ self.og_title() }}">
+    <meta name="twitter:description" content="{{ self.og_description() }}">
     <meta name="twitter:image" content="{% block twitter_image %}{{ url_for('static', filename='images/blog/early-access.png', _external=True) }}{% endblock %}">
+    <meta name="twitter:site" content="@playsolaris">
+    {% block extra_head %}{% endblock %}
 
     <!-- Favicons -->
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon/favicon-96x96.png') }}" sizes="96x96" />
@@ -36,6 +42,34 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/cookie-banner.css') }}">
+
+    <!-- Structured data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://www.playsolaris.net/#website",
+          "url": "https://www.playsolaris.net",
+          "name": "Solaris",
+          "description": "Competitive Minecraft Java Edition minigame server by Astrofox Studios",
+          "publisher": { "@id": "https://www.playsolaris.net/#organization" }
+        },
+        {
+          "@type": "Organization",
+          "@id": "https://www.playsolaris.net/#organization",
+          "name": "Astrofox Studios",
+          "legalName": "Astrofox Studios Ltd",
+          "url": "https://www.playsolaris.net",
+          "logo": "https://www.playsolaris.net/static/favicon/favicon-96x96.png",
+          "foundingLocation": "London, United Kingdom",
+          "description": "Astrofox Studios Ltd is the developer and operator of Solaris, a competitive Minecraft Java Edition minigame server.",
+          "sameAs": ["https://discord.gg/playsolaris"]
+        }
+      ]
+    }
+    </script>
 
     <!-- Theme: apply saved preference before paint -->
     <script>

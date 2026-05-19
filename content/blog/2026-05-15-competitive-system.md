@@ -7,6 +7,9 @@ tags:
   - competitive
   - gameplay
   - deep-dive
+  - ranked
+  - minecraft-minigame
+  - java-edition
 thumbnail: "comp.png"
 header_image: "/static/images/blog/comp.png"
 ---
