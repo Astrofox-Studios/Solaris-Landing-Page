@@ -18,3 +18,10 @@ instance/
 Thumbs.db
 *.log
 .claude/
+
+# Runtime data — managed by the server, not version controlled
+visits.json
+signups.txt
+applications.json
+data.json
+backups/
